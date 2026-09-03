@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Chipotle Online Ordering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#AD2118;
+  --red-dark:#7c1710;
+  --brown:#451400;
+  --cream:#FBF3E4;
+  --cream-deep:#F1E4C9;
+  --tan-line:#e6d8bd;
+  --gold:#D9A63E;
+  --avocado:#5B7A3A;
+  --grey:#8a8a8a;
+  --grey-line:#e3ddd0;
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+  --shadow-card:0 2px 10px rgba(69,20,0,.08);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Nunito',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:#e9e2d2;
+  color:var(--brown);
+  display:flex;
+  justify-content:center;
+}
+h1,h2,h3,.headline{font-family:'Barlow Condensed','Trade Gothic LT Bold',Arial,sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.3px;}
+.hidden{display:none!important;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit;}
+
+/* ---------- phone shell ---------- */
+.phone{
+  width:430px;
+  max-width:100vw;
+  min-height:100vh;
+  background:var(--cream);
+  position:relative;
+  overflow-x:hidden;
+  box-shadow:0 0 40px rgba(0,0,0,.25);
+}
+.screen{position:absolute; inset:0; min-height:100%; display:flex; flex-direction:column; background:var(--cream);}
+.screen.hidden{display:none!important;}
+.scroll{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+
+/* ---------- buttons ---------- */
+.btn-primary{
+  width:100%; padding:16px; border:none; border-radius:var(--radius-lg);
+  background:var(--red); color:#fff; font-weight:800; font-size:16px;
+  letter-spacing:.3px; cursor:pointer;
+}
+.btn-primary:active{transform:scale(.98);}
+.btn-primary:disabled{background:#cbb9a3; color:#fff; cursor:not-allowed;}
+.btn-outline{
+  width:100%; padding:14px; border:1.5px solid var(--red); border-radius:var(--radius-lg);
+  background:#fff; color:var(--red); font-weight:800; font-size:15px; cursor:pointer;
+}
+.btn-add{
+  width:100%; padding:16px 18px; border:none; border-radius:var(--radius-lg);
+  background:var(--red); color:#fff; font-weight:800; font-size:16px;
+  display:flex; align-items:center; justify-content:space-between; cursor:pointer;
+}
+.btn-add:disabled{background:#cbb9a3; cursor:not-allowed;}
+.btn-add:active:not(:disabled){transform:scale(.98);}
+.qty-btn{
+  width:34px; height:34px; border-radius:10px; border:1.5px solid var(--red);
+  background:#fff; color:var(--red); font-size:18px; font-weight:800; cursor:pointer; line-height:1;
+}
+.qty-btn:disabled{opacity:.3; cursor:not-allowed;}
+
+/* ---------- landing ---------- */
+.screen-landing{background:linear-gradient(180deg,var(--red) 0%, var(--red-dark) 55%, #33100a 100%); color:#fff; align-items:center; justify-content:center; text-align:center; padding:36px 30px;}
+.landing-logo{font-family:'Barlow Condensed','Trade Gothic LT Bold',Arial,sans-serif; font-size:34px; font-weight:800; letter-spacing:1px; margin-bottom:6px;}
+.landing-tag{font-size:14px; opacity:.85; margin-bottom:34px;}
+.landing-badge{width:118px; height:118px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 28px; font-size:50px;}
+.landing-title{font-size:26px; font-weight:700; line-height:1.25; margin-bottom:10px;}
+.landing-sub{font-size:14px; opacity:.85; margin-bottom:36px; max-width:300px;}
+.landing-cta{width:100%; max-width:300px;}
+.landing-cta .btn-primary{background:#fff; color:var(--red);}
+.landing-foot{margin-top:18px; font-size:12px; opacity:.75; text-decoration:underline; cursor:pointer;}
+
+/* ---------- order type sheet ---------- */
+.order-type-sheet{background:#fff; border-radius:var(--radius-lg) var(--radius-lg) 0 0; padding:26px 22px 30px; margin-top:auto; text-align:left; color:var(--brown); width:100%;}
+.order-type-sheet h2{font-size:19px; margin:0 0 16px;}
+.order-option{display:flex; align-items:center; gap:12px; border:1.5px solid var(--grey-line); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:12px; cursor:pointer;}
+.order-option.selected{border-color:var(--red); background:#FBEAE7;}
+.order-option .icon{font-size:22px;}
+.order-option .label{font-weight:700; font-size:15px;}
+.order-option .desc{font-size:12px; color:var(--grey);}
+
+/* ---------- schedule (pickup date/time) ---------- */
+.schedule-title{font-size:21px; font-weight:600; text-transform:none; letter-spacing:0; margin:18px 0 6px;}
+.schedule-date-hint{font-size:12.5px; color:var(--grey); margin-bottom:10px;}
+.schedule-hint{font-size:12.5px; color:var(--grey); margin-bottom:14px;}
+.date-scroll{display:flex; gap:10px; overflow-x:auto; padding-bottom:2px;}
+.date-scroll::-webkit-scrollbar{display:none;}
+.date-pill{flex:0 0 auto; width:76px; padding:12px 6px; border-radius:var(--radius-md); border:1.5px solid var(--grey-line); background:#fff; text-align:center; cursor:pointer;}
+.date-pill.selected{border-color:var(--avocado); background:#F3EFDD;}
+.date-pill .dow{font-size:11px; font-weight:800; letter-spacing:.3px; color:var(--grey); text-transform:uppercase;}
+.date-pill.selected .dow{color:var(--avocado);}
+.date-pill .dom{font-size:22px; font-weight:800; margin:2px 0;}
+.date-pill .mon{font-size:11px; font-weight:800; letter-spacing:.3px; color:var(--grey); text-transform:uppercase;}
+.date-pill.selected .mon{color:var(--avocado);}
+.time-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+.time-slot{padding:14px 6px; border-radius:var(--radius-md); border:1.5px solid var(--grey-line); background:#fff; text-align:center; font-size:13px; font-weight:700; cursor:pointer; line-height:1.35;}
+.time-slot.selected{border-color:var(--red); background:#FBEAE7; color:var(--red);}
+.time-slot.disabled{border-color:var(--grey-line); color:#bbb2a2; cursor:not-allowed; background:#fbf8f0;}
+
+/* ---------- header (menu / detail) ---------- */
+.top-bar{display:flex; align-items:center; gap:10px; padding:14px 16px; background:var(--cream); border-bottom:1px solid var(--tan-line); position:sticky; top:0; z-index:5;}
+.icon-btn{width:36px; height:36px; border-radius:50%; border:none; background:#fff; box-shadow:var(--shadow-card); display:flex; align-items:center; justify-content:center; font-size:16px; cursor:pointer; flex-shrink:0;}
+.top-bar .title-block{flex:1; min-width:0;}
+.top-bar .store-name{font-weight:800; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.top-bar .store-sub{font-size:11px; color:var(--grey);}
+
+/* ---------- fake browser chrome (menu screen) ---------- */
+.statusbar{display:flex; align-items:center; justify-content:space-between; padding:14px 22px 0; font-size:14px; font-weight:700; color:var(--brown); background:var(--cream);}
+.statusbar .icons{display:flex; align-items:center; gap:6px;}
+.browser-bar{display:flex; justify-content:center; padding:6px 0 4px; background:var(--cream);}
+.browser-bar .url-pill{display:flex; align-items:center; gap:6px; background:#EDE4CE; color:#6b5c4f; font-size:12.5px; font-weight:600; padding:6px 14px; border-radius:999px;}
+.menu-header{display:flex; align-items:center; gap:10px; padding:14px 16px 10px; background:var(--cream);}
+.menu-logo-text{font-size:20px; font-weight:800; text-transform:uppercase; white-space:nowrap;}
+.menu-outlet{font-size:13px; color:var(--grey); font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.menu-filters-row{display:flex; align-items:center; gap:10px; padding:2px 16px 12px; background:var(--cream);}
+.icon-round-btn{width:36px; height:36px; border-radius:50%; border:1.5px solid var(--grey-line); background:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; cursor:pointer; flex-shrink:0; padding:0;}
+.filter-pill{display:flex; align-items:center; gap:8px; border:1.5px solid var(--grey-line); border-radius:999px; background:#fff; padding:9px 16px; font-weight:700; font-size:13.5px; color:var(--brown); cursor:pointer;}
+.combined-filter-pill{flex:1; justify-content:space-between; min-width:0;}
+.combined-filter-pill span:first-child{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.filter-pill .chevron{color:var(--grey); font-size:14px; flex-shrink:0;}
+.search-bar-row{display:flex; align-items:center; gap:10px; padding:0 16px 12px; background:var(--cream);}
+.search-input-pill{flex:1; min-width:0; display:flex; align-items:center; gap:8px; border:1.5px solid var(--grey-line); border-radius:999px; background:#fff; padding:9px 14px;}
+.search-input-pill input{flex:1; min-width:0; border:none; outline:none; font-size:14px; font-family:inherit; background:transparent; color:var(--brown);}
+.search-clear-btn{border:none; background:none; font-size:18px; color:var(--grey); cursor:pointer; line-height:1; padding:0 2px;}
+.search-empty-state{text-align:center; padding:70px 40px; color:var(--grey);}
+.search-empty-state .emoji{font-size:36px; margin-bottom:14px;}
+.search-empty-state .msg{font-size:14px; font-weight:700;}
+
+/* ---------- category chips ---------- */
+.cat-scroll{display:flex; gap:8px; overflow-x:auto; padding:12px 16px; background:var(--cream); border-bottom:1px solid var(--tan-line); scrollbar-width:none;}
+.cat-scroll::-webkit-scrollbar{display:none;}
+.cat-tab{flex:0 0 auto; padding:9px 16px; border-radius:999px; border:1.5px solid var(--grey-line); background:#fff; font-weight:700; font-size:13px; color:var(--brown); cursor:pointer; white-space:nowrap;}
+.cat-tab.selected{background:var(--red); border-color:var(--red); color:#fff;}
+
+/* ---------- menu list ---------- */
+.menu-section-title{font-size:13px; font-weight:800; letter-spacing:.4px; color:var(--grey); margin:18px 16px 8px; text-transform:uppercase;}
+.menu-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 16px;}
+.meal-card{background:#fff; border-radius:var(--radius-md); box-shadow:var(--shadow-card); overflow:hidden; cursor:pointer; display:flex; flex-direction:column;}
+.meal-thumb{aspect-ratio:1/1; width:100%; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.meal-thumb img{width:100%; height:100%; object-fit:cover;}
+.meal-thumb.placeholder{background:repeating-linear-gradient(135deg, var(--cream-deep) 0 14px, #fff 14px 28px);}
+.meal-thumb .emoji{font-size:44px;}
+.meal-info{padding:10px 12px 12px;}
+.meal-name{font-weight:800; font-size:13.5px; line-height:1.25; margin-bottom:3px;}
+.meal-desc{font-size:11px; color:var(--grey); margin-bottom:6px; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+.meal-price-row{display:flex; align-items:center; justify-content:space-between;}
+.meal-price{font-weight:800; font-size:13px; color:var(--red);}
+.meal-add-btn{width:26px; height:26px; border-radius:50%; background:var(--red); color:#fff; border:none; font-size:16px; font-weight:800; cursor:pointer; line-height:1;}
+
+.menu-cart-bar-wrap{position:sticky; bottom:0; padding:10px 16px 14px; background:linear-gradient(180deg,rgba(251,243,228,0) 0%, var(--cream) 40%);}
+.menu-cart-bar{display:flex; align-items:center; justify-content:space-between; background:var(--red); color:#fff; border-radius:var(--radius-lg); padding:14px 18px; font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 4px 14px rgba(173,33,24,.35);}
+
+/* ---------- meal detail (simple quick-add) ---------- */
+.qd-body{padding:20px 20px 100px;}
+.qd-hero{aspect-ratio:1/1; max-height:220px; border-radius:var(--radius-md); overflow:hidden; margin-bottom:16px; display:flex; align-items:center; justify-content:center; background:#fff;}
+.qd-hero img{width:100%; height:100%; object-fit:cover;}
+.qd-name{font-size:20px; font-weight:800; margin-bottom:4px;}
+.qd-desc{font-size:13.5px; color:#6b5c4f; line-height:1.5; margin-bottom:18px;}
+.qd-price{font-size:16px; font-weight:800; color:var(--red); margin-bottom:18px;}
+
+/* ---------- builder detail ---------- */
+.builder-hero{position:relative; height:230px; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.builder-hero img{width:100%; height:100%; object-fit:cover;}
+.builder-hero .hero-top{position:absolute; top:12px; left:12px; right:12px; display:flex; justify-content:space-between; z-index:2;}
+.progress-strip{display:flex; gap:6px; padding:12px 16px; background:#fff; border-bottom:1px solid var(--tan-line); position:sticky; top:0; z-index:6; overflow-x:auto;}
+.progress-strip::-webkit-scrollbar{display:none;}
+.progress-chip{flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:7px 12px; border-radius:999px; font-size:11.5px; font-weight:700; border:1.5px solid var(--grey-line); color:var(--grey); cursor:pointer; white-space:nowrap;}
+.progress-chip.done{border-color:var(--avocado); color:var(--avocado); background:#EEF3E6;}
+.progress-chip.required.pending{border-color:var(--red); color:var(--red); background:#FBEAE7;}
+.progress-chip .dot{width:7px; height:7px; border-radius:50%; background:currentColor; flex-shrink:0;}
+
+.builder-title-block{padding:16px 20px 4px;}
+.builder-title-block .qd-name{margin-bottom:2px;}
+.builder-title-block .qd-desc{margin-bottom:0; font-size:12.5px;}
+
+.byo-section{padding:20px 20px 4px; border-top:8px solid var(--cream-deep);}
+.byo-section:first-of-type{border-top:none;}
+.byo-section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:2px;}
+.byo-section-title{font-size:15px; font-weight:800;}
+.byo-section-title .num{display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:var(--brown); color:#fff; font-size:11px; margin-right:8px; font-family:'Nunito';}
+.byo-req-tag{font-size:10.5px; font-weight:800; padding:3px 8px; border-radius:999px; letter-spacing:.3px;}
+.byo-req-tag.required{background:#FBEAE7; color:var(--red);}
+.byo-req-tag.optional{background:var(--cream-deep); color:#8a7a5c;}
+.byo-section-hint{font-size:11.5px; color:var(--grey); margin:2px 0 14px;}
+
+.split-toggle{display:flex; align-items:center; justify-content:space-between; background:#fff; border:1.5px solid var(--grey-line); border-radius:var(--radius-md); padding:10px 14px; margin-bottom:14px; font-size:12.5px; font-weight:700;}
+.switch{position:relative; width:38px; height:22px; border-radius:999px; background:var(--grey-line); cursor:pointer; flex-shrink:0;}
+.switch .knob{position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.3); transition:left .15s;}
+.switch.on{background:var(--avocado);}
+.switch.on .knob{left:18px;}
+
+.variant-row{display:flex; align-items:center; gap:12px; padding:11px 12px; border:1.5px solid var(--grey-line); border-radius:var(--radius-md); background:#fff; margin-bottom:9px; cursor:pointer;}
+.variant-row.selected{border-color:var(--red); background:#FBEAE7;}
+.variant-row.unavailable{opacity:.4; cursor:not-allowed;}
+.variant-thumb{width:76px; height:76px; border-radius:10px; overflow:hidden; flex-shrink:0; background:#f4ece0; display:flex; align-items:center; justify-content:center;}
+.variant-thumb img{width:100%; height:100%; object-fit:cover;}
+.variant-info{flex:1; min-width:0;}
+.variant-name{font-weight:700; font-size:13.5px;}
+.variant-sub{font-size:11px; color:var(--grey);}
+.variant-cal{font-size:10.5px; color:var(--grey); margin-top:1px;}
+.variant-radio{width:20px; height:20px; border-radius:50%; border:2px solid #cfc4b2; flex-shrink:0; position:relative;}
+.variant-row.selected .variant-radio,.variant-radio.selected{border-color:var(--red);}
+.variant-row.selected .variant-radio::after,.variant-radio.selected::after{content:''; position:absolute; inset:3px; border-radius:50%; background:var(--red);}
+.variant-check{width:20px; height:20px; border-radius:6px; border:2px solid #cfc4b2; flex-shrink:0; position:relative;}
+.variant-row.selected .variant-check{border-color:var(--red); background:var(--red);}
+.variant-row.selected .variant-check::after{content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:800;}
+
+.mod-row{display:flex; gap:6px; margin:0 0 9px 88px;}
+.mod-pill{flex:1; text-align:center; padding:6px 4px; border-radius:8px; border:1.5px solid var(--grey-line); font-size:10.5px; font-weight:700; color:var(--grey); background:#fff; cursor:pointer;}
+.mod-pill.selected{border-color:var(--brown); color:#fff; background:var(--brown);}
+
+.byo-footer-spacer{height:14px;}
+.builder-footer{position:sticky; bottom:0; background:var(--cream); border-top:1px solid var(--tan-line); padding:12px 20px 18px;}
+.builder-footer-note{font-size:11.5px; color:var(--red); font-weight:700; margin-bottom:8px; text-align:center; display:none;}
+.builder-footer-note.show{display:block;}
+.builder-qty{display:flex; align-items:center; gap:14px; justify-content:center; margin-bottom:10px;}
+.qty-value{font-weight:800; font-size:16px; min-width:20px; text-align:center;}
+
+/* ---------- cart ---------- */
+.cart-order-card{display:flex; gap:12px; background:#fff; border:1px solid var(--grey-line); border-radius:var(--radius-md); padding:12px; margin-bottom:12px;}
+.cart-thumb{width:56px; height:56px; border-radius:10px; overflow:hidden; flex-shrink:0; background:#f4ece0; display:flex; align-items:center; justify-content:center;}
+.cart-thumb img{width:100%; height:100%; object-fit:cover;}
+.cart-item-name{font-weight:800; font-size:14px; margin-bottom:3px;}
+.cart-item-lines{font-size:11px; color:var(--grey); line-height:1.5; margin-bottom:6px;}
+.cart-item-bottom{display:flex; align-items:center; justify-content:space-between;}
+.cart-item-price{font-weight:800; font-size:13px;}
+.cart-qty{display:flex; align-items:center; gap:8px;}
+.cart-qty .qty-btn{width:26px; height:26px; font-size:14px; border-radius:8px;}
+.cart-empty{text-align:center; padding:60px 30px; color:var(--grey);}
+.cart-empty .emoji{font-size:44px; margin-bottom:12px;}
+.totals-row{display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:8px; color:#6b5c4f;}
+.totals-row.total{font-weight:800; font-size:16px; color:var(--brown); border-top:1px solid var(--tan-line); padding-top:10px; margin-top:6px;}
+
+/* ---------- checkout ---------- */
+.field-label{font-size:12px; font-weight:800; color:var(--grey); text-transform:uppercase; letter-spacing:.3px; margin:18px 0 8px;}
+.text-input{width:100%; padding:13px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--grey-line); font-size:14px; font-family:inherit; background:#fff;}
+.pay-row{display:flex; align-items:center; gap:12px; padding:13px 14px; border:1.5px solid var(--grey-line); border-radius:var(--radius-md); margin-bottom:10px; cursor:pointer;}
+.pay-row.selected{border-color:var(--red); background:#FBEAE7;}
+.pay-row .icon{font-size:20px;}
+.pay-row .label{font-weight:700; font-size:14px; flex:1;}
+.pay-row .variant-radio{margin-left:0;}
+
+/* ---------- success ---------- */
+.screen-success{align-items:center; justify-content:center; text-align:center; padding:40px 30px; background:var(--cream);}
+.success-badge{width:90px; height:90px; border-radius:50%; background:var(--avocado); color:#fff; display:flex; align-items:center; justify-content:center; font-size:40px; margin-bottom:22px;}
+.success-title{font-size:22px; font-weight:800; margin-bottom:8px;}
+.success-sub{font-size:14px; color:var(--grey); margin-bottom:6px;}
+.success-order-no{font-size:15px; font-weight:800; color:var(--red); margin-bottom:30px;}
+
+/* ---------- toast ---------- */
+.toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--brown); color:#fff; padding:12px 20px; border-radius:999px; font-size:13px; font-weight:700; opacity:0; transition:.25s; z-index:50; pointer-events:none;}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+
+  <!-- ===================== LANDING ===================== -->
+  <div class="screen screen-landing" id="screen-landing">
+    <div class="landing-logo">CHIPOTLE</div>
+    <div class="landing-tag">MEXICAN GRILL</div>
+    <div class="landing-badge">🌯</div>
+    <div class="landing-title">Real food.<br>Made fresh, right in front of you.</div>
+    <div class="landing-sub">Order ahead for pickup or dine in and build your meal exactly the way you want it.</div>
+    <div class="landing-cta">
+      <button class="btn-primary" onclick="openOrderTypeSheet()">Start Your Order</button>
+    </div>
+    <div class="landing-foot" onclick="openOrderTypeSheet()">Sign in</div>
+  </div>
+
+  <!-- ===================== ORDER TYPE SHEET ===================== -->
+  <div class="screen hidden" id="screen-ordertype" style="justify-content:flex-end; background:rgba(69,20,0,.45);">
+    <div class="order-type-sheet">
+      <h2>How would you like your order?</h2>
+      <div class="order-option selected" id="opt-pickup" onclick="selectOrderType('pickup')">
+        <div class="icon">🏠</div>
+        <div><div class="label">Pickup</div><div class="desc">1090 King St, Chipotle Mexican Grill</div></div>
+      </div>
+      <div class="order-option" id="opt-dinein" onclick="selectOrderType('dinein')">
+        <div class="icon">🍽️</div>
+        <div><div class="label">Dine In</div><div class="desc">Enjoy your meal in the restaurant</div></div>
+      </div>
+      <button class="btn-primary" style="margin-top:8px;" onclick="continueFromOrderType()">Continue</button>
+    </div>
+  </div>
+
+  <!-- ===================== SCHEDULE (Pickup) ===================== -->
+  <div class="screen hidden" id="screen-schedule">
+    <div class="top-bar" style="border-bottom:none;">
+      <button class="icon-btn" onclick="backFromSchedule()">←</button>
+    </div>
+    <div class="scroll">
+      <div style="padding:0 20px 24px;">
+        <h2 class="schedule-title">Pick a date</h2>
+        <div class="schedule-date-hint" id="schedule-date-hint">Today</div>
+        <div class="date-scroll" id="date-scroll"></div>
+
+        <h2 class="schedule-title" style="margin-top:26px;">Pick a time</h2>
+        <div class="schedule-hint">Minimum preparation time 30 mins</div>
+        <div class="time-grid" id="time-grid"></div>
+      </div>
+    </div>
+    <div style="padding:12px 20px 20px; border-top:1px solid var(--tan-line);">
+      <button class="btn-primary" id="schedule-next-btn" disabled onclick="confirmSchedule()">Next</button>
+    </div>
+  </div>
+
+  <!-- ===================== MENU ===================== -->
+  <div class="screen hidden" id="screen-menu">
+    <div class="statusbar">
+      <span>9:41</span>
+      <div class="icons">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5"/><rect x="5" y="5" width="3" height="7"/><rect x="10" y="3" width="3" height="9"/><rect x="15" y="0" width="3" height="12"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 4.5C4.5 1 11.5 1 15 4.5"/><path d="M3.5 7C6 4.7 10 4.7 12.5 7"/><circle cx="8" cy="10" r="1" fill="currentColor" stroke="none"/></svg>
+        <svg width="24" height="12" viewBox="0 0 24 12" fill="none" stroke="currentColor" stroke-width="1"><rect x="0.5" y="0.5" width="20" height="11" rx="2.5"/><rect x="2" y="2" width="16" height="8" rx="1" fill="currentColor" stroke="none"/><rect x="21" y="4" width="2" height="4" fill="currentColor"/></svg>
+      </div>
+    </div>
+    <div class="browser-bar">
+      <div class="url-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        chipotle.com/order
+      </div>
+    </div>
+    <div class="menu-header">
+      <button class="icon-btn" onclick="openOrderTypeSheet()">☰</button>
+      <div class="menu-logo-text headline">Chipotle</div>
+      <div class="menu-outlet" id="menu-outlet-name">Downtown</div>
+      <button class="icon-btn" onclick="goToCart()" style="margin-left:auto;">🛒</button>
+    </div>
+    <div class="menu-filters-row" id="menu-filters-row">
+      <button class="icon-round-btn" onclick="openMenuSearch()" aria-label="Search menu">🔍</button>
+      <button class="filter-pill combined-filter-pill" id="menu-filter-pill" onclick="openOrderTypeSheet()">
+        <span id="menu-filter-label">Pickup · Today - 8:30 am</span>
+        <span class="chevron">⌄</span>
+      </button>
+    </div>
+    <div class="search-bar-row hidden" id="search-bar-row">
+      <div class="search-input-pill">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="menu-search-input" placeholder="Search menu" oninput="onMenuSearchInput()">
+        <button class="search-clear-btn" onclick="closeMenuSearch()">&times;</button>
+      </div>
+      <button class="icon-round-btn" aria-label="Sort and filter">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h6"/><circle cx="18" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg>
+      </button>
+    </div>
+    <div class="cat-scroll" id="cat-scroll"></div>
+    <div class="scroll" id="menu-body-scroll">
+      <div id="menu-sections"></div>
+      <div style="height:20px;"></div>
+    </div>
+    <div class="menu-cart-bar-wrap hidden" id="menu-cart-bar-wrap">
+      <div class="menu-cart-bar" onclick="goToCart()">
+        <span id="menu-cart-bar-count">0 items</span>
+        <span id="menu-cart-bar-total">View cart · $0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== QUICK-ADD DETAIL (non-burrito items) ===================== -->
+  <div class="screen hidden" id="screen-quickdetail">
+    <div class="top-bar">
+      <button class="icon-btn" onclick="closeQuickDetail()">←</button>
+      <div class="title-block"><div class="store-name">Item Details</div></div>
+    </div>
+    <div class="scroll">
+      <div class="qd-body">
+        <div class="qd-hero" id="qd-hero"></div>
+        <div class="qd-name" id="qd-name">Item</div>
+        <div class="qd-desc" id="qd-desc">Description</div>
+        <div class="qd-price" id="qd-price">$0.00</div>
+      </div>
+    </div>
+    <div class="builder-footer">
+      <div class="builder-qty">
+        <button class="qty-btn" id="qd-qty-minus" onclick="changeQdQty(-1)" disabled>−</button>
+        <span class="qty-value" id="qd-qty-value">1</span>
+        <button class="qty-btn" onclick="changeQdQty(1)">+</button>
+      </div>
+      <button class="btn-add" onclick="addQdToCart()">
+        <span id="qd-add-label">Add to order</span>
+        <span id="qd-add-price">$0.00</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== BURRITO BUILDER ===================== -->
+  <div class="screen hidden" id="screen-builder">
+    <div class="builder-hero">
+      <div class="hero-top">
+        <button class="icon-btn" onclick="closeBuilder()">←</button>
+        <button class="icon-btn" onclick="goToCart()">🛒</button>
+      </div>
+      <img src="Menu/Byo%20burrito/protein-veggie/BYO%20burrito.png" alt="Build Your Own Burrito">
+    </div>
+    <div class="progress-strip" id="progress-strip"></div>
+    <div class="scroll">
+      <div class="builder-title-block">
+        <div class="qd-name">Build Your Own Burrito</div>
+        <div class="qd-desc">Your choice of freshly grilled meat or sofritas wrapped in a warm flour tortilla with rice, beans, or fajita veggies, and topped with guac, salsa, queso blanco, sour cream or cheese.</div>
+      </div>
+      <div id="byo-sections"></div>
+      <div class="byo-footer-spacer"></div>
+    </div>
+    <div class="builder-footer">
+      <div class="builder-footer-note" id="builder-note">Please choose your Protein, Rice and Beans to continue</div>
+      <div class="builder-qty">
+        <button class="qty-btn" id="byo-qty-minus" onclick="changeByoQty(-1)" disabled>−</button>
+        <span class="qty-value" id="byo-qty-value">1</span>
+        <button class="qty-btn" onclick="changeByoQty(1)">+</button>
+      </div>
+      <button class="btn-add" id="byo-add-btn" onclick="addByoToCart()">
+        <span id="byo-add-label">Add to order</span>
+        <span id="byo-add-price">$9.85</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== CART ===================== -->
+  <div class="screen hidden" id="screen-cart">
+    <div class="top-bar">
+      <button class="icon-btn" onclick="backFromCart()">←</button>
+      <div class="title-block"><div class="store-name">Your Order</div></div>
+    </div>
+    <div class="scroll">
+      <div style="padding:16px 20px;">
+        <div id="cart-order-list"></div>
+      </div>
+    </div>
+    <div style="padding:16px 20px 20px; border-top:1px solid var(--tan-line);">
+      <div class="totals-row"><span>Subtotal</span><span id="cart-subtotal-value">$0.00</span></div>
+      <div class="totals-row"><span>Tax</span><span id="cart-tax-value">$0.00</span></div>
+      <div class="totals-row total"><span>Total</span><span id="cart-total-value">$0.00</span></div>
+      <button class="btn-primary" style="margin-top:14px;" id="cart-checkout-btn" onclick="goToCheckout()">Go to Checkout</button>
+    </div>
+  </div>
+
+  <!-- ===================== CHECKOUT ===================== -->
+  <div class="screen hidden" id="screen-checkout">
+    <div class="top-bar">
+      <button class="icon-btn" onclick="backFromCheckout()">←</button>
+      <div class="title-block"><div class="store-name">Checkout</div></div>
+    </div>
+    <div class="scroll">
+      <div style="padding:4px 20px 20px;">
+        <div class="field-label">Contact name</div>
+        <input class="text-input" id="checkout-name" placeholder="Your name">
+
+        <div class="field-label">Order summary</div>
+        <div id="checkout-order-summary"></div>
+
+        <div class="field-label">Payment method</div>
+        <div class="pay-row selected" data-method="card" onclick="selectPayRow(this)">
+          <div class="icon">💳</div><div class="label">Credit / Debit Card</div><div class="variant-radio selected"></div>
+        </div>
+        <div class="pay-row" data-method="applepay" onclick="selectPayRow(this)">
+          <div class="icon">🍎</div><div class="label">Apple Pay</div><div class="variant-radio"></div>
+        </div>
+        <div class="pay-row" data-method="cash" onclick="selectPayRow(this)">
+          <div class="icon">💵</div><div class="label">Cash on Pickup</div><div class="variant-radio"></div>
+        </div>
+
+        <div class="totals-row" style="margin-top:20px;"><span>Subtotal</span><span id="co-subtotal-value">$0.00</span></div>
+        <div class="totals-row"><span>Tax</span><span id="co-tax-value">$0.00</span></div>
+        <div class="totals-row total"><span>Total</span><span id="co-total-value">$0.00</span></div>
+      </div>
+    </div>
+    <div style="padding:12px 20px 20px;">
+      <button class="btn-add" onclick="submitOrder()"><span>Place Order</span><span id="co-pay-total">$0.00</span></button>
+    </div>
+  </div>
+
+  <!-- ===================== SUCCESS ===================== -->
+  <div class="screen hidden screen-success" id="screen-success">
+    <div class="success-badge">✓</div>
+    <div class="success-title">Order Placed!</div>
+    <div class="success-sub">We're preparing your food fresh.</div>
+    <div class="success-order-no" id="success-order-no">Order #C1024</div>
+    <button class="btn-primary" onclick="goBackToMenuFromSuccess()">Order Again</button>
+  </div>
+
+  <div class="toast" id="toast">Added to order</div>
+</div>
+
+<script>
+/* =========================================================
+   DATA
+   ========================================================= */
+var IMG = 'Menu/Byo%20burrito/';
+function P(folder, file){ return IMG + folder + '/' + encodeURIComponent(file).replace(/%2F/g,'/'); }
+
+var PROTEIN_IMG = 'protein-veggie/';
+var proteinImg = function(name){ return IMG + PROTEIN_IMG + encodeURIComponent(name) + '.png'; };
+
+var CATEGORIES = [
+  {id:'burrito', label:'Burrito'},
+  {id:'bowl', label:'Burrito Bowl'},
+  {id:'quesadilla', label:'Quesadilla'},
+  {id:'salad', label:'Salad'},
+  {id:'tacos', label:'Tacos'},
+  {id:'family', label:'Family Meal'},
+  {id:'kids', label:'Kids Meal'},
+  {id:'chips', label:'Chips'}
+];
+
+var MENU_ITEMS = {
+  burrito: [
+    {id:'byo-burrito', name:'Build Your Own Burrito', desc:'Choose your protein, rice, beans & toppings.', price:9.85, img:IMG+PROTEIN_IMG+'BYO%20burrito.png', builder:true},
+    {id:'chicken-burrito', name:'Chicken Burrito', desc:'Chicken, white rice, black beans, salsa & cheese.', price:9.85, img:proteinImg('Chicken')},
+    {id:'steak-burrito', name:'Steak Burrito', desc:'Steak, brown rice, pinto beans, guac & sour cream.', price:11.15, img:proteinImg('Steak')}
+  ],
+  bowl: [
+    {id:'chicken-bowl', name:'Chicken Bowl', desc:'Chicken, rice, beans, salsa, cheese & lettuce.', price:9.85, icon:'🥣'},
+    {id:'barbacoa-bowl', name:'Barbacoa Bowl', desc:'Beef barbacoa, brown rice, black beans & guac.', price:11.55, icon:'🥣'},
+    {id:'sofritas-bowl', name:'Sofritas Bowl', desc:'Plant-based sofritas, rice, beans & fajita veggies.', price:9.85, icon:'🥣'}
+  ],
+  quesadilla: [
+    {id:'chicken-quesadilla', name:'Chicken Quesadilla', desc:'Grilled chicken & melted cheese in a crisp tortilla.', price:10.45, icon:'🧀'},
+    {id:'cheese-quesadilla', name:'Cheese Quesadilla', desc:'Melted cheese folded into a crisp flour tortilla.', price:8.25, icon:'🧀'}
+  ],
+  salad: [
+    {id:'chicken-salad', name:'Chicken Salad', desc:'Romaine, chicken, black beans, salsa & vinaigrette.', price:9.85, icon:'🥗'},
+    {id:'veggie-salad', name:'Veggie Salad', desc:'Romaine, fajita veggies, guac, salsa & cheese.', price:9.35, icon:'🥗'}
+  ],
+  tacos: [
+    {id:'three-tacos', name:'3 Tacos', desc:'Your choice of protein in soft or crispy corn tortillas.', price:9.85, icon:'🌮'},
+    {id:'carnitas-tacos', name:'Carnitas Tacos', desc:'Carnitas, salsa, cheese & lettuce, 3 tacos.', price:10.75, icon:'🌮'}
+  ],
+  family: [
+    {id:'family-bundle', name:'Family Bundle', desc:'Feeds 4-5: burritos, bowls, chips, guac & drinks.', price:64.95, icon:'👨‍👩‍👧‍👦'},
+    {id:'burrito-by-the-box', name:'Burrito By The Box', desc:'10 build-your-own burritos for the group.', price:89.00, icon:'📦'}
+  ],
+  kids: [
+    {id:'kids-quesadilla', name:'Kids Quesadilla', desc:'Cheese quesadilla, side & a drink.', price:6.25, icon:'🧒'},
+    {id:'kids-tacos', name:'Kids Tacos', desc:'Two soft tacos, side & a drink.', price:6.25, icon:'🧒'}
+  ],
+  chips: [
+    {id:'chips', name:'Chips', desc:'Freshly fried, salted corn tortilla chips.', price:2.95, img:IMG+'chips%20n%20dips/chips.png'},
+    {id:'chips-guac', name:'Chips & Guacamole', desc:'Chips served with a fresh side of guacamole.', price:4.55, img:IMG+'chips%20n%20dips/order%20(1).png'},
+    {id:'chips-queso', name:'Chips & Queso Blanco', desc:'Chips served with a warm side of queso blanco.', price:4.35, img:IMG+'chips%20n%20dips/order%20(8).png'}
+  ]
+};
+
+/* ---- Build Your Own Burrito: 7 sections from the spreadsheet ---- */
+var BYO_SECTIONS = [
+  { id:'protein', num:1, title:'Protein or Veggie', required:true, type:'single', allowSplit:true,
+    hint:'Choose 1 protein — or split it 50/50 between two.',
+    options:[
+      {name:'Chicken', cal:180, price:0, doublePrice:4.75, modifiers:['Normal','Double'], img:proteinImg('Chicken')},
+      {name:'Steak', cal:150, price:1.30, doublePrice:6.05, modifiers:['Normal','Double'], img:proteinImg('Steak')},
+      {name:'Beef Barbacoa', cal:170, price:1.70, doublePrice:6.45, modifiers:['Normal','Double'], img:proteinImg('Beef Barbacoa')},
+      {name:'Carnitas', cal:210, price:1.70, doublePrice:6.45, modifiers:['Normal','Double'], img:proteinImg('Carnitas')},
+      {name:'Sofritas', sub:'Plant-Based Protein', cal:150, price:0, doublePrice:4.75, modifiers:['Normal','Double'], img:proteinImg('Sofritas')},
+      {name:'Veggie', sub:'Includes Guacamole', cal:0, price:0, img:proteinImg('Veggie')}
+    ]},
+  { id:'rice', num:2, title:'Rice', required:true, type:'single',
+    hint:'Pick one — or go rice-free.',
+    options:[
+      {name:'White Rice', cal:210, img:IMG+'rice/white%20rice.png', modifiers:['Normal','Light','Extra','Side']},
+      {name:'Brown Rice', cal:210, img:IMG+'rice/brown%20rice.png', modifiers:['Normal','Light','Extra','Side']},
+      {name:'No Rice', cal:0}
+    ]},
+  { id:'beans', num:3, title:'Beans', required:true, type:'single',
+    hint:'Pick one — or skip the beans.',
+    options:[
+      {name:'Black Beans', cal:130, img:IMG+'beans/black%20beans.png', modifiers:['Normal','Light','Extra','Side']},
+      {name:'Pinto Beans', cal:130, img:IMG+'beans/pinto%20beans.png', modifiers:['Normal','Light','Extra','Side']},
+      {name:'No Beans', cal:0}
+    ]},
+  { id:'toppings', num:4, title:'Top Things Off', required:false, type:'multi',
+    hint:'Choose as many as you like.',
+    options:[
+      {name:'Guacamole', cal:230, price:2.35, modifiers:['Normal','Side'], img:IMG+'single%20sides/1%20side%20of%20guacamole.png'},
+      {name:'Fresh Tomato Salsa', sub:'Mild', cal:25, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/order%20(1).png'},
+      {name:'Roasted Chili-Corn Salsa', sub:'Medium', cal:80, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/order%20(2).png'},
+      {name:'Tomatillo-Green Chili Salsa', sub:'Medium', cal:15, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/order%20(3).png'},
+      {name:'Tomatillo-Red Chili Salsa', sub:'Hot', cal:30, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/order%20(4).png'},
+      {name:'Sour Cream', cal:110, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/order%20(5).png'},
+      {name:'Fajita Veggies', cal:20, modifiers:['Normal','Light','Extra'], img:IMG+'top%20things%20off/order%20(6).png'},
+      {name:'Cheese', cal:110, modifiers:['Normal','Light','Extra'], img:IMG+'top%20things%20off/order%20(7).png'},
+      {name:'Romaine Lettuce', cal:5, modifiers:['Normal','Light','Extra'], img:IMG+'top%20things%20off/order%20(8).png'},
+      {name:'Queso Blanco', cal:120, price:2.15, modifiers:['Normal','Side'], img:IMG+'top%20things%20off/order%20(9).png'}
+    ]},
+  { id:'options', num:5, title:'Options', required:false, type:'multi',
+    hint:'A little extra, just in case.',
+    options:[
+      {name:'Double Wrap with Tortilla', cal:320, price:0.75, img:IMG+'options/double%20wrap%20with%20tortilla.png'}
+    ]},
+  { id:'chipsdips', num:6, title:'Chips & Dips', required:false, type:'single', optionalSingle:true,
+    hint:'Add a side to share (optional).',
+    options:[
+      {name:'Chips', cal:540, price:2.95, img:IMG+'chips%20n%20dips/chips.png'},
+      {name:'Chips & Guacamole', cal:770, price:4.55, img:IMG+'chips%20n%20dips/order%20(1).png'},
+      {name:'Large Chips', cal:810, price:3.95, img:IMG+'chips%20n%20dips/order%20(2).png'},
+      {name:'Large Chips & Large Guacamole', cal:1270, price:7.55, img:IMG+'chips%20n%20dips/order%20(3).png'},
+      {name:'Chips & Fresh Tomato Salsa', cal:565, price:4.15, img:IMG+'chips%20n%20dips/order%20(4).png'},
+      {name:'Chips & Tomatillo-Red Chili Salsa', cal:570, price:4.15, img:IMG+'chips%20n%20dips/order%20(5).png'},
+      {name:'Chips & Tomatillo-Green Chili Salsa', cal:555, price:4.15, img:IMG+'chips%20n%20dips/order%20(6).png'},
+      {name:'Chips & Roasted Chili-Corn Salsa', cal:620, price:4.15, img:IMG+'chips%20n%20dips/order%20(7).png'},
+      {name:'Chips & Queso Blanco', cal:780, price:4.35, img:IMG+'chips%20n%20dips/order%20(8).png'},
+      {name:'Large Chips & Large Queso Blanco', cal:1290, price:7.95, img:IMG+'chips%20n%20dips/order%20(9).png'}
+    ]},
+  { id:'sides', num:7, title:'Single Sides', required:false, type:'multi',
+    hint:'Extra sides to add on to your order.',
+    options:[
+      {name:'Side of Guacamole', cal:230, price:2.55, img:IMG+'single%20sides/1%20side%20of%20guacamole.png'},
+      {name:'Large Side of Guacamole', cal:460, price:4.30, img:IMG+'single%20sides/1.1%20Large%20side%20of%20guacamole%20copy.png'},
+      {name:'Side of Queso Blanco', cal:120, price:2.15, img:IMG+'single%20sides/2.%20side%20of%20quesco%20blanco.png'},
+      {name:'Large Side of Queso Blanco', cal:240, price:3.75, img:IMG+'single%20sides/2.1%20side%20of%20quesco%20blanco%20copy.png'},
+      {name:'Side of Cilantro-Lime Sauce', cal:80, price:1.35, img:IMG+'single%20sides/0%20side%20of%20cilantro%20lime%20sauce.png'},
+      {name:'Large Side of Cilantro-Lime Sauce', cal:160, price:2.25, img:IMG+'single%20sides/0.1%20Large%20side%20of%20cilantro%20lime%20sauce%20copy.png'},
+      {name:'Large Fresh Tomato Salsa', cal:50, price:1.75, img:IMG+'single%20sides/3.%20large%20fresh%20tomato%20salsa.png'},
+      {name:'Large Tomatillo-Red Chili Salsa', cal:60, price:1.75, img:IMG+'single%20sides/large%20tomatillo%20red%20chili%20salsa.png'},
+      {name:'Large Tomatillo-Green Chili Salsa', cal:30, price:1.75, img:IMG+'single%20sides/large%20tomatillo%20green%20chili%20salsa.png'}
+    ]}
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+var selectedOrderType = 'pickup';
+var currentCategory = 'burrito';
+var cartItems = [];
+var cartItemSeq = 0;
+
+var qd = { item:null, qty:1 };
+
+var byoQty = 1;
+var byoSelections = {};   // sectionId -> { single: [{name,mod}], splitOn:bool } | multi: [{name,mod}]
+var byoSplitOn = { protein:false };
+
+var scheduleSelectedDateIdx = 0;
+var scheduleSelectedTime = null;
+
+/* =========================================================
+   SCREEN HELPERS
+   ========================================================= */
+function hideAllScreens(){
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.add('hidden'); });
+}
+function show(id){ hideAllScreens(); document.getElementById(id).classList.remove('hidden'); }
+
+function openOrderTypeSheet(){ show('screen-ordertype'); }
+function selectOrderType(type){
+  selectedOrderType = type;
+  document.getElementById('opt-pickup').classList.toggle('selected', type==='pickup');
+  document.getElementById('opt-dinein').classList.toggle('selected', type==='dinein');
+}
+function continueFromOrderType(){
+  if(selectedOrderType==='pickup'){
+    scheduleSelectedTime = null;
+    renderScheduleDates();
+    renderTimeSlots();
+    updateScheduleNext();
+    show('screen-schedule');
+  } else {
+    goToMenu();
+  }
+}
+function backFromSchedule(){ show('screen-ordertype'); }
+
+/* ---- Pickup schedule ---- */
+var WEEKDAYS = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+var MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+function scheduleDates(){
+  var dates = [];
+  var base = new Date();
+  for(var i=0;i<4;i++){
+    var d = new Date(base.getFullYear(), base.getMonth(), base.getDate()+i);
+    dates.push(d);
+  }
+  return dates;
+}
+function renderScheduleDates(){
+  var dates = scheduleDates();
+  document.getElementById('schedule-date-hint').textContent = (scheduleSelectedDateIdx===0) ? 'Today' : WEEKDAYS[dates[scheduleSelectedDateIdx].getDay()];
+  var html = dates.map(function(d, idx){
+    var sel = idx===scheduleSelectedDateIdx;
+    return '<div class="date-pill'+(sel?' selected':'')+'" onclick="selectScheduleDate('+idx+')">'+
+      '<div class="dow">'+(idx===0?'Today':WEEKDAYS[d.getDay()])+'</div>'+
+      '<div class="dom">'+d.getDate()+'</div>'+
+      '<div class="mon">'+MONTHS[d.getMonth()]+'</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('date-scroll').innerHTML = html;
+}
+function selectScheduleDate(idx){
+  scheduleSelectedDateIdx = idx;
+  scheduleSelectedTime = null;
+  renderScheduleDates();
+  renderTimeSlots();
+  updateScheduleNext();
+}
+function scheduleTimeSlots(){
+  var slots = [];
+  var startHour = 7, startMin = 0;
+  for(var i=0;i<12;i++){
+    var totalMin = startHour*60 + startMin + i*15;
+    var endMin = totalMin+15;
+    var start = fmtTime(totalMin), end = fmtTime(endMin);
+    slots.push({
+      label: start.time+' - '+end.time+' '+end.ampm,
+      startTime: start.time, endTime: end.time, ampm: end.ampm,
+      disabled: (scheduleSelectedDateIdx===0 && i<6)
+    });
+  }
+  return slots;
+}
+function fmtTime(totalMin){
+  var h = Math.floor(totalMin/60), m = totalMin%60;
+  var ampm = h>=12 ? 'PM' : 'AM';
+  var h12 = h%12; if(h12===0) h12=12;
+  return {time: h12+':'+(m<10?'0':'')+m, ampm: ampm};
+}
+function renderTimeSlots(){
+  var slots = scheduleTimeSlots();
+  var html = slots.map(function(s, idx){
+    var sel = scheduleSelectedTime===idx;
+    var cls = s.disabled ? 'disabled' : (sel ? 'selected' : '');
+    var label = s.startTime+' - '+s.endTime+'<br>'+s.ampm;
+    return '<div class="time-slot '+cls+'" onclick="'+(s.disabled?'':'selectTimeSlot('+idx+')')+'">'+label+'</div>';
+  }).join('');
+  document.getElementById('time-grid').innerHTML = html;
+}
+function selectTimeSlot(idx){
+  scheduleSelectedTime = idx;
+  renderTimeSlots();
+  updateScheduleNext();
+}
+function updateScheduleNext(){
+  document.getElementById('schedule-next-btn').disabled = (scheduleSelectedTime===null);
+}
+function confirmSchedule(){
+  if(scheduleSelectedTime===null) return;
+  goToMenu();
+}
+
+function ordinalSuffix(n){
+  var v = n%100;
+  if(v>=11 && v<=13) return 'th';
+  switch(n%10){ case 1: return 'st'; case 2: return 'nd'; case 3: return 'rd'; default: return 'th'; }
+}
+function menuFilterLabel(){
+  if(selectedOrderType==='pickup'){
+    var dates = scheduleDates();
+    var d = dates[scheduleSelectedDateIdx];
+    var dateLabel = scheduleSelectedDateIdx===0 ? 'Today' : (WEEKDAYS[d.getDay()]+', '+d.getDate()+ordinalSuffix(d.getDate()));
+    var timeLabel = (scheduleSelectedTime!==null) ? scheduleTimeSlots()[scheduleSelectedTime].startTime+' '+scheduleTimeSlots()[scheduleSelectedTime].ampm.toLowerCase() : 'ASAP';
+    return 'Pickup · '+dateLabel+' - '+timeLabel;
+  }
+  return 'Dine In · Table service';
+}
+function goToMenu(){
+  document.getElementById('menu-outlet-name').textContent = 'Downtown';
+  document.getElementById('menu-filter-label').textContent = menuFilterLabel();
+  renderCatTabs();
+  renderMenuCategory(currentCategory);
+  show('screen-menu');
+}
+
+/* =========================================================
+   MENU RENDERING
+   ========================================================= */
+function renderCatTabs(){
+  var wrap = document.getElementById('cat-scroll');
+  wrap.innerHTML = CATEGORIES.map(function(c){
+    return '<button class="cat-tab'+(c.id===currentCategory?' selected':'')+'" onclick="selectCategory(\''+c.id+'\')">'+c.label+'</button>';
+  }).join('');
+}
+function selectCategory(id){
+  currentCategory = id;
+  renderCatTabs();
+  renderMenuCategory(id);
+}
+function mealCardHTML(catId, it){
+  var thumb = it.img
+    ? '<img src="'+it.img+'" alt="'+it.name+'">'
+    : '<span class="emoji">'+(it.icon||'🌯')+'</span>';
+  return '<div class="meal-card" onclick="openItem(\''+catId+'\',\''+it.id+'\')">'+
+    '<div class="meal-thumb'+(it.img?'':' placeholder')+'">'+thumb+'</div>'+
+    '<div class="meal-info">'+
+      '<div class="meal-name">'+it.name+'</div>'+
+      '<div class="meal-desc">'+it.desc+'</div>'+
+      '<div class="meal-price-row"><span class="meal-price">$'+it.price.toFixed(2)+'</span>'+
+      '<button class="meal-add-btn" onclick="event.stopPropagation(); openItem(\''+catId+'\',\''+it.id+'\')">+</button></div>'+
+    '</div></div>';
+}
+function renderMenuCategory(id){
+  var cat = CATEGORIES.filter(function(c){return c.id===id;})[0];
+  var items = MENU_ITEMS[id] || [];
+  var html = '<div class="menu-section-title">'+cat.label+'</div><div class="menu-grid">';
+  items.forEach(function(it){ html += mealCardHTML(id, it); });
+  html += '</div>';
+  document.getElementById('menu-sections').innerHTML = html;
+  document.getElementById('menu-body-scroll').scrollTop = 0;
+}
+
+/* ---- search ---- */
+function openMenuSearch(){
+  document.getElementById('search-bar-row').classList.remove('hidden');
+  document.getElementById('menu-filters-row').classList.add('hidden');
+  document.getElementById('cat-scroll').classList.add('hidden');
+  var input = document.getElementById('menu-search-input');
+  input.value = '';
+  input.focus();
+  renderSearchEmptyState();
+}
+function closeMenuSearch(){
+  document.getElementById('search-bar-row').classList.add('hidden');
+  document.getElementById('menu-filters-row').classList.remove('hidden');
+  document.getElementById('cat-scroll').classList.remove('hidden');
+  document.getElementById('menu-search-input').value = '';
+  renderMenuCategory(currentCategory);
+}
+function renderSearchEmptyState(){
+  document.getElementById('menu-sections').innerHTML =
+    '<div class="search-empty-state"><div class="emoji">🔍</div><div class="msg">Enter menu name or category</div></div>';
+}
+function onMenuSearchInput(){
+  var q = document.getElementById('menu-search-input').value.trim().toLowerCase();
+  if(!q){ renderSearchEmptyState(); return; }
+  var matches = [];
+  CATEGORIES.forEach(function(cat){
+    (MENU_ITEMS[cat.id]||[]).forEach(function(it){
+      if(it.name.toLowerCase().indexOf(q)>-1 || it.desc.toLowerCase().indexOf(q)>-1){
+        matches.push({catId:cat.id, item:it});
+      }
+    });
+  });
+  var html = '<div class="menu-section-title">'+matches.length+' result'+(matches.length===1?'':'s')+' for "'+q+'"</div><div class="menu-grid">';
+  html += matches.map(function(m){ return mealCardHTML(m.catId, m.item); }).join('');
+  html += '</div>';
+  document.getElementById('menu-sections').innerHTML = html;
+}
+function openItem(catId, itemId){
+  var item = MENU_ITEMS[catId].filter(function(i){return i.id===itemId;})[0];
+  if(item.builder){ openBuilder(); return; }
+  openQuickDetail(item);
+}
+
+/* =========================================================
+   QUICK-ADD DETAIL (non-burrito items)
+   ========================================================= */
+function openQuickDetail(item){
+  qd.item = item; qd.qty = 1;
+  document.getElementById('qd-hero').innerHTML = item.img ? '<img src="'+item.img+'" alt="'+item.name+'">' : '<span style="font-size:64px;">'+(item.icon||'🌯')+'</span>';
+  document.getElementById('qd-name').textContent = item.name;
+  document.getElementById('qd-desc').textContent = item.desc;
+  document.getElementById('qd-price').textContent = '$'+item.price.toFixed(2);
+  updateQdFooter();
+  show('screen-quickdetail');
+}
+function closeQuickDetail(){ show('screen-menu'); }
+function changeQdQty(delta){
+  qd.qty = Math.max(1, qd.qty+delta);
+  document.getElementById('qd-qty-value').textContent = qd.qty;
+  document.getElementById('qd-qty-minus').disabled = (qd.qty<=1);
+  updateQdFooter();
+}
+function updateQdFooter(){
+  document.getElementById('qd-add-label').textContent = 'Add ('+qd.qty+')';
+  document.getElementById('qd-add-price').textContent = '$'+(qd.item.price*qd.qty).toFixed(2);
+}
+function addQdToCart(){
+  addItemToCart({
+    name: qd.item.name,
+    thumbSrc: qd.item.img || null,
+    thumbEmoji: qd.item.icon || '🌯',
+    lines: [],
+    qty: qd.qty,
+    unitPrice: qd.item.price
+  });
+  showToast(qd.item.name+' added to your order');
+  show('screen-menu');
+}
+
+/* =========================================================
+   BURRITO BUILDER
+   ========================================================= */
+function openBuilder(){
+  byoQty = 1;
+  byoSelections = {};
+  byoSplitOn.protein = false;
+  BYO_SECTIONS.forEach(function(sec){ byoSelections[sec.id] = []; });
+  document.getElementById('byo-qty-value').textContent = 1;
+  document.getElementById('byo-qty-minus').disabled = true;
+  renderByoSections();
+  renderProgressStrip();
+  updateByoFooter();
+  show('screen-builder');
+}
+function closeBuilder(){ show('screen-menu'); }
+
+function renderByoSections(){
+  var html = '';
+  BYO_SECTIONS.forEach(function(sec){
+    html += '<div class="byo-section" id="byo-sec-'+sec.id+'">';
+    html += '<div class="byo-section-head"><div class="byo-section-title"><span class="num">'+sec.num+'</span>'+sec.title+'</div>'+
+      '<span class="byo-req-tag '+(sec.required?'required':'optional')+'">'+(sec.required?'Required':'Optional')+'</span></div>';
+    html += '<div class="byo-section-hint">'+sec.hint+'</div>';
+
+    if(sec.allowSplit){
+      html += '<div class="split-toggle"><span>Split 50/50 between two proteins</span>'+
+        '<div class="switch" id="split-switch-'+sec.id+'" onclick="toggleSplit(\''+sec.id+'\')"><div class="knob"></div></div></div>';
+    }
+
+    var splitActive = sec.allowSplit && byoSplitOn[sec.id];
+    sec.options.forEach(function(opt, idx){
+      var rowId = sec.id+'__'+idx;
+      var isSelected = isOptionSelected(sec.id, opt.name);
+      var mod = getSelectionModifier(sec.id, idx);
+      var thumb = opt.img ? '<div class="variant-thumb"><img src="'+opt.img+'" alt="'+opt.name+'"></div>' : '';
+      var control = sec.type==='multi' || splitActive
+        ? '<div class="variant-check"></div>'
+        : '<div class="variant-radio"></div>';
+      var showModifiers = opt.modifiers && isSelected && !splitActive;
+      var priceTag = (isSelected && mod==='Double') ? opt.doublePrice : opt.price;
+      html += '<div class="variant-row'+(isSelected?' selected':'')+'" id="row-'+rowId+'" onclick="toggleOption(\''+sec.id+'\','+idx+')">'+
+        thumb+
+        '<div class="variant-info"><div class="variant-name">'+opt.name+(priceTag?' <span style="color:var(--red); font-weight:800;">+$'+priceTag.toFixed(2)+'</span>':'')+'</div>'+
+        (opt.sub?'<div class="variant-sub">'+opt.sub+'</div>':'')+
+        '<div class="variant-cal">'+opt.cal+' Cal</div>'+
+        (splitActive && isSelected && byoSelections[sec.id].length===2 ? '<div class="variant-sub">Half portion</div>' : '')+
+        '</div>'+
+        control+
+      '</div>';
+      if(showModifiers){
+        html += renderModRow(sec.id, idx, opt.modifiers);
+      }
+    });
+    html += '</div>';
+  });
+  document.getElementById('byo-sections').innerHTML = html;
+}
+function renderModRow(secId, idx, modifiers){
+  var current = getSelectionModifier(secId, idx);
+  var pills = modifiers.map(function(m){
+    var sel = (current===m) || (!current && m==='Normal');
+    return '<div class="mod-pill'+(sel?' selected':'')+'" onclick="event.stopPropagation(); setModifier(\''+secId+'\','+idx+',\''+m+'\')">'+m+'</div>';
+  }).join('');
+  return '<div class="mod-row">'+pills+'</div>';
+}
+function getOptionState(secId, idx){
+  var sec = BYO_SECTIONS.filter(function(s){return s.id===secId;})[0];
+  var opt = sec.options[idx];
+  return sec.selections ? null : null;
+}
+function isOptionSelected(secId, optName){
+  return byoSelections[secId].some(function(s){ return s.name===optName; });
+}
+function getSelectionModifier(secId, idx){
+  var sec = BYO_SECTIONS.filter(function(s){return s.id===secId;})[0];
+  var opt = sec.options[idx];
+  var found = byoSelections[secId].filter(function(s){return s.name===opt.name;})[0];
+  return found ? found.mod : null;
+}
+function toggleSplit(secId){
+  byoSplitOn[secId] = !byoSplitOn[secId];
+  document.getElementById('split-switch-'+secId).classList.toggle('on', byoSplitOn[secId]);
+  if(byoSplitOn[secId]){
+    byoSelections[secId].forEach(function(s){ if(s.mod) s.mod = 'Normal'; });
+  }
+  if(!byoSplitOn[secId] && byoSelections[secId].length>1){
+    byoSelections[secId] = [byoSelections[secId][0]];
+  }
+  renderByoSections();
+  renderProgressStrip();
+  updateByoFooter();
+}
+function toggleOption(secId, idx){
+  var sec = BYO_SECTIONS.filter(function(s){return s.id===secId;})[0];
+  var opt = sec.options[idx];
+  var isMulti = sec.type==='multi' || (sec.allowSplit && byoSplitOn[secId]);
+  var already = byoSelections[secId].filter(function(s){return s.name===opt.name;})[0];
+
+  if(isMulti){
+    if(already){
+      byoSelections[secId] = byoSelections[secId].filter(function(s){return s.name!==opt.name;});
+    } else {
+      var max = sec.allowSplit ? 2 : Infinity;
+      if(byoSelections[secId].length>=max) return;
+      byoSelections[secId].push({name:opt.name, mod:opt.modifiers?'Normal':null, price:opt.price||0, doublePrice:opt.doublePrice||0, cal:opt.cal});
+    }
+  } else {
+    if(already && sec.optionalSingle){
+      byoSelections[secId] = [];
+    } else {
+      byoSelections[secId] = [{name:opt.name, mod:opt.modifiers?'Normal':null, price:opt.price||0, doublePrice:opt.doublePrice||0, cal:opt.cal}];
+    }
+  }
+  renderByoSections();
+  renderProgressStrip();
+  updateByoFooter();
+}
+function setModifier(secId, idx, mod){
+  var sec = BYO_SECTIONS.filter(function(s){return s.id===secId;})[0];
+  var opt = sec.options[idx];
+  var found = byoSelections[secId].filter(function(s){return s.name===opt.name;})[0];
+  if(found){ found.mod = mod; }
+  renderByoSections();
+  updateByoFooter();
+}
+
+function sectionIsComplete(sec){
+  if(!sec.required) return true;
+  return byoSelections[sec.id].length>0;
+}
+function renderProgressStrip(){
+  var html = BYO_SECTIONS.map(function(sec){
+    var done = byoSelections[sec.id].length>0;
+    var cls = done ? 'done' : (sec.required ? 'required pending' : '');
+    return '<div class="progress-chip '+cls+'" onclick="scrollToSection(\''+sec.id+'\')"><span class="dot"></span>'+sec.title+'</div>';
+  }).join('');
+  document.getElementById('progress-strip').innerHTML = html;
+}
+function scrollToSection(id){
+  var el = document.getElementById('byo-sec-'+id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function byoUnitPrice(){
+  var total = 9.85; // base burrito price (chicken/veggie/sofritas, white or brown rice, one bean, standard toppings)
+  BYO_SECTIONS.forEach(function(sec){
+    byoSelections[sec.id].forEach(function(s){
+      var portion = (sec.id==='protein' && byoSelections.protein.length===2) ? 0.5 : 1;
+      var linePrice = (portion===1 && s.mod==='Double') ? (s.doublePrice||0) : (s.price||0);
+      total += linePrice * portion;
+    });
+  });
+  return total;
+}
+function missingRequired(){
+  return BYO_SECTIONS.filter(function(s){ return s.required && byoSelections[s.id].length===0; });
+}
+function updateByoFooter(){
+  var missing = missingRequired();
+  var btn = document.getElementById('byo-add-btn');
+  var note = document.getElementById('builder-note');
+  if(missing.length>0){
+    btn.disabled = false; // stays tappable so we can nudge the user instead of a dead button
+    note.classList.remove('show');
+  } else {
+    note.classList.remove('show');
+  }
+  document.getElementById('byo-add-label').textContent = 'Add ('+byoQty+') to order';
+  document.getElementById('byo-add-price').textContent = '$'+(byoUnitPrice()*byoQty).toFixed(2);
+}
+function changeByoQty(delta){
+  byoQty = Math.max(1, byoQty+delta);
+  document.getElementById('byo-qty-value').textContent = byoQty;
+  document.getElementById('byo-qty-minus').disabled = (byoQty<=1);
+  updateByoFooter();
+}
+function addByoToCart(){
+  var missing = missingRequired();
+  if(missing.length>0){
+    var note = document.getElementById('builder-note');
+    note.textContent = 'Please choose your '+missing.map(function(s){return s.title;}).join(' and ')+' to continue';
+    note.classList.add('show');
+    scrollToSection(missing[0].id);
+    return;
+  }
+  var lines = [];
+  BYO_SECTIONS.forEach(function(sec){
+    if(byoSelections[sec.id].length===0) return;
+    var text = byoSelections[sec.id].map(function(s){
+      var modTxt = (s.mod && s.mod!=='Normal') ? ' ('+s.mod+')' : '';
+      return s.name+modTxt;
+    }).join(', ');
+    if(sec.id==='protein' && byoSelections.protein.length===2) text = 'Half ' + text.replace(', ', ' / Half ');
+    lines.push(text);
+  });
+  addItemToCart({
+    name: 'Build Your Own Burrito',
+    thumbSrc: IMG+PROTEIN_IMG+'BYO%20burrito.png',
+    lines: lines,
+    qty: byoQty,
+    unitPrice: byoUnitPrice()
+  });
+  showToast('Burrito added to your order');
+  show('screen-menu');
+}
+
+/* =========================================================
+   CART
+   ========================================================= */
+function addItemToCart(item){
+  cartItemSeq++;
+  cartItems.push({
+    id: cartItemSeq,
+    name: item.name,
+    thumbSrc: item.thumbSrc,
+    thumbEmoji: item.thumbEmoji || '🌯',
+    lines: item.lines || [],
+    qty: item.qty,
+    unitPrice: item.unitPrice
+  });
+  renderMenuCartBar();
+}
+function changeCartItemQty(id, delta){
+  var it = cartItems.filter(function(c){return c.id===id;})[0];
+  if(!it) return;
+  it.qty += delta;
+  if(it.qty<=0){ cartItems = cartItems.filter(function(c){return c.id!==id;}); }
+  renderCartOrder();
+  renderMenuCartBar();
+}
+function removeCartItem(id){
+  cartItems = cartItems.filter(function(c){return c.id!==id;});
+  renderCartOrder();
+  renderMenuCartBar();
+}
+function cartSubtotal(){
+  return cartItems.reduce(function(sum,it){ return sum + it.unitPrice*it.qty; }, 0);
+}
+function cartCount(){
+  return cartItems.reduce(function(sum,it){ return sum + it.qty; }, 0);
+}
+function renderMenuCartBar(){
+  var wrap = document.getElementById('menu-cart-bar-wrap');
+  var count = cartCount();
+  if(count===0){ wrap.classList.add('hidden'); return; }
+  wrap.classList.remove('hidden');
+  document.getElementById('menu-cart-bar-count').textContent = count+' item'+(count>1?'s':'');
+  document.getElementById('menu-cart-bar-total').textContent = 'View cart · $'+cartSubtotal().toFixed(2);
+}
+function renderCartOrder(){
+  var listEl = document.getElementById('cart-order-list');
+  if(cartItems.length===0){
+    listEl.innerHTML = '<div class="cart-empty"><div class="emoji">🌯</div>Your order is empty.<br>Head back to the menu to add something delicious.</div>';
+  } else {
+    listEl.innerHTML = cartItems.map(renderOrderCardHTML).join('');
+  }
+  var sub = cartSubtotal();
+  var tax = sub*0.0825;
+  var total = sub+tax;
+  document.getElementById('cart-subtotal-value').textContent = '$'+sub.toFixed(2);
+  document.getElementById('cart-tax-value').textContent = '$'+tax.toFixed(2);
+  document.getElementById('cart-total-value').textContent = '$'+total.toFixed(2);
+  document.getElementById('cart-checkout-btn').disabled = cartItems.length===0;
+}
+function renderOrderCardHTML(item){
+  var thumb = item.thumbSrc ? '<img src="'+item.thumbSrc+'" alt="'+item.name+'">' : '<span style="font-size:26px;">'+item.thumbEmoji+'</span>';
+  var lines = item.lines.length ? item.lines.join('<br>') : '';
+  return '<div class="cart-order-card">'+
+    '<div class="cart-thumb">'+thumb+'</div>'+
+    '<div style="flex:1; min-width:0;">'+
+      '<div class="cart-item-name">'+item.name+'</div>'+
+      (lines?'<div class="cart-item-lines">'+lines+'</div>':'')+
+      '<div class="cart-item-bottom">'+
+        '<div class="cart-item-price">$'+(item.unitPrice*item.qty).toFixed(2)+'</div>'+
+        '<div class="cart-qty">'+
+          '<button class="qty-btn" onclick="changeCartItemQty('+item.id+',-1)">−</button>'+
+          '<span class="qty-value">'+item.qty+'</span>'+
+          '<button class="qty-btn" onclick="changeCartItemQty('+item.id+',1)">+</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+function goToCart(){ renderCartOrder(); show('screen-cart'); }
+function backFromCart(){ show('screen-menu'); }
+
+/* =========================================================
+   CHECKOUT
+   ========================================================= */
+var selectedPayMethod = 'card';
+function selectPayRow(row){
+  document.querySelectorAll('.pay-row').forEach(function(r){ r.classList.remove('selected'); r.querySelector('.variant-radio').classList.remove('selected'); });
+  row.classList.add('selected');
+  row.querySelector('.variant-radio').classList.add('selected');
+  selectedPayMethod = row.getAttribute('data-method');
+}
+function goToCheckout(){
+  document.getElementById('checkout-order-summary').innerHTML = cartItems.map(function(it){
+    return '<div class="totals-row"><span>'+it.qty+'x '+it.name+'</span><span>$'+(it.unitPrice*it.qty).toFixed(2)+'</span></div>';
+  }).join('');
+  var sub = cartSubtotal();
+  var tax = sub*0.0825;
+  var total = sub+tax;
+  document.getElementById('co-subtotal-value').textContent = '$'+sub.toFixed(2);
+  document.getElementById('co-tax-value').textContent = '$'+tax.toFixed(2);
+  document.getElementById('co-total-value').textContent = '$'+total.toFixed(2);
+  document.getElementById('co-pay-total').textContent = '$'+total.toFixed(2);
+  show('screen-checkout');
+}
+function backFromCheckout(){ show('screen-cart'); }
+function submitOrder(){
+  var orderNo = 'C'+Math.floor(1000+Math.random()*9000);
+  document.getElementById('success-order-no').textContent = 'Order #'+orderNo;
+  cartItems = [];
+  show('screen-success');
+}
+function goBackToMenuFromSuccess(){
+  renderMenuCartBar();
+  goToMenu();
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+var toastTimer;
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+show('screen-landing');
+</script>
+</body>
+</html>
