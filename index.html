@@ -589,6 +589,7 @@ var BYO_SECTIONS = [
   { id:'toppings', num:4, title:'Top Things Off', required:false, type:'multi',
     hint:'Choose as many as you like.',
     options:[
+      {name:'Cilantro Lime Sauce', sub:'Made Fresh Daily', cal:80, price:1.00, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/cilantro%20lime%20sauce%20(new%20).png'},
       {name:'Guacamole', cal:230, price:2.35, modifiers:['Normal','Side'], img:IMG+'single%20sides/1%20side%20of%20guacamole.png'},
       {name:'Fresh Tomato Salsa', sub:'Mild', cal:25, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/order%20(1).png'},
       {name:'Roasted Chili-Corn Salsa', sub:'Medium', cal:80, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/order%20(2).png'},
@@ -647,6 +648,7 @@ var qd = { item:null, qty:1 };
 var byoQty = 1;
 var byoSelections = {};   // sectionId -> { single: [{name,mod}], splitOn:bool } | multi: [{name,mod}]
 var byoSplitOn = { protein:false };
+var byoSplitDouble = { protein:false };
 
 var scheduleSelectedDateIdx = 0;
 var scheduleSelectedTime = null;
@@ -900,6 +902,7 @@ function openBuilder(){
   byoQty = 1;
   byoSelections = {};
   byoSplitOn.protein = false;
+  byoSplitDouble.protein = false;
   BYO_SECTIONS.forEach(function(sec){ byoSelections[sec.id] = []; });
   document.getElementById('byo-qty-value').textContent = 1;
   document.getElementById('byo-qty-minus').disabled = true;
@@ -920,7 +923,7 @@ function renderByoSections(){
 
     if(sec.allowSplit){
       html += '<div class="split-toggle"><span>Split 50/50 between two proteins</span>'+
-        '<div class="switch" id="split-switch-'+sec.id+'" onclick="toggleSplit(\''+sec.id+'\')"><div class="knob"></div></div></div>';
+        '<div class="switch'+(byoSplitOn[sec.id]?' on':'')+'" id="split-switch-'+sec.id+'" onclick="toggleSplit(\''+sec.id+'\')"><div class="knob"></div></div></div>';
     }
 
     var splitActive = sec.allowSplit && byoSplitOn[sec.id];
@@ -934,12 +937,14 @@ function renderByoSections(){
         : '<div class="variant-radio"></div>';
       var showModifiers = opt.modifiers && isSelected && !splitActive;
       var priceTag = (isSelected && mod==='Double') ? opt.doublePrice : opt.price;
-      html += '<div class="variant-row'+(isSelected?' selected':'')+'" id="row-'+rowId+'" onclick="toggleOption(\''+sec.id+'\','+idx+')">'+
+      var veggieBlocked = splitActive && opt.name==='Veggie' && !isSelected;
+      html += '<div class="variant-row'+(isSelected?' selected':'')+(veggieBlocked?' unavailable':'')+'" id="row-'+rowId+'" onclick="toggleOption(\''+sec.id+'\','+idx+')">'+
         thumb+
         '<div class="variant-info"><div class="variant-name">'+opt.name+(priceTag?' <span style="color:var(--red); font-weight:800;">+$'+priceTag.toFixed(2)+'</span>':'')+'</div>'+
         (opt.sub?'<div class="variant-sub">'+opt.sub+'</div>':'')+
         '<div class="variant-cal">'+opt.cal+' Cal</div>'+
-        (splitActive && isSelected && byoSelections[sec.id].length===2 ? '<div class="variant-sub">Half portion</div>' : '')+
+        (splitActive && isSelected && byoSelections[sec.id].length===2 ? '<div class="variant-sub">'+(byoSplitDouble[sec.id]?'Full portion':'Half portion')+'</div>' : '')+
+        (splitActive && isSelected && byoSelections[sec.id].length===1 && byoSplitDouble[sec.id] ? '<div class="variant-sub">Double portion</div>' : '')+
         '</div>'+
         control+
       '</div>';
@@ -947,6 +952,22 @@ function renderByoSections(){
         html += renderModRow(sec.id, idx, opt.modifiers);
       }
     });
+    if(splitActive){
+      var pickedCount = byoSelections[sec.id].length;
+      var canDouble = pickedCount>=1;
+      var doubleOn = byoSplitDouble[sec.id];
+      var subText = pickedCount===2
+        ? 'Double portion of '+byoSelections[sec.id][0].name+' and '+byoSelections[sec.id][1].name
+        : pickedCount===1
+          ? 'Double portion of '+byoSelections[sec.id][0].name
+          : 'Select a protein to enable';
+      html += '<div class="variant-row'+(doubleOn?' selected':'')+(canDouble?'':' unavailable')+'" onclick="toggleSplitDouble(\''+sec.id+'\')">'+
+        '<div class="variant-thumb" style="display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:var(--red);">2×</div>'+
+        '<div class="variant-info"><div class="variant-name">Double your protein <span style="color:var(--red); font-weight:800;">+$6.10</span></div>'+
+        '<div class="variant-sub">'+subText+'</div></div>'+
+        '<div class="variant-check"></div>'+
+      '</div>';
+    }
     html += '</div>';
   });
   document.getElementById('byo-sections').innerHTML = html;
@@ -979,11 +1000,20 @@ function toggleSplit(secId){
   if(byoSplitOn[secId]){
     byoSelections[secId].forEach(function(s){ if(s.mod) s.mod = 'Normal'; });
   }
-  if(!byoSplitOn[secId] && byoSelections[secId].length>1){
-    byoSelections[secId] = [byoSelections[secId][0]];
+  if(!byoSplitOn[secId]){
+    byoSplitDouble[secId] = false;
+    if(byoSelections[secId].length>1){
+      byoSelections[secId] = [byoSelections[secId][0]];
+    }
   }
   renderByoSections();
   renderProgressStrip();
+  updateByoFooter();
+}
+function toggleSplitDouble(secId){
+  if(byoSelections[secId].length<1) return;
+  byoSplitDouble[secId] = !byoSplitDouble[secId];
+  renderByoSections();
   updateByoFooter();
 }
 function toggleOption(secId, idx){
@@ -992,9 +1022,15 @@ function toggleOption(secId, idx){
   var isMulti = sec.type==='multi' || (sec.allowSplit && byoSplitOn[secId]);
   var already = byoSelections[secId].filter(function(s){return s.name===opt.name;})[0];
 
+  if(sec.allowSplit && byoSplitOn[secId] && opt.name==='Veggie' && !already){
+    showToast("Can't go halfsies with Veggie");
+    return;
+  }
+
   if(isMulti){
     if(already){
       byoSelections[secId] = byoSelections[secId].filter(function(s){return s.name!==opt.name;});
+      if(byoSelections[secId].length===0) byoSplitDouble[secId] = false;
     } else {
       var max = sec.allowSplit ? 2 : Infinity;
       if(byoSelections[secId].length>=max) return;
@@ -1046,6 +1082,7 @@ function byoUnitPrice(){
       total += linePrice * portion;
     });
   });
+  if(byoSplitDouble.protein && byoSelections.protein.length>=1) total += 6.10;
   return total;
 }
 function missingRequired(){
@@ -1086,7 +1123,12 @@ function addByoToCart(){
       var modTxt = (s.mod && s.mod!=='Normal') ? ' ('+s.mod+')' : '';
       return s.name+modTxt;
     }).join(', ');
-    if(sec.id==='protein' && byoSelections.protein.length===2) text = 'Half ' + text.replace(', ', ' / Half ');
+    if(sec.id==='protein' && byoSelections.protein.length===2){
+      var portionLabel = byoSplitDouble.protein ? 'Full ' : 'Half ';
+      text = portionLabel + text.replace(', ', ' / '+portionLabel);
+    } else if(sec.id==='protein' && byoSelections.protein.length===1 && byoSplitDouble.protein){
+      text = 'Double ' + text;
+    }
     lines.push(text);
   });
   addItemToCart({
