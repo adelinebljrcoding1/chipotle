@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01. Design System</title>
+<script>
+  // Always enter through the flow index (index.html). Links from index.html carry
+  // &from=index; anything opened directly (double-clicked, bare bookmark, typed URL)
+  // gets sent to the index first.
+  if (new URLSearchParams(location.search).get('from') !== 'index') {
+    location.replace('index.html');
+  }
+  // Same switch the prototype uses: ?view=desktop|mobile forces the layout.
+  (function(){
+    var v = new URLSearchParams(location.search).get('view');
+    if (v === 'desktop') document.documentElement.classList.add('is-desktop');
+  })();
+</script>
+<link rel="stylesheet" href="design-system.css">
+<style>
+  :root{
+    --ink:#2b1204;
+    --paper:#fbf6ec;
+    --card:#ffffff;
+    --line:#eadfca;
+    --brown-deep:#2e0d00;
+    --brown:#451400;
+    --brown-soft:#f3e9d6;
+    --red:#AD2118;
+    --muted:#7a6457;
+    --accent:#D9A63E;
+    --mark:#e8811a;
+    --bad:#AD2118;
+    --bad-soft:#fbeae7;
+    --good:#5B7A3A;
+    --good-soft:#eef2e6;
+    --radius:4px;
+    --shadow:0 1px 2px rgba(69,20,0,.06), 0 8px 24px -16px rgba(69,20,0,.3);
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:56px 28px 96px;}
+  code{font-family:var(--mono);font-size:.9em;background:var(--brown-soft);padding:1px 5px;border-radius:3px;}
+
+  /* ---------- Cover ---------- */
+  .back{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--brown);text-decoration:none;margin-bottom:16px;}
+  .back:hover{text-decoration:underline;}
+  .cover{
+    background:linear-gradient(160deg,var(--brown-deep),var(--brown) 70%);
+    color:#fbf3e4;border-radius:8px;padding:44px 40px 36px;position:relative;overflow:hidden;box-shadow:var(--shadow);
+  }
+  .cover::after{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.10), transparent 70%);}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;letter-spacing:.10em;text-transform:uppercase;font-weight:700;color:#f1dcc0;margin-bottom:18px;}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  h1{font-family:var(--font-display);text-transform:uppercase;font-size:clamp(34px,5vw,48px);line-height:1.02;margin:0 0 14px;font-weight:700;letter-spacing:.02em;max-width:18ch;}
+  .cover p{margin:0;max-width:64ch;font-size:15px;line-height:1.55;color:#f1e3cf;}
+  .cover-meta{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;}
+  .meta-pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:7px 14px;font-size:12.5px;color:#f6ebdb;display:flex;gap:6px;align-items:baseline;}
+  .meta-pill b{color:#fff;font-weight:700;}
+
+  /* ---------- Contents ---------- */
+  .toc{margin-top:18px;padding:16px 20px;}
+  .toc-title{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .toc ol{margin:0;padding-left:20px;columns:2;column-gap:32px;font-size:14px;line-height:1.9;}
+  .toc li{break-inside:avoid;color:var(--muted);}
+  .toc a{color:var(--brown);font-weight:700;text-decoration:none;}
+  .toc a:hover{color:var(--red);text-decoration:underline;}
+  @media (max-width:640px){.toc ol{columns:1;}}
+
+  /* ---------- Section ---------- */
+  .section{margin-top:38px;scroll-margin-top:16px;}
+  .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--brown);color:#fdf6ea;border-radius:4px;padding:12px 18px 10px;margin-bottom:14px;}
+  .section-head h2{margin:0;font-family:var(--font-display);text-transform:uppercase;font-size:19px;font-weight:700;letter-spacing:.03em;}
+  .section-count{font-size:12px;color:#f1dcc0;font-weight:700;}
+  .lede{font-size:14px;line-height:1.55;color:var(--muted);margin:0 0 14px;max-width:78ch;}
+  .lede b{color:var(--ink);}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);}
+  .sub-head{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 4px 8px;}
+
+  /* ---------- Audit stats ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+  .stat{padding:16px 16px 14px;}
+  .stat .k{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .stat .v{display:flex;align-items:baseline;gap:8px;margin-top:8px;font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .stat .v s{color:var(--bad);text-decoration-thickness:2px;font-size:22px;}
+  .stat .v .arrow{color:var(--muted);font-size:16px;font-weight:700;}
+  .stat .n{margin-top:6px;font-size:12.5px;color:var(--muted);line-height:1.4;}
+  @media (max-width:820px){.stats{grid-template-columns:repeat(2,minmax(0,1fr));}}
+
+  /* ---------- Toggle ---------- */
+  .seg{display:inline-flex;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:3px;}
+  .seg button{font:inherit;font-size:12.5px;font-weight:700;color:#f1e3cf;background:none;border:0;border-radius:4px;padding:6px 12px;cursor:pointer;}
+  .seg button[aria-pressed="true"]{background:#fbf3e4;color:var(--brown-deep);}
+
+  /* ---------- Type scale ---------- */
+  .scale{overflow:hidden;}
+  .row{display:grid;grid-template-columns:150px minmax(0,1fr) 220px;gap:18px;align-items:center;padding:18px 20px;border-top:1px solid var(--line);}
+  .row:first-child{border-top:0;}
+  .row .name{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--red);}
+  .row .name small{display:block;font-family:inherit;color:var(--muted);font-weight:500;margin-top:3px;font-size:11.5px;}
+  .row .specimen{color:var(--brown);margin:0;min-width:0;overflow-wrap:anywhere;}
+  .row .spec{font-family:var(--mono);font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .row .spec .use{display:block;font-family:var(--font-body);color:var(--muted);font-size:12.5px;line-height:1.4;margin-top:4px;}
+  .row .spec .grow{color:var(--mark);font-weight:700;}
+  .tier{display:flex;align-items:baseline;gap:10px;padding:10px 20px;background:#fcf8f0;border-top:1px solid var(--line);font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .tier:first-child{border-top:0;}
+  .tier span{font-weight:500;letter-spacing:0;text-transform:none;font-size:12.5px;}
+  @media (max-width:760px){.row{grid-template-columns:1fr;gap:8px;padding:16px;}}
+
+  /* ---------- Weights ---------- */
+  .weights{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+  .weight{padding:18px;}
+  .weight .sample{font-size:30px;line-height:1.1;color:var(--brown);}
+  .weight .label{margin-top:10px;font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--red);}
+  .weight .for{margin-top:6px;font-size:13px;color:var(--muted);line-height:1.45;}
+  .weight.retired{background:var(--bad-soft);border-color:#efcdc8;}
+  .weight.retired .label{color:var(--bad);}
+  .retired-row{margin-top:10px;padding:12px 16px;font-size:13px;line-height:1.55;color:var(--ink);}
+  .retired-row b{color:var(--bad);}
+  @media (max-width:860px){.weights{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  @media (max-width:520px){.weights{grid-template-columns:1fr;}}
+
+  /* ---------- Colour ---------- */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+  .sw{overflow:hidden;}
+  .sw .chip{height:64px;border-bottom:1px solid var(--line);}
+  .sw .meta{padding:10px 12px 12px;}
+  .sw .tok{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--red);}
+  .sw .hex{font-family:var(--mono);font-size:12px;color:var(--ink);margin-top:2px;}
+  .sw .for{font-size:12.5px;color:var(--muted);line-height:1.4;margin-top:6px;}
+
+  /* ---------- Rules ---------- */
+  .rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .rule{padding:14px 16px;font-size:13.5px;line-height:1.5;}
+  .rule b{display:block;font-size:14px;margin-bottom:2px;}
+  .rule .tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:3px;padding:2px 6px;margin-bottom:6px;}
+  .rule .tag.do{background:var(--good-soft);color:var(--good);}
+  .rule .tag.dont{background:var(--bad-soft);color:var(--bad);}
+  @media (max-width:720px){.rules{grid-template-columns:1fr;}}
+
+  /* ---------- Migration table ---------- */
+  .filter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+  .filter button{font:inherit;font-size:12px;font-weight:700;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer;}
+  .filter button[aria-pressed="true"]{background:var(--brown);border-color:var(--brown);color:#fff;}
+  .table-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:13px;min-width:820px;}
+  th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line);background:#fcf8f0;}
+  td{padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4;}
+  tr:last-child td{border-bottom:0;}
+  td.sel{font-family:var(--mono);font-size:12px;color:var(--ink);}
+  td.sel a{color:var(--brown);text-decoration:none;border-bottom:1px solid var(--line);}
+  td.sel a:hover{color:var(--red);border-bottom-color:var(--red);}
+  td.sel a span{opacity:.5;font-family:inherit;}
+  td.before{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;}
+  td.before.changed{text-decoration:line-through;text-decoration-color:rgba(173,33,24,.6);}
+  td.after{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;}
+  td.after.changed{color:var(--red);font-weight:700;}
+  td.to{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--brown);white-space:nowrap;}
+  td.note{color:var(--muted);min-width:220px;}
+
+  /* ---------- Code ---------- */
+  .code{position:relative;}
+  .code pre{margin:0;padding:18px 20px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:#f6ebdb;background:var(--brown-deep);border-radius:var(--radius);}
+  .code .copy{position:absolute;top:10px;right:10px;font:inherit;font-size:12px;font-weight:700;color:var(--brown-deep);background:#fbf3e4;border:0;border-radius:4px;padding:6px 10px;cursor:pointer;}
+  .steps{margin:0 0 14px;padding-left:20px;font-size:14px;line-height:1.7;}
+
+  /* ---------- Spacing demo (built from the tokens, 430px like the prototype) ---------- */
+  .space-grid{display:grid;grid-template-columns:430px minmax(0,1fr);gap:18px;align-items:start;}
+  .space-demo{background:#FBF3E4;padding:20px 0 24px;border-radius:var(--radius);border:1px solid var(--line);color:#451400;overflow:hidden;}
+  .space-demo .in{padding:0 var(--space-page-x);position:relative;}
+  .space-demo .d-desc{color:rgb(120,98,89);}
+  .space-demo .d-head{display:flex;justify-content:space-between;align-items:center;}
+  .space-demo .d-chips{display:flex;flex-wrap:wrap;gap:var(--space-chip);}
+  .space-demo .d-chip{padding:5px 10px;border-radius:999px;background:#fff;border:1.5px solid #e3ddd0;}
+  .space-demo .divider{height:var(--space-divider);background:#F1E4C9;}
+  .req{display:inline-block;padding:3px 7px;border-radius:4px;background:#F1E4C9;color:#451400;font-size:var(--fs-footnote);}
+  .space-demo .gap{position:relative;display:flex;align-items:center;}
+  .space-demo .gap span{position:absolute;right:6px;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--mark);background:#fff5ec;border-radius:3px;padding:0 5px;line-height:1.5;}
+  .space-demo .gap::before{content:"";position:absolute;left:var(--space-page-x);right:var(--space-page-x);top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(232,129,26,.16) 0 4px,transparent 4px 8px);}
+  .space-table td.tok{font-family:var(--mono);font-size:12px;color:var(--red);font-weight:600;white-space:nowrap;}
+  .space-table td.val{font-family:var(--mono);font-size:12px;white-space:nowrap;}
+  @media (max-width:900px){.space-grid{grid-template-columns:minmax(0,1fr);}.space-demo{max-width:430px;}}
+
+  /* ---------- Option card ---------- */
+  .oc-grid{display:grid;grid-template-columns:430px minmax(0,1fr);gap:18px;align-items:start;}
+  .oc-stage{background:#FBF3E4;box-shadow:inset 0 0 0 1px var(--line);border-radius:var(--radius);padding:24px var(--space-page-x) 20px;display:flex;flex-direction:column;gap:var(--space-row);color:#451400;}
+  .oc{position:relative;width:100%;display:flex;justify-content:space-between;align-items:center;gap:var(--option-gap);min-height:var(--option-min-height);padding:var(--option-pad);background:#fff;border:var(--option-border) solid #e3ddd0;border-radius:var(--option-radius);box-sizing:border-box;}
+  .oc .nm{line-height:var(--option-control);}
+  .oc .sub{font-size:var(--fs-body);line-height:1.4;color:rgb(120,98,89);margin-top:2px;}
+  .oc .info{flex:1;min-width:0;}
+  .oc .radio{width:var(--option-control);height:var(--option-control);border-radius:50%;border:2px solid #cfc4b2;flex-shrink:0;box-sizing:border-box;position:relative;}
+  .oc .check{width:var(--option-control);height:var(--option-control);border-radius:4px;border:2px solid #cfc4b2;flex-shrink:0;box-sizing:border-box;position:relative;}
+  .oc.sel{border-color:#AD2118;background:#FBEAE7;}
+  .oc.sel .radio{border-color:#AD2118;}
+  .oc.sel .radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:#AD2118;}
+  .oc.sel .check{border-color:#AD2118;background:#AD2118;}
+  .oc.sel .check::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;}
+  .oc.na{opacity:.4;}
+  .oc .thumb{width:44px;height:44px;border-radius:4px;flex-shrink:0;background:radial-gradient(circle at 35% 35%,#d8a86a,#8a4b1f 70%);}
+  .oc-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:6px 0 -4px;}
+  .oc-label:first-child{margin-top:0;}
+  .oc.anno{outline:1px dashed rgba(232,129,26,.6);}
+  .oc.anno .m{position:absolute;background:rgba(232,129,26,.18);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--mark);}
+  /* Offsets are from inside the 1.5px border, so -1.5px reaches the card's outer edge. */
+  .oc.anno .m.l{left:-1.5px;top:-1.5px;bottom:-1.5px;width:16px;} .oc.anno .m.r{right:-1.5px;top:-1.5px;bottom:-1.5px;width:16px;}
+  .oc.anno .m.t{top:-1.5px;left:14.5px;right:14.5px;height:16px;} .oc.anno .m.b{bottom:-1.5px;left:14.5px;right:14.5px;height:16px;}
+  .oc.anno .m.g{top:14.5px;bottom:14.5px;width:12px;right:34.5px;} /* 14.5 padding + 20 radio */
+  .oc.anno .m.l,.oc.anno .m.r{writing-mode:vertical-rl;}
+  @media (max-width:900px){.oc-grid{grid-template-columns:minmax(0,1fr);}.oc-stage{max-width:430px;}}
+
+  /* ---------- Phone frame ---------- */
+  .frame-grid{display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px;align-items:start;}
+  .frame-fig{padding:20px;display:flex;justify-content:center;}
+  .mini-phone{position:relative;width:172px;height:340px;background:#FBF3E4;box-shadow:0 0 20px rgba(0,0,0,.25);overflow:hidden;display:flex;flex-direction:column;font-size:10px;color:var(--muted);}
+  .mini-phone .band{display:flex;align-items:center;justify-content:center;border-bottom:1px dashed #e0cfb1;flex-shrink:0;}
+  .mini-phone .sb{height:14px;background:#f5ead6;}
+  .mini-phone .bb{height:17px;background:#efe2c9;}
+  .mini-phone .content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;color:var(--brown);font-weight:700;}
+  .mini-phone .content small{font-weight:500;color:var(--muted);}
+  .spec-table td:first-child{font-weight:700;white-space:nowrap;}
+  .spec-table td.mono{font-family:var(--mono);font-size:12px;}
+  .frame-rules{margin:12px 0 0;padding-left:20px;font-size:13.5px;line-height:1.6;}
+  @media (max-width:720px){.frame-grid{grid-template-columns:minmax(0,1fr);}}
+
+  footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+  @media (max-width:640px){
+    .wrap{padding:28px 16px 72px;}
+    .cover{padding:32px 22px 28px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="index.html">← Flow index</a>
+
+  <div class="cover">
+    <div class="eyebrow"><span class="dot"></span> Chipotle &middot; Order Online Reimagining</div>
+    <h1>01. Design System</h1>
+    <p>Typography, colour, spacing and components for every screen, mobile and desktop. Pick a text style by its <b>role</b> (screen title, sheet title, section heading…), never by eye. Chipotle has two type tiers: condensed uppercase <b>display</b> type for anything that labels, and <b>Nunito</b> for anything you read. Desktop only enlarges the four title tiers; reading sizes stay put.</p>
+    <div class="cover-meta">
+      <span class="meta-pill">Tokens <b>design-system.css</b></span>
+      <span class="meta-pill">Fonts <b>Trade Gothic Condensed · Nunito</b></span>
+      <span class="meta-pill">Weights <b>400 · 700</b></span>
+    </div>
+  </div>
+
+  <nav class="panel toc" aria-label="Contents">
+    <div class="toc-title">Contents</div>
+    <ol>
+      <li><a href="#audit">Why this exists &middot; audit</a></li>
+      <li><a href="#type-scale">Type scale</a></li>
+      <li><a href="#weights">Weights</a></li>
+      <li><a href="#colour">Colour</a></li>
+      <li><a href="#rules">Rules for new screens</a></li>
+      <li><a href="#migration">Migration map</a></li>
+      <li><a href="#spacing">Spacing &middot; detail pages</a></li>
+      <li><a href="#option-card">Option card</a></li>
+      <li><a href="#phone-frame">Phone frame &middot; mobile mock-up</a></li>
+      <li><a href="#usage">Using it in the prototype</a></li>
+    </ol>
+  </nav>
+
+  <!-- Audit -->
+  <div class="section" id="audit">
+    <div class="section-head"><h2>Why this exists &middot; audit of the prototype</h2><span class="section-count">140 type rules scanned</span></div>
+    <div class="stats">
+      <div class="panel stat"><div class="k">Text sizes</div><div class="v"><s>14</s><span class="arrow">→</span>8</div><div class="n">10px to 24px, incl. 15, 17, 21 and 22.4px. Emoji and wordmark sizes (32–96px) are exempt.</div></div>
+      <div class="panel stat"><div class="k">Font weights</div><div class="v"><s>4</s><span class="arrow">→</span>2</div><div class="n">600 and 800 retired. 800 was on 15 rules (prices, quantities)</div></div>
+      <div class="panel stat"><div class="k">Title sizes</div><div class="v"><s>7</s><span class="arrow">→</span>4</div><div class="n">16, 18, 20, 21, 22, 22.4, 24px across screen, sheet and hero titles</div></div>
+      <div class="panel stat"><div class="k">Uppercase tracking</div><div class="v"><s>7</s><span class="arrow">→</span>1</div><div class="n">0, .2px, .3px, .4px, 1px, 3px, .04em. Now .02em everywhere</div></div>
+    </div>
+  </div>
+
+  <!-- Type scale -->
+  <div class="section" id="type-scale">
+    <div class="section-head">
+      <h2>Type scale</h2>
+      <div class="seg" role="group" aria-label="Layout">
+        <button type="button" data-view="mobile" aria-pressed="true">📱 Mobile</button>
+        <button type="button" data-view="desktop" aria-pressed="false">🖥 Desktop</button>
+      </div>
+    </div>
+    <p class="lede">Specimens render at real size from <code>design-system.css</code>. Toggle to Desktop to see which tiers grow (<span style="color:var(--mark);font-weight:700">orange</span>). The values on the right are read live from the page. Display-tier copy is written in sentence case in the markup; the class uppercases it.</p>
+    <div class="panel scale" id="scale"></div>
+  </div>
+
+  <!-- Weights -->
+  <div class="section" id="weights">
+    <div class="section-head"><h2>Weights</h2><span class="section-count">2 in use &middot; 1 reserved &middot; 1 retired</span></div>
+    <div class="weights">
+      <div class="panel weight"><div class="sample t-title-1" style="font-size:30px;line-height:1.1">Burrito 700</div><div class="label">Display · 700</div><div class="for">The only display weight. Every <code>t-display</code> … <code>t-headline</code> role — Trade Gothic Condensed has a 16px floor, so <code>t-label</code> and <code>t-tag</code> use Nunito Bold instead. Only the Bold Condensed file is loaded for this tier.</div></div>
+      <div class="panel weight"><div class="sample" style="font-family:var(--font-body);font-weight:400">Burrito 400</div><div class="label">--fw-regular · 400</div><div class="for">Descriptions, hints, rows, inputs, meta, secondary prices ("from $9.85").</div></div>
+      <div class="panel weight"><div class="sample" style="font-family:var(--font-body);font-weight:700">Burrito 700</div><div class="label">--fw-bold · 700</div><div class="for">All body emphasis: prices, totals, quantities, links, pills, time slots, option names, toasts.</div></div>
+      <div class="panel weight retired"><div class="sample" style="font-family:var(--font-body);font-weight:800">Burrito 800</div><div class="label">--fw-heavy · 800 · reserved</div><div class="for">Not used by any role. Prices get their weight from 700 plus colour, so no price outweighs its item name.</div></div>
+    </div>
+    <div class="panel retired-row"><b>Per-role tokens:</b> each role reads its weight from its own token (<code>--fw-display</code>, <code>--fw-title-1</code> … <code>--fw-callout</code>), so a role can change weight in one place without touching any screen.<br><b>Retired:</b> <code>800</code> on 15 rules (<code>.meal-price</code>, <code>.qty-value</code>, <code>.totals-row.total</code>, <code>.top-bar .store-name</code>…): use 700. <code>600</code> on <code>.schedule-title</code> (display font, where 600 isn't loaded so the browser fakes it) and <code>.landing-tab</code>: use 700. The phone-chrome <code>.browser-bar .url-pill</code> keeps 600 as device chrome.</div>
+  </div>
+
+  <!-- Colour -->
+  <div class="section" id="colour">
+    <div class="section-head"><h2>Colour</h2><span class="section-count">From the prototype's <code style="background:transparent;color:#f1dcc0">:root</code></span></div>
+    <p class="lede">Pepper red is the single action colour: CTAs, prices, selected states. Brown carries text and dark surfaces. The page is cream, never white; white is for cards and option rows. Values below are the prototype's own variables.</p>
+    <div class="swatches" id="swatches"></div>
+  </div>
+
+  <!-- Rules -->
+  <div class="section" id="rules">
+    <div class="section-head"><h2>Rules for new screens</h2><span class="section-count">9 rules</span></div>
+    <div class="rules">
+      <div class="panel rule"><span class="tag do">Do</span><b>Choose by role, not by size</b>Ask "is this a top-bar title, a sheet title, or a group label?" and use that style. If none fits, reuse the closest one. Don't add a size.</div>
+      <div class="panel rule"><span class="tag do">Do</span><b>Display labels, body reads</b>Anything that names or labels (titles, section heads, item names, buttons, field labels) is display tier. Anything a customer reads as a sentence, or a number they compare (prices, totals), is Nunito.</div>
+      <div class="panel rule"><span class="tag do">Do</span><b>One title per screen</b>Each screen gets at most one <code>t-title-1</code>. Sheets use <code>t-title-2</code>. Top bars, builder sections and product names use <code>t-title-3</code>.</div>
+      <div class="panel rule"><span class="tag do">Do</span><b>Let the tokens handle desktop</b>Never write <code>html.is-desktop .x{font-size:…}</code>. Title tiers already grow on <code>html.is-desktop</code>. If an element needs a different <em>role</em> on desktop, swap the class.</div>
+      <div class="panel rule"><span class="tag do">Do</span><b>Inputs are 16px</b>Every <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code> and <code>&lt;textarea&gt;</code> uses <code>t-input</code>. Today <code>.text-input</code>, the search pill and the phone field are 14px, which makes iOS Safari zoom on focus.</div>
+      <div class="panel rule"><span class="tag do">Do</span><b>One button size</b>Every full-width action (Continue, Next, Add to bag, Pay, Track order) is <code>t-button</code>. Today they're split between 20px (<code>.btn-primary</code>, <code>.btn-add</code>) and 16px (<code>.btn-checkout-pay</code>, <code>.btn-success-primary</code>).</div>
+      <div class="panel rule"><span class="tag dont">Don't</span><b>Flip hierarchy with weight</b>A group heading must outrank its options: builder section titles (18) over ingredient names (16) over the calorie line (14/400). Don't make a price heavier than the item it prices.</div>
+      <div class="panel rule"><span class="tag dont">Don't</span><b>Go below 12px</b>The smallest text is <code>t-tag</code> at 12px. <code>.kb-tag</code> (10px) and <code>.byo-section-title .num</code> (11px) move up; the VISA card tag is a logo mark, so swap it for the real card-brand SVG.</div>
+      <div class="panel rule"><span class="tag dont">Don't</span><b>Trade Gothic Condensed has a 16px floor</b>It's only drawn at real weight down to 16px (<code>t-headline</code>). Any role below that — <code>t-label</code> (14px), <code>t-tag</code> (12px) — uses Nunito Bold instead, uppercase + tracked the same way, so it still reads as a label or tag.</div>
+    </div>
+  </div>
+
+  <!-- Migration -->
+  <div class="section" id="migration">
+    <div class="section-head"><h2>Migration map &middot; existing selectors → token</h2><span class="section-count" id="mig-count"></span></div>
+    <p class="lede"><b>Before</b> is the value in the prototype today. <b>Target</b> is the token's value, read live from <code>design-system.css</code> (switch Mobile / Desktop above to see both). Rows in <b style="color:var(--red)">red</b> change; grey rows already match. Click a selector to open that screen in the prototype, with the element outlined in orange. Emoji, glyph buttons (× + − ✓ ‹), the Chipotle wordmarks, the phone status bar and browser bar, and the Dev Mode and comment tools are out of scope.</p>
+    <p class="lede"><b style="color:var(--pending,#b5651d)">Migration status: not started</b> (30 Sep 2026). The prototype doesn't load <code>design-system.css</code> yet; every row below is still hard-coded.</p>
+    <div class="filter" id="mig-filter"></div>
+    <div class="panel table-wrap">
+      <table>
+        <thead><tr><th>Selector</th><th>Before</th><th>Target</th><th>Token</th><th>Note</th></tr></thead>
+        <tbody id="mig-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Spacing -->
+  <div class="section" id="spacing">
+    <div class="section-head"><h2>Spacing &middot; detail pages</h2><span class="section-count">10 tokens &middot; quick-add, builders &amp; checkout</span></div>
+    <p class="lede">Quick-add detail, both builders and checkout follow the same rhythm. Use the <code>--space-*</code> tokens and never hard-code these gaps. The example on the left is 430px wide, the prototype's screen width, and is built from the same tokens. The orange bands show each gap.</p>
+    <div class="space-grid">
+      <div class="space-demo" aria-hidden="true">
+        <div class="in"><div class="t-title-3">Build your own burrito</div></div>
+        <div class="gap" style="height:var(--space-title-desc)"><span>8</span></div>
+        <div class="in"><div class="d-desc t-body">Choose your protein, rice, beans &amp; toppings, wrapped in a warm flour tortilla.</div></div>
+        <div class="gap" style="height:var(--space-intro)"><span>24</span></div>
+        <div class="in"><div class="d-chips t-callout"><span class="d-chip">1 Protein</span><span class="d-chip">2 Rice</span><span class="d-chip">3 Beans</span></div></div>
+        <div class="gap" style="height:var(--space-intro)"><span>24</span></div>
+        <div class="divider"></div>
+        <div class="gap" style="height:var(--space-section)"><span>28</span></div>
+        <div class="in"><div class="d-head"><span class="t-title-3">Protein or veggie</span><span class="req">Required</span></div></div>
+        <div class="gap" style="height:var(--space-heading)"><span>12</span></div>
+        <div class="in"><div class="oc sel"><div class="info"><div class="nm t-headline">Chicken</div></div><span class="radio"></span></div></div>
+        <div class="gap" style="height:var(--space-row)"><span>12</span></div>
+        <div class="in"><div class="oc"><div class="info"><div class="nm t-headline">Steak</div></div><span class="radio"></span></div></div>
+      </div>
+      <div>
+        <div class="panel table-wrap">
+          <table class="space-table" style="min-width:0">
+            <thead><tr><th>Token</th><th>Value</th><th>Rule</th></tr></thead>
+            <tbody id="space-body"></tbody>
+          </table>
+        </div>
+        <ul class="frame-rules">
+          <li><b>Two side margins.</b> Content uses <code>--space-page-x</code> (20px). Top bars and the two-column menu grid use <code>--space-bar-x</code> (16px). Today the builder and quick-add body are 20px and the top bars are 16px, so this matches the prototype.</li>
+          <li><b>One divider.</b> Sections are split by a full-bleed 8px <code>--cream-deep</code> band. Today the builder uses a 12px border and checkout an 8px band with 8px margins; both become the 8px band with 28px above the next heading.</li>
+          <li><b>No margins on rows.</b> Space comes from the parent: side padding from the body, <code>gap</code> between rows, and the heading's bottom margin above the first row. Today <code>.variant-row</code> and <code>.pay-row</code> set their own <code>margin-bottom</code> (12px and 10px).</li>
+          <li><b>Option rows:</b> see <a href="#option-card">Option card</a> below for the card's inner spacing.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option card -->
+  <div class="section" id="option-card">
+    <div class="section-head"><h2>Option card &middot; choice &amp; payment rows</h2><span class="section-count">6 tokens &middot; <code style="background:transparent;color:#f1dcc0">.variant-row</code>, <code style="background:transparent;color:#f1dcc0">.order-option</code>, <code style="background:transparent;color:#f1dcc0">.pay-row</code></span></div>
+    <p class="lede">Every selectable row uses the same card: <b>16px from the outer edge to the content on all four sides</b>. That's a 1.5px border plus 14.5px padding. The name's line-height matches the 20px radio, so a one-line card is exactly 52px tall. Today the three row types each have their own padding (<code>14px 12px</code>, <code>14px 16px</code>, <code>13px 14px</code>); they all move to this one. The cards below are real size and built from the tokens.</p>
+    <div class="oc-grid">
+      <div class="oc-stage" aria-hidden="true">
+        <div class="oc-label">Measured</div>
+        <div class="oc anno"><span class="m l">16</span><span class="m r">16</span><span class="m t">16</span><span class="m b">16</span><span class="m g">12</span><div class="info"><div class="nm t-headline">Barbacoa</div></div><span class="radio"></span></div>
+        <div class="oc-label">States</div>
+        <div class="oc sel"><div class="info"><div class="nm t-headline">Chicken</div></div><span class="radio"></span></div>
+        <div class="oc"><div class="info"><div class="nm t-headline">Sofritas</div></div><span class="radio"></span></div>
+        <div class="oc na"><div class="info"><div class="nm t-headline">Carnitas · unavailable</div></div><span class="radio"></span></div>
+        <div class="oc-label">Multi-select, with photo &amp; calories</div>
+        <div class="oc sel"><span class="thumb"></span><div class="info"><div class="nm t-headline">Guacamole</div><div class="sub">230 cal · +$2.95</div></div><span class="check"></span></div>
+        <div class="oc"><span class="thumb"></span><div class="info"><div class="nm t-headline">Queso blanco</div><div class="sub">120 cal · +$1.75</div></div><span class="check"></span></div>
+      </div>
+      <div>
+        <div class="panel table-wrap">
+          <table class="space-table" style="min-width:0">
+            <thead><tr><th>Measurement</th><th>Value</th><th>How</th></tr></thead>
+            <tbody>
+              <tr><td>Card size (one line)</td><td class="val">390 × 52px</td><td>Full width inside the 20px page margins; <code>min-height:var(--option-min-height)</code></td></tr>
+              <tr><td>Card edge → content</td><td class="val">16px all sides</td><td>1.5px border + 14.5px padding</td></tr>
+              <tr><td>Name</td><td class="val">16px display</td><td><code>t-headline</code> with a 20px line-height, the same height as the radio</td></tr>
+              <tr><td>Name → control</td><td class="val">12px</td><td>The card's <code>gap</code> (<code>--option-gap</code>)</td></tr>
+              <tr><td>Border &amp; corners</td><td class="val">1.5px #e3ddd0 · 4px</td><td>Background <code>#fff</code>. Matches the prototype's 4px row radius</td></tr>
+              <tr><td>Selected</td><td class="val">#AD2118 · #FBEAE7</td><td>Border swaps to pepper red with a red tint fill. Never a coloured left-border accent</td></tr>
+              <tr><td>Radio</td><td class="val">20 × 20px</td><td>2px <code>#cfc4b2</code> ring; selected: red ring with a 10px dot (3px inset)</td></tr>
+              <tr><td>Checkbox</td><td class="val">20 × 20px</td><td>4px radius, same ring; selected: red fill with a white ✓</td></tr>
+              <tr><td>Calories / price line</td><td class="val">+2px, 14px</td><td><code>t-body</code> below the name; the card grows and the 16px edges stay</td></tr>
+              <tr><td>Photo</td><td class="val">44 × 44px</td><td>4px radius, 12px before the name</td></tr>
+              <tr><td>Unavailable</td><td class="val">40% opacity</td><td>Not clickable (<code>.variant-row.unavailable</code>)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel table-wrap" style="margin-top:10px">
+          <table class="space-table" style="min-width:0">
+            <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+            <tbody id="option-body"></tbody>
+          </table>
+        </div>
+        <ul class="frame-rules">
+          <li><b>Never set a fixed height.</b> Use <code>min-height</code>, so cards with a calorie line, photo or two-line name grow while keeping 16px on every side.</li>
+          <li><b>Controls</b> (radio, checkbox) sit on the right, 16px in, centred vertically.</li>
+          <li>Cards stack <code>--space-row</code> (12px) apart. The first card sits <code>--space-heading</code> (12px) under its heading.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phone frame -->
+  <div class="section" id="phone-frame">
+    <div class="section-head"><h2>Phone frame &middot; mobile mock-up</h2><span class="section-count">Same on every screen</span></div>
+    <p class="lede">Every mobile screen sits in the same shell as the prototype: a 430px column centred on a tan page, full viewport height. Home, menu, cart and checkout show the status bar and browser bar; detail screens, builders and sheets start at the top bar.</p>
+    <div class="frame-grid">
+      <div class="panel frame-fig" aria-hidden="true">
+        <div class="mini-phone">
+          <div class="band sb">Status bar · 33</div>
+          <div class="band bb">Browser bar · 41</div>
+          <div class="content">Content area<small>430 × viewport</small></div>
+        </div>
+      </div>
+      <div>
+        <div class="panel table-wrap">
+          <table class="spec-table" style="min-width:0">
+            <thead><tr><th>Part</th><th>Size</th><th>CSS</th></tr></thead>
+            <tbody>
+              <tr><td>Screen</td><td>430px wide (iPhone Pro Max viewport), full viewport height</td><td class="mono">.phone{width:430px;max-width:100vw;min-height:100vh}</td></tr>
+              <tr><td>Frame</td><td>No device bezel; soft shadow on the column</td><td class="mono">box-shadow:0 0 40px rgba(0,0,0,.25)</td></tr>
+              <tr><td>Status bar</td><td>430 × 33px, "9:41" + signal / wifi / battery</td><td class="mono">.statusbar{padding:14px 22px 0}</td></tr>
+              <tr><td>Browser bar</td><td>430 × 41px, URL pill <code>chipotle.com</code></td><td class="mono">.browser-bar{padding:6px 0 4px}</td></tr>
+              <tr><td>Content area</td><td>Each screen fills the column</td><td class="mono">.screen{position:absolute;inset:0}</td></tr>
+              <tr><td>Colours</td><td>Page <code>#e9e2d2</code>, screen <code>#FBF3E4</code></td><td class="mono">body / .phone background</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul class="frame-rules">
+          <li>Don't resize or restyle the column, status bar or browser bar. They're device chrome, and they don't use the type tokens.</li>
+          <li>Screen content uses 20px side padding, a sticky top bar (<code>.checkout-top-bar</code>: back arrow, centred <code>t-title-3</code> title) and, when there's a main action, a sticky footer with one <code>t-button</code>.</li>
+          <li>Leave <code>--space-footer</code> (100px) at the bottom of scrolling content so the footer doesn't cover it.</li>
+          <li><b>Desktop</b> (<code>?view=desktop</code>) sets <code>html.is-desktop</code> today, which grows the title tiers; no screen has a desktop layout yet. When one lands it drops the column and the two bars and fills the window.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- How to use -->
+  <div class="section" id="usage">
+    <div class="section-head"><h2>Using it in the prototype</h2><span class="section-count">2 steps</span></div>
+    <ol class="steps">
+      <li>Add <code>&lt;link rel="stylesheet" href="design-system.css"&gt;</code> in the prototype's <code>&lt;head&gt;</code>, before its own <code>&lt;style&gt;</code>.</li>
+      <li>For new screens, use the classes (<code>class="t-title-3"</code>) or the variables inside your own selectors:</li>
+    </ol>
+    <div class="code">
+      <button class="copy" type="button" data-copy="snippet">Copy</button>
+<pre id="snippet">/* New screen: Rewards */
+.rewards-title   { font-family:var(--font-display); text-transform:uppercase; letter-spacing:var(--ls-display);
+                   font-size:var(--fs-title-1); line-height:var(--lh-title-1); font-weight:var(--fw-title-1); }
+.reward-name     { font-family:var(--font-display); text-transform:uppercase; letter-spacing:var(--ls-display);
+                   font-size:var(--fs-headline); line-height:var(--lh-headline); font-weight:var(--fw-headline); }
+.reward-desc     { font-family:var(--font-body); font-size:var(--fs-body); line-height:var(--lh-body); font-weight:var(--fw-regular); }
+.reward-points   { font-family:var(--font-body); font-size:var(--fs-callout); line-height:var(--lh-callout); font-weight:var(--fw-callout); color:var(--red); }
+
+/* …or in markup */
+&lt;h2 class="t-title-1"&gt;Your rewards&lt;/h2&gt;
+&lt;p class="t-body"&gt;Earn 10 points for every $1 spent.&lt;/p&gt;</pre>
+    </div>
+  </div>
+
+  <footer>
+    <span>Chipotle Order Online Reimagining &middot; Design System v1</span>
+    <span>Source of truth: <code>design-system.css</code></span>
+  </footer>
+</div>
+
+<script>
+  var PROTO = 'Chipotle%20Online%20Ordering.html';
+
+  var SCALE = [
+    {tier:'Display tier', note:'Trade Gothic Condensed Bold · uppercase · .02em · 16px floor'},
+    {t:'display',  cls:'t-display',  text:'Order confirmed!', use:'Confirmation heroes: order success, order status stage.', grows:true},
+    {t:'title-1',  cls:'t-title-1',  text:'Join Happy Points', use:'At most one per screen: the in-content page title.', grows:true},
+    {t:'title-2',  cls:'t-title-2',  text:'How would you like your order?', use:'Bottom sheets, modals, payment processing.', grows:true},
+    {t:'title-3',  cls:'t-title-3',  text:'Build your own burrito', use:'Top-bar titles, builder section titles, product names, category tabs.', grows:true},
+    {t:'button',   cls:'t-button',   text:'Add to bag · $9.85', use:'Every full-width action button. Nothing else.'},
+    {t:'headline', cls:'t-headline', text:'Order summary', use:'Group labels, option names, secondary buttons, info values.'},
+    {tier:'Body tier', note:'Nunito · 400 / 700'},
+    {t:'label',    cls:'t-label',    text:'First name', use:'Field labels, menu section eyebrows, compact upsell names. Below the 16px Trade Gothic floor, so Nunito Bold — kept uppercase to still read as a label.'},
+    {t:'tag',      cls:'t-tag',      text:'Kids favourite', use:'Badges and tags on cards and rows. Below the 16px Trade Gothic floor, so Nunito Bold — kept uppercase to still read as a tag.'},
+    {t:'body-lg',  cls:'t-body-lg',  text:'Total  $10.66', use:'Totals, quantities, the item price on a detail page.'},
+    {t:'body',     cls:'t-body',     text:'Choose your protein, rice, beans & toppings, wrapped in a warm flour tortilla.', use:'Descriptions, hints, ingredient lines, calorie lines, rows.'},
+    {t:'callout',  cls:'t-callout',  text:'$9.85   ·   Change   ·   12:30 pm', use:'Prices, text links, pills, time slots, payment names, toasts.'},
+    {t:'input',    cls:'t-input',    text:'(555) 123-4567', use:'Every text field, select and search bar. Fixed at 16px.'},
+    {t:'footnote', cls:'t-footnote', text:'Order #C4821 · Sep 30, 12:41 pm', use:'Meta: order numbers, dates, custom meal names.'}
+  ];
+
+  var COLOURS = [
+    ['--red','#AD2118','Pepper red. CTAs, prices, selected borders, links.'],
+    ['--red-dark','#7c1710','Pressed / hover red.'],
+    ['--brown','#451400','All text, dark surfaces, section heads.'],
+    ['--cream','#FBF3E4','Page and screen background.'],
+    ['--cream-deep','#F1E4C9','Section divider bands, tag fills.'],
+    ['--tan-line','#e6d8bd','Top-bar and list hairlines.'],
+    ['--grey-line','#e3ddd0','Option-row and pill borders.'],
+    ['--gold','#D9A63E','Rewards accent.'],
+    ['--avocado','#5B7A3A','On / complete states (split toggle, done chips).'],
+    ['--grey','#8a8a8a','Inactive date pills, placeholder text.'],
+    ['select tint','#FBEAE7','Selected option row fill.'],
+    ['muted text','rgb(120,98,89)','Descriptions and hints. Promote to a token.']
+  ];
+
+  // [selector, before, token, note, route, highlight?]
+  var MIG = [
+    ['.order-success-title','24 / 700','display','ok','order-success'],
+    ['.order-status-title','22 / 700','display','Stage hero ("Preparing"), same tier as the success hero','order-status:preparing'],
+    ['.landing-account-title','22.4 / 700 / 0','title-1','Off-scale 22.4','landing'],
+    ['.order-type-sheet h2','20 / 700','title-2','ok','ordertype'],
+    ['.payment-processing-title','20 / 700','title-2','ok','payment'],
+    ['.card-sheet-header h2','16 / 700','title-2','Sheet title was smaller than the sheet\'s own labels','cardsheet'],
+    ['.date-pill .dom','22 / 700','title-2','Date numeral in the date pill','schedule'],
+    ['.schedule-title','21 / 600 / 0','title-3','Two per screen (Pick a date / Pick a time), so section headings. 600 isn\'t loaded','schedule'],
+    ['.order-option .label','20 / 700','title-3','Option name inside a sheet, one tier under the sheet title','ordertype'],
+    ['.checkout-top-title','18 / 700','title-3','ok','checkout'],
+    ['.qd-topbar-title','18 / 700','title-3','ok','quickdetail:byo-bowl'],
+    ['.payment-title','18 / 700','title-3','ok','payment'],
+    ['.byo-section-title','18 / 700','title-3','ok','builder'],
+    ['.qd-name','18 / 700','title-3','ok','quickdetail:byo-bowl'],
+    ['.cat-tab','18 / 700','title-3','ok','menu'],
+    ['.meal-name','18 / 700','title-3','ok','menu'],
+    ['.cart-item-name','18 / 700','title-3','ok','cart'],
+    ['.order-details-store','18 / 700','title-3','ok','order-details'],
+    ['.btn-primary','20 / 700 / .3px','button','All full-width actions share one size','ordertype'],
+    ['.btn-add','20 / 700','button','','quickdetail:byo-bowl'],
+    ['.btn-checkout-pay','16 / 700','button','','checkout'],
+    ['.btn-success-primary','16 / 700','button','','order-success'],
+    ['.checkout-section-title, .checkout-section-label','16 / 700','headline','ok','checkout'],
+    ['.checkout-rewards-title','16 / 700','headline','ok','checkout'],
+    ['.cart-section-label, .cart-upsell-title','16 / 700','headline','ok','cart'],
+    ['.order-details-heading','16 / 700','headline','ok','order-details'],
+    ['.variant-name','16 / 700','headline','ok','builder'],
+    ['.landing-tile-label','16 / 700 / .04em','headline','Tracking to .02em','landing'],
+    ['.landing-rewards-note','16 / 700 / 0','headline','','landing'],
+    ['.date-pill .dow, .date-pill .mon','16 / 700 / .3px','headline','','schedule'],
+    ['.btn-add-item','16 / 700','headline','Secondary button','cart'],
+    ['.btn-outline','15 / 700','headline','Secondary button','landing'],
+    ['.sidebar-nav-row, .sidebar-login-btn','15 / 700','headline','','sidebar'],
+    ['.checkout-info-value','15 / 700','headline','','checkout'],
+    ['.processing-order-name','15 / 700','headline','','payment'],
+    ['.menu-section-title','14 / 700 / .4px','label','','menu'],
+    ['.field-label','14 / 700 / .3px','label','','checkout'],
+    ['.card-field label','12 / 700 / .3px','label','Form labels match .field-label','cardsheet'],
+    ['.cart-upsell-name','14 / 700','label','ok','cart'],
+    ['.kb-tag','10 / 700 / .3px','tag','Below minimum','kidsbuilder'],
+    ['.qd-price','18 / 800','body-lg','Off the body scale','quickdetail:byo-bowl'],
+    ['.totals-row.total','16 / 800','body-lg','','checkout'],
+    ['.qty-value, .qty-stepper .qty-value','15–16 / 800','body-lg','','quickdetail:byo-bowl','.qty-value'],
+    ['.cart-item-total','17 / 700 display','body-lg','Totals are body tier; 17 is off-scale','cart'],
+    ['.landing-dollars-row','15 / 800','body-lg','','landing'],
+    ['.top-bar .store-name','15 / 800','body-lg','','menu'],
+    ['.order-details-total-paid','16 / 700','body-lg','ok','order-details'],
+    ['.meal-desc','14 / 400 / 1.3','body','Line-height to 1.5','menu'],
+    ['.qd-desc, .cart-item-lines','14 / 400 / 1.5','body','ok','quickdetail:byo-bowl'],
+    ['.byo-section-hint, .variant-sub, .variant-cal','14 / 400','body','ok','builder'],
+    ['.byo-req-tag','14 / 400 / .3px','body','Keeps 14 regular; drop tracking','builder'],
+    ['.order-option .desc, .schedule-hint','14 / 400','body','ok','ordertype'],
+    ['.checkout-info-label, .checkout-hint, .checkout-rewards-sub','14 / 400','body','ok','checkout'],
+    ['.totals-row, .order-success-row, .order-details-item-row','14 / 400','body','ok','checkout'],
+    ['.payment-processing-sub','14 / 400 / 1.6','body','Line-height to 1.5','payment'],
+    ['.order-success-sub, .order-status-sub','15 / 400','body','15 is off-scale','order-success'],
+    ['.meal-price, .cart-item-price, .cart-upsell-price','14 / 800','callout','','menu'],
+    ['.menu-cart-bar','14 / 800','callout','','cart'],
+    ['.menu-outlet','15 / 700','callout','','menu'],
+    ['.landing-tab','14 / 600','callout','','landing'],
+    ['.time-slot','14 / 700 / 1.35','callout','ok','schedule'],
+    ['.filter-pill, .progress-chip, .split-toggle','14 / 700','callout','ok','builder','.progress-chip'],
+    ['.checkout-change-link, .pay-row .label, .checkout-extra-label','14 / 700','callout','ok','checkout'],
+    ['.card-save-row, .builder-footer-note, .toast','14 / 700','callout','ok','cardsheet'],
+    ['.meal-price-from','14 / 400','callout + fw-regular','ok','menu'],
+    ['.text-input, .checkout-phone-input','14','input','14px zooms on iOS','checkout'],
+    ['.search-input-pill input','14','input','14px zooms on iOS','menu-search'],
+    ['.mod-pill','13 / 700','footnote + fw-bold','ok','builder'],
+    ['.cart-upsell-badge','13 / 700 / .2px','footnote + fw-bold','Drop tracking','cart'],
+    ['.cart-item-custom-name, .processing-order-meta','13 / 400','footnote','ok','payment'],
+    ['.order-details-meta, .order-details-item-sub','13 / 400','footnote','ok','order-details'],
+    ['.sidebar-lang-pill','13 / 400','footnote','ok','sidebar'],
+    ['.card-icon-tag','11 / 800 / .3px','—','Exempt: card-brand mark. Swap for the real SVG','cardsheet']
+  ];
+
+  function specFor(el){
+    var cs = getComputedStyle(el);
+    var lh = parseFloat(cs.lineHeight) / parseFloat(cs.fontSize);
+    return parseFloat(cs.fontSize) + 'px / ' + cs.fontWeight + ' / ' + (isFinite(lh) ? (+lh.toFixed(2)) : cs.lineHeight);
+  }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+  var scaleEl = document.getElementById('scale');
+  scaleEl.innerHTML = SCALE.map(function(s){
+    if (s.tier) return '<div class="tier">' + s.tier + ' <span>' + s.note + '</span></div>';
+    return '<div class="row">' +
+      '<div class="name">.' + s.cls + '<small>--fs-' + s.t + '</small></div>' +
+      '<p class="specimen ' + s.cls + '">' + esc(s.text) + '</p>' +
+      '<div class="spec" data-grows="' + (s.grows ? 1 : 0) + '"><span class="v"></span><span class="use">' + s.use + '</span></div>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('swatches').innerHTML = COLOURS.map(function(c){
+    return '<div class="panel sw"><div class="chip" style="background:' + c[1] + '"></div><div class="meta">' +
+      '<div class="tok">' + c[0] + '</div><div class="hex">' + c[1] + '</div><div class="for">' + c[2] + '</div></div></div>';
+  }).join('');
+
+  function refresh(){
+    var desk = document.documentElement.classList.contains('is-desktop');
+    scaleEl.querySelectorAll('.row').forEach(function(row){
+      var spec = row.querySelector('.spec');
+      var v = spec.querySelector('.v');
+      v.textContent = specFor(row.querySelector('.specimen'));
+      v.className = 'v' + (desk && spec.dataset.grows === '1' ? ' grow' : '');
+    });
+    document.querySelectorAll('.seg button').forEach(function(b){
+      b.setAttribute('aria-pressed', String((b.dataset.view === 'desktop') === desk));
+    });
+  }
+  document.querySelectorAll('.seg button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.documentElement.classList.toggle('is-desktop', b.dataset.view === 'desktop');
+      var u = new URL(location.href); u.searchParams.set('view', b.dataset.view);
+      history.replaceState(null, '', u);
+      refresh();
+      renderMig();
+    });
+  });
+
+  // Spacing & option tokens: values read live from design-system.css
+  var SPACE = [
+    ['--space-page-x','Left and right margin of content'],
+    ['--space-bar-x','Left and right padding of top bars and the menu grid'],
+    ['--space-title-desc','Item name → description'],
+    ['--space-intro','Description → progress chips → first divider'],
+    ['--space-divider','Height of the full-bleed cream-deep band between sections'],
+    ['--space-section','Divider band → next section heading'],
+    ['--space-heading','Section heading → its first row'],
+    ['--space-row','Option row → option row'],
+    ['--space-chip','Chip → chip (progress chips, modifier pills)'],
+    ['--space-footer','Bottom padding so the sticky footer never covers content']
+  ];
+  var OPTION = [
+    ['--option-border','Card border width'],
+    ['--option-pad','Inner padding on all sides (+ border = 16px)'],
+    ['--option-control','Radio / checkbox size, and the name\'s line-height'],
+    ['--option-min-height','Minimum card height (16 + 20 + 16)'],
+    ['--option-gap','Photo ↔ name ↔ control'],
+    ['--option-radius','Corner radius']
+  ];
+  function tokenRows(list){
+    var root = getComputedStyle(document.documentElement);
+    return list.map(function(r){
+      return '<tr><td class="tok">' + r[0] + '</td><td class="val">' + (root.getPropertyValue(r[0]).trim() || '—') + '</td><td>' + r[1] + '</td></tr>';
+    }).join('');
+  }
+  function renderTokens(){
+    document.getElementById('space-body').innerHTML = tokenRows(SPACE);
+    document.getElementById('option-body').innerHTML = tokenRows(OPTION);
+  }
+
+  // Migration table
+  var tokens = ['all'].concat(SCALE.filter(function(s){ return s.t; }).map(function(s){ return s.t; }));
+  var active = 'all';
+  var body = document.getElementById('mig-body');
+  var filterEl = document.getElementById('mig-filter');
+  var WMOD = {'fw-regular':'--fw-regular','fw-bold':'--fw-bold'};
+  function targetFor(to){
+    if (to === '—') return null;
+    var root = getComputedStyle(document.documentElement);
+    var tok = to.split(' ')[0];
+    var size = parseFloat(root.getPropertyValue('--fs-' + tok));
+    var mod = (to.match(/fw-(regular|bold)/) || [])[0];
+    var w = parseInt(root.getPropertyValue(mod ? WMOD[mod] : '--fw-' + tok), 10) || parseInt(root.getPropertyValue('--fw-regular'), 10);
+    return {size:size, weight:w};
+  }
+  // A row changes if it isn't marked 'ok' (tracking, line-height or family differ),
+  // or if the live target size/weight differs from Before (e.g. title tiers on desktop).
+  function changedFrom(r, now){
+    if (!now) return false;
+    if (r[3] !== 'ok') return true;
+    var size = r[1].match(/^[\d.]+/);
+    var w = r[1].match(/\/\s*(\d{3})\b/);
+    return parseFloat(size[0]) !== now.size || (w && parseInt(w[1], 10) !== now.weight);
+  }
+  function linkFor(r){
+    var hl = r[5] || r[0].split(',')[0].trim();
+    return PROTO + '?view=' + (document.documentElement.classList.contains('is-desktop') ? 'desktop' : 'mobile') +
+      '&hl=' + encodeURIComponent(hl) + '#' + r[4];
+  }
+  function renderMig(){
+    var rows = MIG.filter(function(r){ return active === 'all' || r[2].split(' ')[0] === active; });
+    body.innerHTML = rows.map(function(r){
+      var now = targetFor(r[2]);
+      var changed = changedFrom(r, now);
+      var nowTxt = now ? now.size + ' / ' + now.weight : 'exempt';
+      var note = r[3] === 'ok' ? '' : r[3];
+      if (!changed && now) note = note || 'Already matches';
+      var sel = '<a href="' + linkFor(r) + '" target="_blank" rel="noopener" title="Open in prototype">' + esc(r[0]) + ' <span aria-hidden="true">↗</span></a>';
+      return '<tr><td class="sel">' + sel + '</td><td class="before' + (changed ? ' changed' : '') + '">' + r[1] + '</td>' +
+        '<td class="after' + (changed ? ' changed' : '') + '">' + nowTxt + '</td>' +
+        '<td class="to">' + r[2] + '</td><td class="note">' + esc(note) + '</td></tr>';
+    }).join('');
+    document.getElementById('mig-count').textContent = rows.length + ' of ' + MIG.length + ' rows';
+    filterEl.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.t === active)); });
+  }
+  filterEl.innerHTML = tokens.map(function(t){ return '<button type="button" data-t="' + t + '">' + t + '</button>'; }).join('');
+  filterEl.addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    active = b.dataset.t; renderMig();
+  });
+
+  refresh(); renderTokens(); renderMig();
+  // Webfonts change measured line-heights; re-read once they've loaded.
+  window.addEventListener('load', function(){ refresh(); renderTokens(); });
+
+  document.querySelector('[data-copy]').addEventListener('click', function(e){
+    var btn = e.currentTarget;
+    var text = document.getElementById('snippet').textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function(){
+      btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1400);
+    }, function(){ btn.textContent = 'Select & copy'; });
+  });
+</script>
+</body>
+</html>
