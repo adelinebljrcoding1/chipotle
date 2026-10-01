@@ -540,7 +540,6 @@
     ['.order-type-sheet h2','20 / 700','title-2','ok','ordertype'],
     ['.payment-processing-title','20 / 700','title-2','ok','payment'],
     ['.card-sheet-header h2','16 / 700','title-2','Sheet title was smaller than the sheet\'s own labels','cardsheet'],
-    ['.date-pill .dom','22 / 700','title-2','Date numeral in the date pill','schedule'],
     ['.schedule-title','21 / 600 / 0','title-3','Two per screen (Pick a date / Pick a time), so section headings. 600 isn\'t loaded','schedule'],
     ['.order-option .label','20 / 700','title-3','Option name inside a sheet, one tier under the sheet title','ordertype'],
     ['.checkout-top-title','18 / 700','title-3','ok','checkout'],
@@ -552,6 +551,7 @@
     ['.meal-name','18 / 700','title-3','ok','menu'],
     ['.cart-item-name','18 / 700','title-3','ok','cart'],
     ['.order-details-store','18 / 700','title-3','ok','order-details'],
+    ['.mode-title','18 / 700','title-3','ok','ordertype'],
     ['.btn-primary','20 / 700 / .3px','button','All full-width actions share one size','ordertype'],
     ['.btn-add','20 / 700','button','','quickdetail:byo-bowl'],
     ['.btn-checkout-pay','16 / 700','button','','checkout'],
@@ -563,7 +563,6 @@
     ['.variant-name','16 / 700','headline','ok','builder'],
     ['.landing-tile-label','16 / 700 / .04em','headline','Tracking to .02em','landing'],
     ['.landing-rewards-note','16 / 700 / 0','headline','','landing'],
-    ['.date-pill .dow, .date-pill .mon','16 / 700 / .3px','headline','','schedule'],
     ['.btn-add-item','16 / 700','headline','Secondary button','cart'],
     ['.btn-outline','15 / 700','headline','Secondary button','landing'],
     ['.sidebar-nav-row, .sidebar-login-btn','15 / 700','headline','','sidebar'],
@@ -573,6 +572,7 @@
     ['.field-label','14 / 700 / .3px','label','','checkout'],
     ['.card-field label','12 / 700 / .3px','label','Form labels match .field-label','cardsheet'],
     ['.cart-upsell-name','14 / 700','label','ok','cart'],
+    ['.time-period-label','14 / 700 / .02em','label','Fixed: was Trade Gothic Condensed 14px, which broke the 16px display-tier floor — now Nunito Bold, same uppercase look','schedule'],
     ['.kb-tag','10 / 700 / .3px','tag','Below minimum','kidsbuilder'],
     ['.qd-price','18 / 800','body-lg','Off the body scale','quickdetail:byo-bowl'],
     ['.totals-row.total','16 / 800','body-lg','','checkout'],
@@ -606,6 +606,7 @@
     ['.cart-item-custom-name, .processing-order-meta','13 / 400','footnote','ok','payment'],
     ['.order-details-meta, .order-details-item-sub','13 / 400','footnote','ok','order-details'],
     ['.sidebar-lang-pill','13 / 400','footnote','ok','sidebar'],
+    ['.mode-sub','13 / 400','footnote','ok','ordertype'],
     ['.card-icon-tag','11 / 800 / .3px','—','Exempt: card-brand mark. Swap for the real SVG','cardsheet']
   ];
 
@@ -712,7 +713,7 @@
   function linkFor(r){
     var hl = r[5] || r[0].split(',')[0].trim();
     return PROTO + '?view=' + (document.documentElement.classList.contains('is-desktop') ? 'desktop' : 'mobile') +
-      '&hl=' + encodeURIComponent(hl) + '#' + r[4];
+      '&from=index&hl=' + encodeURIComponent(hl) + '#' + r[4];
   }
   function renderMig(){
     var rows = MIG.filter(function(r){ return active === 'all' || r[2].split(' ')[0] === active; });
