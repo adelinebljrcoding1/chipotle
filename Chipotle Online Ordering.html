@@ -846,6 +846,26 @@ html.capture .detail-pop, html.capture .detail-dim{animation:none!important;}
 .devmode-toggle{position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; align-items:center; gap:8px; padding:11px 16px 11px 14px; border:none; border-radius:999px; background:#18181c; color:#fff; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.3); letter-spacing:.2px;}
 /* Bottom-left prototype tools: Index + phone frame on/off */
 .proto-tools{position:fixed; bottom:20px; left:20px; z-index:9999; display:flex; gap:8px;}
+/* ---- Phones: prototype tools tucked behind one small tab ----
+   On a narrow screen the prototype fills the window, so Index / Phone frame / Comment / Dev Mode would cover
+   the app. They hide behind a tab on the right edge; tap it to show or hide them. Desktop is unchanged. */
+.tools-tab{display:none;}
+html.compact-tools .tools-tab{display:flex; position:fixed; right:0; top:50%; transform:translateY(-50%); z-index:10000; width:28px; height:52px; align-items:center; justify-content:center; padding:0; border:none; border-radius:10px 0 0 10px; background:rgba(24,24,28,.55); color:#fff; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.25);}
+html.compact-tools.tools-open .tools-tab{background:#18181c;}
+html.compact-tools:not(.tools-open) .proto-tools,
+html.compact-tools:not(.tools-open) .devmode-toggle,
+html.compact-tools:not(.tools-open) .comment-toggle,
+html.compact-tools:not(.tools-open) .comment-resolved-toggle,
+html.compact-tools:not(.tools-open) .comment-hint,
+html.compact-tools:not(.tools-open) .devmode-hint{display:none!important;}
+html.compact-tools .proto-tools{left:12px; bottom:12px;}
+html.compact-tools .devmode-toggle{right:12px; bottom:12px;}
+html.compact-tools .comment-toggle{right:12px; top:12px;}
+/* Icon-only bottom buttons on phones so they don't run into each other (labels stay for screen readers via aria/title). */
+html.compact-tools .proto-tools .index-toggle span,
+html.compact-tools .frame-toggle > span,
+html.compact-tools #devmode-toggle-label{display:none;}
+html.compact-tools .proto-tools .index-toggle, html.compact-tools .frame-toggle, html.compact-tools .devmode-toggle{padding:12px; gap:0;}
 .proto-tools .index-toggle{position:static;}
 .frame-toggle{display:flex; align-items:center; gap:8px; padding:11px 16px 11px 14px; border:none; border-radius:999px; background:#18181c; color:#fff; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.3); letter-spacing:.2px;}
 .frame-toggle svg{display:block; flex-shrink:0;}
@@ -1754,8 +1774,9 @@ body.comment-on .comment-resolved-toggle{top:100px;}
 </div>
 
 <!-- ===================== INDEX SHORTCUT ===================== -->
+<button class="tools-tab devmode-ui" id="tools-tab" onclick="toggleProtoTools()" aria-label="Show prototype tools" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg></button>
 <div class="proto-tools devmode-ui">
-<a class="index-toggle" href="index.html">
+<a class="index-toggle" href="index.html" aria-label="Index" title="Index">
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
   <span>Index</span>
 </a>
@@ -1766,7 +1787,7 @@ body.comment-on .comment-resolved-toggle{top:100px;}
 </div>
 
 <!-- ===================== DEV MODE INSPECTOR ===================== -->
-<button class="devmode-toggle devmode-ui" id="devmode-toggle" onclick="toggleDevMode()">
+<button class="devmode-toggle devmode-ui" id="devmode-toggle" onclick="toggleDevMode()" aria-label="Dev Mode" title="Dev Mode">
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
   <span id="devmode-toggle-label">Dev Mode</span>
 </button>
@@ -4413,6 +4434,20 @@ function setPhoneFrame(on, remember){
   if(btn){ btn.setAttribute('aria-pressed', on ? 'true' : 'false'); document.getElementById('frame-toggle-state').textContent = on ? 'On' : 'Off'; }
   if(remember){ try{ localStorage.setItem('chipotle-phone-frame', on ? '1' : '0'); }catch(e){} }
 }
+/* Compact tools on phone-width screens (and whenever the window is narrow). */
+function toggleProtoTools(force){
+  var html = document.documentElement;
+  var open = typeof force==='boolean' ? force : !html.classList.contains('tools-open');
+  html.classList.toggle('tools-open', open);
+  var t = document.getElementById('tools-tab');
+  if(t){ t.setAttribute('aria-expanded', open ? 'true' : 'false'); t.setAttribute('aria-label', open ? 'Hide prototype tools' : 'Show prototype tools'); }
+}
+(function(){
+  var mq = window.matchMedia('(max-width: 600px)');
+  function apply(){ document.documentElement.classList.toggle('compact-tools', mq.matches); }
+  apply();
+  if(mq.addEventListener) mq.addEventListener('change', apply); else mq.addListener(apply);
+})();
 function togglePhoneFrame(){
   setPhoneFrame(document.documentElement.classList.contains('no-frame'), true);
   // Drop a ?frame= from the URL so a reload keeps the choice just made.
