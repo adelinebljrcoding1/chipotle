@@ -114,12 +114,13 @@ button{font-family:inherit;}
 
 /* ---------- happy points card (top of menu, the landing page) ---------- */
 .menu-account-card{position:relative; display:flex; align-items:center; gap:12px; background:#fff; border-radius:var(--radius-lg); padding:16px 16px 16px 20px; margin:4px 16px 16px; box-shadow:var(--shadow-card); cursor:pointer;}
+.menu-account-card.is-guest{margin-top:16px;} /* same space above the Join card as below it */
 /* Guests can dismiss the "Join Happy Points" card; it comes back on the next visit. */
-.menu-account-card.is-guest{padding-right:36px;}
-.menu-account-close{position:absolute; top:4px; right:4px; width:32px; height:32px; border:none; border-radius:50%; background:none; color:var(--taupe); opacity:.45; font-size:12px; line-height:1; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;} /* small, muted glyph; 32px tap area */
+.menu-account-card.is-guest{padding-right:16px;}
+.menu-account-close{position:absolute; top:4px; right:4px; width:40px; height:40px; border:none; border-radius:50%; background:none; color:var(--taupe); opacity:.6; line-height:1; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;} /* muted ✕ (18px icon); 40px tap area */
 .menu-account-close:hover{opacity:.8;}
 .menu-account-card:not(.is-guest) .menu-account-close{display:none;}
-.menu-account-card.is-guest .chev{display:none;} /* guests get the close button instead */
+.menu-account-card.is-guest .chev{display:block;} /* no dismiss: the chevron shows the card leads to sign up */
 .menu-account-card.dismissed{display:none;}
 .menu-account-text{flex:1; min-width:0;}
 .menu-account-title{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-size:18px; line-height:1.2; font-weight:700; color:var(--brown); text-transform:uppercase; letter-spacing:0;}
@@ -149,18 +150,23 @@ button{font-family:inherit;}
 .menu-points-btn.has-tier{background:#fff; color:var(--brown);} /* same brown as menu item names */ /* white container, like the other header buttons */
 .menu-points-btn .pts-dot{width:14px; height:14px; border-radius:50%; background:#B87333; flex-shrink:0;}
 .menu-points-btn .pts-amt{font-size:18px; transform:translateY(2px);} /* Trade Gothic digits sit high; optically centre them with the dot */
-.menu-filter-search-btn{width:43px; height:43px;}
-.menu-outlet-pin{flex-shrink:0; margin-right:-6px; opacity:.7;} /* design B: pin before the store name */
+.menu-filter-search-btn{width:40px; height:40px;}
+.menu-outlet-pin{flex-shrink:0; width:20px; height:20px; margin-right:-6px;} /* design B: pin before the store name; full strength like the sidebar pin */
+/* "Downtown" and "0 Points" are centred on the pin: their cap height is centred on the pin's box
+   (Gotham's caps sit ~0.5px above the line-box centre, so the words drop 0.5px). */
+#menu-header .menu-outlet, #menu-points-btn .pts-num, #menu-points-btn .pts-word{position:relative; top:.5px;}
 #screen-menu:not(.header-alt-b) .menu-outlet-pin,
 #screen-menu:not(.header-alt-b) .menu-points-btn,
 #screen-menu:not(.header-alt-b) .menu-filter-search-btn,
 #screen-menu.header-alt-b #menu-header-search-btn,
 #screen-menu.header-alt-b .menu-logo-text,
 #screen-menu.member-alt-b #menu-member-block{display:none;}
-.menu-account-card .chev{color:var(--taupe); flex-shrink:0;}
+.menu-account-card .chev{color:var(--taupe); flex-shrink:0; width:20px; height:20px;}
 
 /* ---------- order type sheet ---------- */
-.order-type-sheet{background:#fff; border-radius:var(--radius-lg) var(--radius-lg) 0 0; padding:26px 22px 30px; margin-top:auto; text-align:left; color:var(--brown); width:100%; position:relative;}
+.order-type-sheet{background:#fff; border-radius:12px 12px 0 0; padding:26px 22px 30px; margin-top:auto; text-align:left; color:var(--brown); width:100%; position:relative;}
+#screen-mealname:not(.hidden) .order-type-sheet{animation:detailUp .28s cubic-bezier(.2,.8,.2,1);} /* slides up over the detail pop-up */
+#screen-mealname:not(.hidden){animation:detailFade .2s ease-out;}
 .order-type-sheet-tall{min-height:70%; display:flex; flex-direction:column;}
 .order-type-sheet-tall .btn-primary{margin-top:auto;}
 
@@ -169,7 +175,7 @@ button{font-family:inherit;}
 .sheet-overlay.hidden{display:none!important;}
 .schedule-sheet{background:var(--cream); border-radius:var(--radius-lg) var(--radius-lg) 0 0; min-height:78%; max-height:88%; display:flex; flex-direction:column; overflow:hidden;}
 .schedule-sheet .scroll{flex:1;}
-.order-type-close{position:absolute; top:16px; right:16px; width:30px; height:30px; border-radius:50%; border:none; background:var(--tan-line,#eee); color:var(--brown); font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;}
+.order-type-close{position:absolute; top:18px; right:12px; width:40px; height:40px; border:none; background:none; color:var(--brown); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;} /* same ✕ as the detail pop-up */
 .order-type-sheet h2{font-size:20px; margin:0 0 16px;}
 .order-option{display:flex; align-items:center; gap:12px; border:1.5px solid var(--grey-line); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:12px; cursor:pointer;}
 .order-option.selected{border-color:var(--red); background:#FBEAE7;}
@@ -222,10 +228,11 @@ button{font-family:inherit;}
 .menu-outlet{font-size:15px; color:var(--taupe); font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .menu-filters-row{display:flex; align-items:center; gap:10px; padding:2px 16px 12px; background:var(--cream);}
 .icon-round-btn{width:36px; height:36px; border-radius:4px; border:1.5px solid var(--grey-line); background:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; cursor:pointer; flex-shrink:0; padding:0;}
-.filter-pill{display:flex; align-items:center; gap:8px; height:43px; border:1.5px solid var(--grey-line); border-radius:4px; background:#fff; padding:0 16px; font-weight:700; font-size:14px; color:var(--brown); cursor:pointer; box-sizing:border-box;}
+.filter-pill{display:flex; align-items:center; gap:8px; height:40px; border:1.5px solid var(--grey-line); border-radius:4px; background:#fff; padding:0 16px; font-weight:700; font-size:14px; color:var(--brown); cursor:pointer; box-sizing:border-box;}
 .combined-filter-pill{flex:1; justify-content:space-between; min-width:0;}
 .combined-filter-pill span:first-child{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.filter-pill .chevron{display:inline-flex; align-items:center; justify-content:center; line-height:1; color:var(--taupe); font-size:14px; flex-shrink:0;}
+.filter-pill .chevron{display:inline-flex; align-items:center; justify-content:center; line-height:1; color:var(--taupe); flex-shrink:0;}
+.filter-pill .chevron svg{display:block; width:20px; height:20px;}
 .search-bar-row{display:flex; align-items:center; gap:10px; padding:14px 16px 12px; background:var(--cream);}
 .search-input-pill{flex:1; min-width:0; display:flex; align-items:center; gap:8px; border:1.5px solid var(--grey-line); border-radius:4px; background:#fff; padding:9px 14px;}
 .search-input-pill .search-icon{flex-shrink:0;}
@@ -244,6 +251,9 @@ button{font-family:inherit;}
 /* ---------- menu list ---------- */
 .menu-section-title{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:14px; letter-spacing:.4px; color:var(--grey); margin:18px 16px 8px; text-transform:uppercase;}
 .menu-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:16px 16px 0;}
+/* Category sections in the single menu list */
+.menu-cat-title{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:20px; line-height:24px; color:#451500; text-transform:uppercase; margin:32px 16px 0;}
+.menu-cat:first-child .menu-cat-title{margin-top:32px;} /* collapses with the Join card's 16px margin: 32px gap, same as between categories */
 .meal-card{background:#fff; border-radius:var(--radius-md); box-shadow:var(--shadow-card); overflow:hidden; cursor:pointer; display:flex; flex-direction:column;}
 .meal-thumb{aspect-ratio:1/1; width:100%; background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden;}
 .meal-thumb img{width:100%; height:100%; object-fit:cover;}
@@ -258,8 +268,8 @@ button{font-family:inherit;}
 .meal-add-btn{width:26px; height:26px; border-radius:50%; background:var(--red); color:#fff; border:none; font-size:16px; font-weight:800; cursor:pointer; line-height:1;}
 
 .menu-cart-bar-wrap{position:sticky; bottom:0; padding:10px 16px 14px; background:linear-gradient(180deg,rgba(251,243,228,0) 0%, var(--cream) 40%);}
-.menu-cart-bar{display:flex; align-items:center; justify-content:space-between; background:var(--red); color:#fff; border-radius:var(--radius-lg); padding:14px 18px; font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 4px 14px rgba(173,33,24,.35);}
-#menu-cart-bar-count{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:18px; text-transform:uppercase;}
+.menu-cart-bar{display:flex; align-items:center; justify-content:space-between; background:var(--brown); color:#fff; border-radius:var(--radius-lg); padding:14px 18px; font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 4px 14px rgba(69,21,0,.3);}
+#menu-cart-bar-count{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:20px; text-transform:uppercase;}
 
 /* ---------- meal detail (simple quick-add) ---------- */
 .qd-topbar{position:relative; display:flex; align-items:center; justify-content:center; padding:14px 16px; background:var(--cream); border-bottom:1px solid var(--tan-line);}
@@ -269,13 +279,14 @@ button{font-family:inherit;}
 /* ---------- sidebar sheet ---------- */
 .sidebar-drawer{background:var(--cream); width:78%; max-width:320px; height:100%; padding:28px 20px 20px; display:flex; flex-direction:column; box-shadow:6px 0 24px rgba(69,20,0,.18);}
 .sidebar-drawer-top{display:flex; align-items:center; justify-content:space-between; margin:0 0 22px;}
-.sidebar-close-btn{width:32px; height:32px; border:none; background:none; padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.sidebar-close-btn{width:40px; height:40px; margin:-4px 0 -4px -14px; border:none; background:none; color:var(--brown); padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;} /* same ✕ as the detail pop-up; icon lines up with the logo */
 .sidebar-drawer-top{flex-wrap:wrap;}
 .sidebar-logo{order:3; flex-basis:100%; margin:16px 0 0;} /* own row, below the close button */
-.sidebar-logo img{height:33px; width:auto; display:block;} /* horizontal logo, 230×54 */
+.sidebar-logo img{height:44px; width:auto; display:block;} /* horizontal logo, 230×54 */
 .sidebar-lang-pill{display:flex; align-items:center; gap:4px; border:1.5px solid var(--grey-line); border-radius:999px; background:#fff; padding:8px 10px; font-size:13px; color:var(--brown); cursor:pointer; flex-shrink:0;}
-.sidebar-nav-row{display:flex; align-items:center; gap:14px; width:100%; border:none; background:none; padding:14px 0; font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:15px; text-transform:uppercase; color:var(--brown); cursor:pointer; text-align:left; border-bottom:1px solid var(--tan-line);}
-.sidebar-nav-row .icon{width:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.sidebar-nav-row{display:flex; align-items:center; gap:14px; width:100%; border:none; background:none; padding:14px 0; font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; color:var(--brown); cursor:pointer; text-align:left; border-bottom:1px solid var(--tan-line);}
+.sidebar-nav-row .icon{width:24px; height:24px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.sidebar-nav-row .icon img, .sidebar-nav-row .icon svg{width:24px; height:24px;} /* same height as the 20px label's line box */
 .sidebar-spacer{flex:1;}
 /* Logged-in sidebar (Roll'd-style layout): a Happy Points row with balance + tier sub-rows,
    and an Account group at the bottom (profile, order history, log out). No meter. */
@@ -301,7 +312,7 @@ button{font-family:inherit;}
 .sidebar-account .sidebar-nav-row:last-child{border-bottom:none;}
 #screen-sidebar:not(.is-member) .member-only,
 #screen-sidebar.is-member .guest-only{display:none;}
-.sidebar-login-btn{width:100%; border:none; background:var(--red); color:#fff; font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:15px; text-transform:uppercase; padding:15px; border-radius:4px; cursor:pointer;}
+.sidebar-login-btn{width:100%; border:none; background:#3C1400; color:#fff; font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; padding:13px 15px; border-radius:4px; cursor:pointer;}
 .qd-body{padding:20px 20px 100px;}
 .qd-hero-wrap{padding:20px 20px 4px; background:var(--cream);}
 .qd-hero{width:100%; height:260px; border-radius:16px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--cream-deep);}
@@ -370,35 +381,57 @@ button{font-family:inherit;}
 /* ---- Refined member menu (Logged in A / B references) ----
    .refined: header with plain "N POINTS" badge, bare search, PICK UP + time pills, pill tabs.
    .layout-b: Happy Points card on top and a one-column list of items. */
-#screen-menu:not(.refined) .refined-only, #screen-menu:not(.layout-b) .layout-b-only, #screen-menu.guest-menu .alt-switch{display:none!important;}
+#screen-menu:not(.refined) .refined-only, #screen-menu:not(.layout-b) .layout-b-only, #screen-menu.guest-menu .alt-switch,
+#screen-menu.guest-menu .menu-points-card{display:none!important;}
 .browser-bar{position:relative;}
 .alt-switch{position:absolute; right:14px; top:50%; transform:translateY(-50%); display:flex; gap:8px; font-family:'Nunito'; font-size:13px; letter-spacing:.04em; color:var(--taupe);}
 .alt-switch button{border:none; background:none; padding:2px 0; cursor:pointer; font:inherit; color:inherit; font-weight:400;}
 .alt-switch button.selected{font-weight:800; color:var(--brown);}
 .hp-rosette{width:22px; height:22px; display:block; flex-shrink:0;}
-#screen-menu.refined .menu-header .menu-outlet{font-size:17px; font-weight:700; color:var(--taupe);}
+#screen-menu.refined .menu-header .menu-outlet{font-size:17px; font-weight:700; color:var(--brown);}
 #screen-menu.refined .menu-points-btn.has-tier{background:none; box-shadow:none; color:var(--brown); padding:0; min-width:0; height:auto; gap:6px; display:flex; align-items:center;}
 #screen-menu.refined .menu-points-btn .pts-num{font-family:'Nunito'; font-weight:800; font-size:20px;}
-#screen-menu.refined .menu-points-btn .pts-word{font-family:'Nunito'; font-weight:700; font-size:15px; letter-spacing:.06em; text-transform:uppercase;}
+#screen-menu.refined .menu-points-btn .pts-word{font-family:'Nunito'; font-weight:700; font-size:15px; text-transform:none;}
 #screen-menu.refined .menu-filter-search-btn{border:none; background:none; width:32px;}
 #screen-menu.refined .menu-filter-search-btn img{opacity:.6; width:20px; height:20px;}
-.pf-type-pill{flex:0 0 auto; height:43px; padding:0 20px; border-radius:999px; border:1.5px solid var(--tan-line); background:#EFEDEA; color:#A9A3A0; font-family:'Nunito'; font-weight:800; font-size:14px; letter-spacing:.04em; text-transform:uppercase; cursor:pointer;}
+.pf-type-pill{flex:0 0 auto; height:40px; padding:0 20px; border-radius:999px; border:1.5px solid var(--tan-line); background:#EFEDEA; color:#A9A3A0; font-family:'Nunito'; font-weight:800; font-size:14px; text-transform:none; cursor:pointer;}
 #screen-menu.refined .combined-filter-pill{border-radius:999px; border-color:var(--tan-line); font-family:'Nunito'; font-weight:800; font-size:15px;}
 #screen-menu.refined .pf-prefix{display:none;}
-#screen-menu.refined .cat-scroll{padding:14px 16px;}
-#screen-menu.refined .cat-tab{border-radius:999px; border-color:var(--tan-line); font-family:'Nunito'; font-weight:800; font-size:14px; letter-spacing:.03em; padding:12px 18px; color:var(--brown);}
+#screen-menu.refined .cat-scroll{padding:4px 16px 14px;} /* sits close under the Pick up / ASAP row */
+/* ---- Scrolled (minimised) header ----
+   Scrolling the menu down hides the Pick up / ASAP row; search slides in at the left of the category
+   pills and stays fixed while the pills scroll sideways. Back at the top, the full header returns. */
+.cat-row{display:flex; align-items:center; background:var(--cream); border-bottom:1px solid var(--tan-line);}
+/* Frozen headers: same soft shadow as the menu cards, layered above the content scrolling beneath them. */
+.cat-row, .detail-head, .top-bar, .checkout-top-bar, .progress-strip{box-shadow:var(--shadow-card);}
+.cat-row, .checkout-top-bar{position:relative; z-index:3;}
+.cat-row .cat-scroll{flex:1; min-width:0; border-bottom:none;}
+.cat-search-btn{flex-shrink:0; width:0; height:41px; margin-left:0; padding:0; border:none; background:none; display:flex; align-items:center; justify-content:center; overflow:hidden; opacity:0; cursor:pointer; transition:width .22s ease, margin .22s ease, opacity .18s ease;}
+.cat-search-btn img{opacity:.6; width:20px; height:20px; flex-shrink:0;} /* same plain magnifier as the full header */
+#screen-menu .menu-filters-row{max-height:64px; overflow:hidden; transition:max-height .22s ease, opacity .18s ease, padding .22s ease;}
+#screen-menu.header-min .menu-filters-row{max-height:0; opacity:0; padding-top:0; padding-bottom:0;}
+#screen-menu.header-min .cat-search-btn{width:32px; margin-left:16px; margin-right:8px; opacity:1;}
+/* Line the search icon up with the pills, not the whole row (the row has 4px above the pills and 14px below). */
+.cat-search-btn{align-self:flex-start; margin-top:4px;}
+#screen-menu .cat-row .cat-scroll{transition:padding .22s ease;}
+#screen-menu.header-min .cat-row .cat-scroll{padding-left:0;} /* the 8px gap sits outside the scroller, so pills clip before reaching the search button */
+
+#screen-menu.refined .cat-tab{border-radius:999px; border-color:var(--tan-line); font-family:'Nunito'; font-weight:800; font-size:14px; padding:12px 18px; color:var(--brown); text-transform:none;} /* sentence case, like the Pick up / ASAP pills */
 #screen-menu.refined .cat-tab.selected{background:var(--brown); border-color:var(--brown); color:#fff;}
 .menu-points-card{display:flex; align-items:center; gap:14px; background:#fff; box-shadow:var(--shadow-card); border-radius:var(--radius-md); margin:16px 16px 0; padding:14px 16px; cursor:pointer;}
 .menu-points-card .hp-rosette{width:40px; height:40px;}
+.menu-account-card .hp-rosette{width:52px; height:52px;} /* Join Happy Points: same rosette as the member points card, centred on the two lines */
+.menu-account-card:not(.is-guest) .hp-rosette{display:none;}
 .mpc-text{flex:1; min-width:0;}
 .mpc-hi{font-size:13px; color:var(--taupe);}
 .mpc-pts{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:19px; text-transform:uppercase; color:var(--brown); margin-top:1px;}
-.mpc-view{font-family:'Nunito'; font-weight:800; font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:var(--brown);}
+.mpc-view{font-family:'Nunito'; font-weight:800; font-size:14px; letter-spacing:.06em; text-transform:uppercase; color:var(--brown);}
 #screen-menu.layout-b .menu-grid{grid-template-columns:1fr;}
-#screen-menu.layout-b .meal-card{flex-direction:row; align-items:center;}
-#screen-menu.layout-b .meal-thumb{width:38%; flex-shrink:0; aspect-ratio:1/1;}
-#screen-menu.layout-b .meal-thumb img{object-fit:contain; padding:6px;}
-#screen-menu.layout-b .meal-info{padding:12px 14px 12px 6px;}
+#screen-menu.layout-b .meal-card{flex-direction:row; align-items:stretch;}
+/* Big photo that bleeds off the card's left edge (cropped on the left), like the Pollo Asado / Chips rows. */
+#screen-menu.layout-b .meal-thumb{width:36%; flex-shrink:0; aspect-ratio:auto; min-height:128px; position:relative; justify-content:flex-end; background:none;}
+#screen-menu.layout-b .meal-thumb img{position:absolute; top:50%; right:0; width:150%; max-width:none; height:auto; aspect-ratio:1/1; transform:translateY(-50%); object-fit:contain; object-position:center; padding:0;}
+#screen-menu.layout-b .meal-info{padding:14px 16px 14px 14px; align-self:center;}
 
 /* ---- Sign in (login) screen ---- */
 .login-body{flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; padding:48px 24px 0; overflow-y:auto;}
@@ -438,6 +471,8 @@ button{font-family:inherit;}
 #screen-menu.refined .meal-name,
 #screen-menu.refined .mpc-pts,
 #screen-menu.refined .menu-account-title{font-family:'Trade Gothic LT Com','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:18px; line-height:22px;}
+#screen-menu.refined .meal-name{font-size:20px; line-height:24px;} /* item names */
+#screen-menu.refined .menu-account-title{font-size:18px; line-height:22px;} /* Join card title */
 #screen-menu.refined .cat-tab,
 #screen-menu.refined .pf-type-pill,
 #screen-menu.refined .combined-filter-pill,
@@ -445,11 +480,20 @@ button{font-family:inherit;}
 #screen-menu.refined .menu-points-btn .pts-num,
 #screen-menu.refined .menu-points-btn .pts-word,
 #screen-menu.refined .mpc-view{font-family:'Gotham','Nunito',sans-serif; font-weight:700; font-size:14px;}
+#screen-menu.refined .cat-tab{font-weight:500; font-size:14px;} /* category tabs: Gotham Medium, lighter than the other controls */
+#screen-menu.refined .menu-header .menu-outlet{font-weight:400;} /* outlet name: Gotham Book */
+#screen-menu.refined .menu-points-btn .pts-word{font-weight:400;} /* "Points": Gotham Book; the number stays bold */
+#screen-menu.refined .pf-type-pill, #screen-menu.refined .combined-filter-pill{font-weight:500;} /* Pick up + ASAP pills: Gotham Medium, same as the category tabs */
+/* Optical centring: Gotham's caps sit ~0.75px above the line-box centre, so the pill labels drop 0.75px. */
+#screen-menu.refined .cat-tab{padding-top:12.75px; padding-bottom:11.25px;}
+#screen-menu.refined .cat-tab:not(.selected){background:transparent; border-color:transparent;} /* unselected categories: text only, no fill or outline (border kept transparent so pills keep their size) */
+#screen-menu.refined .pf-type-pill{padding-top:1.5px;}
+#screen-menu.refined #menu-filter-label{position:relative; top:.75px;}
 #screen-menu.refined .meal-desc,
 #screen-menu.refined .mpc-hi,
-#screen-menu.refined .menu-account-sub{font-family:'Gotham','Nunito',sans-serif; font-weight:400; font-size:13px; line-height:20px; color:var(--taupe);}
+#screen-menu.refined .menu-account-sub{font-family:'Gotham','Nunito',sans-serif; font-weight:400; font-size:14px; line-height:20px; color:var(--taupe);}
 #screen-menu.refined .meal-price,
-#screen-menu.refined .meal-price-from{font-family:'Gotham','Nunito',sans-serif; font-weight:500; font-size:13px; line-height:20px;}
+#screen-menu.refined .meal-price-from{font-family:'Gotham','Nunito',sans-serif; font-weight:500; font-size:14px; line-height:20px;}
 #screen-menu.refined .meal-price{color:var(--red);}
 #screen-menu.refined .meal-price-from{color:var(--taupe);}
 
@@ -469,45 +513,56 @@ button{font-family:inherit;}
 
 /* ---- Builder V1 (new design): white option cards, and the protein portion is picked
    in an almost-full bottom sheet (level 1: portion · level 2: the other half). ---- */
-#screen-builder.builder-new .progress-strip{display:none;}
-#screen-builder.builder-new .builder-title-block{padding:24px 16px 4px;}
-#screen-builder.builder-new .qd-name,
-#screen-builder.builder-new .byo-section-title,
-#screen-builder.builder-new .variant-name{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; color:var(--brown); text-transform:uppercase;}
-#screen-builder.builder-new .qd-name{font-size:18px; line-height:22px; margin-bottom:6px;}
-#screen-builder.builder-new .qd-desc{font-family:'Gotham',sans-serif; font-size:13px; line-height:20px; color:var(--taupe);}
-#screen-builder.builder-new .byo-section{padding:28px 16px 8px; border-top:none;}
-#screen-builder.builder-new .byo-section-head{align-items:center; margin-bottom:4px;}
-#screen-builder.builder-new .byo-section-title{font-size:18px; line-height:22px;}
-#screen-builder.builder-new .byo-section-title .num{display:none;}
-#screen-builder.builder-new .byo-req-tag{font-family:'Gotham',sans-serif; font-size:12px; padding:3px 8px;}
-#screen-builder.builder-new .byo-section-hint{font-family:'Gotham',sans-serif; font-size:13px; line-height:20px; margin:0 0 16px;}
-#screen-builder.builder-new .split-toggle{border:none; box-shadow:0 1px 4px rgba(69,21,0,.08); font-family:'Gotham',sans-serif; font-size:13px;}
-#screen-builder.builder-new .variant-card{display:flow-root; background:#fff; border-radius:8px; box-shadow:0 1px 4px rgba(69,21,0,.08); margin-bottom:12px;}
-#screen-builder.builder-new .variant-row{border:none; background:none; margin:0; padding:12px 16px 12px 12px; gap:12px; box-shadow:none;}
-#screen-builder.builder-new .variant-row.no-thumb{padding-left:16px; min-height:70px;}
-#screen-builder.builder-new .variant-row.selected{background:none;}
-#screen-builder.builder-new .variant-thumb{width:60px; height:60px; border-radius:4px;}
-#screen-builder.builder-new .variant-name{font-size:14px; line-height:18px;}
-#screen-builder.builder-new .variant-meta{font-family:'Gotham',sans-serif; font-size:13px; line-height:20px; color:var(--brown);}
-#screen-builder.builder-new .variant-meta b{font-weight:500;}
-#screen-builder.builder-new .variant-meta .dot{margin:0 4px; color:var(--taupe);}
-#screen-builder.builder-new .variant-sub{font-family:'Gotham',sans-serif; font-size:13px; line-height:18px; color:var(--taupe);}
-#screen-builder.builder-new .variant-row.unavailable{opacity:.4;}
-#screen-builder.builder-new .variant-radio,
-#screen-builder.builder-new .variant-check{border-color:#D9CBB8;}
-#screen-builder.builder-new .variant-row.selected .variant-radio{border-color:var(--brown);}
-#screen-builder.builder-new .variant-row.selected .variant-radio::after{background:var(--brown);}
-#screen-builder.builder-new .variant-row.selected .variant-check{border-color:var(--brown); background:var(--brown);}
-#screen-builder.builder-new .mod-row{margin:0 16px 0 84px; padding-bottom:14px;}
-#screen-builder.builder-new .mod-pill{font-family:'Gotham',sans-serif; font-size:12px; font-weight:500;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .progress-strip{display:none;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .builder-title-block{padding:24px 16px 4px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .qd-name,
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-title,
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-name{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; color:var(--brown); text-transform:uppercase;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .qd-name{font-size:24px; line-height:28px; margin-bottom:12px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .qd-desc{font-family:'Gotham',sans-serif; font-size:14px; line-height:22px; color:var(--taupe);}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section{padding:28px 16px 8px; border-top:none;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-head{align-items:center; margin-bottom:4px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-title{font-size:20px; line-height:24px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-title .num{display:none;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-req-tag{font-family:'Gotham',sans-serif; font-size:14px; padding:3px 8px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-req-tag.optional{display:none;} /* only Required is tagged; untagged sections read as optional */
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-hint{font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; margin:0 0 16px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .split-toggle{border:none; box-shadow:0 1px 4px rgba(69,21,0,.08); font-family:'Gotham',sans-serif; font-size:14px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-card{display:flow-root; background:#fff; border-radius:8px; box-shadow:0 1px 4px rgba(69,21,0,.08); margin-bottom:12px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row{border:none; background:none; margin:0; padding:16px; gap:12px; box-shadow:none;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row.no-thumb{padding-left:16px; min-height:70px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row.selected{background:none;}
+/* Big photo cropped by the card's left edge, like the menu list. */
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-card{overflow:hidden;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row:not(.no-thumb){padding-left:0; align-items:stretch;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row:not(.no-thumb) .variant-info,
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row:not(.no-thumb) .variant-radio,
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row:not(.no-thumb) .variant-check{align-self:center;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-thumb{width:104px; height:auto; min-height:104px; margin:-16px 0; border-radius:0; background:none; position:relative; overflow:hidden;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-thumb img{position:absolute; top:50%; right:0; width:140%; max-width:none; height:auto; aspect-ratio:1/1; transform:translateY(-50%); object-fit:contain;}
+/* The "side of …" cup photos have extra empty space around a smaller, right-of-centre cup: zoom them so the cup matches the other photos. */
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-thumb img[src*="side%20of%20"]{width:200%; right:-15px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-name{font-size:18px; line-height:22px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-meta{font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; color:var(--brown); margin-top:4px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-meta b{font-weight:500;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-meta .dot{margin:0 4px; color:var(--taupe);}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-sub{font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; color:var(--taupe);}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-meta + .variant-sub{margin-top:4px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row.unavailable{opacity:.4;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-radio,
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-check{border-color:#D9CBB8;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row.selected .variant-radio{border-color:var(--brown);}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row.selected .variant-radio::after{background:var(--brown);}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row.selected .variant-check{border-color:var(--brown); background:var(--brown);}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .mod-row{margin:0 16px 0 116px; padding-bottom:14px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .mod-pill{font-family:'Gotham',sans-serif; font-size:12px; font-weight:500;}
 /* The chosen portion, shown inside the selected protein card. Tap to change it. */
-.pv-selection{display:flex; align-items:center; gap:12px; margin:0 12px 12px; padding:10px 12px; background:#F4F2EF; border-radius:4px; cursor:pointer; font-family:'Gotham',sans-serif;}
+.pv-selection{display:flex; align-items:center; gap:12px; margin:12px 12px 12px; padding:10px 12px; background:#F4F2EF; border-radius:4px; cursor:pointer; font-family:'Gotham',sans-serif;}
 .pv-selection .pv-sel-text{flex:1; min-width:0;}
-.pv-selection .pv-sel-label{font-size:13px; line-height:18px; font-weight:500; color:var(--brown);}
-.pv-selection .pv-sel-value{font-size:13px; line-height:18px; color:var(--taupe);}
-.pv-selection .pv-sel-right{display:flex; flex-direction:column; align-items:flex-end; gap:2px; font-size:13px; font-weight:500; color:var(--brown);}
-.pv-selection svg{color:var(--taupe);}
+.pv-selection .pv-sel-label{font-size:14px; line-height:20px; font-weight:500; color:var(--brown);}
+.pv-selection .pv-sel-value{font-size:14px; line-height:20px; color:var(--taupe); margin-top:4px;}
+.pv-selection .pv-sel-right{display:flex; flex-direction:column; align-items:flex-end; gap:2px; font-size:14px; font-weight:500; color:var(--brown);}
+.pv-selection svg{color:var(--taupe); flex-shrink:0;}
 
 .pv-overlay{position:absolute; inset:0; z-index:130; background:rgba(0,0,0,.6); display:flex; flex-direction:column; justify-content:flex-end;}
 .pv-overlay.hidden{display:none!important;}
@@ -522,27 +577,60 @@ button{font-family:inherit;}
 @keyframes pvBack{from{transform:translateX(-24px); opacity:0;} to{transform:none; opacity:1;}}
 .pv-head{display:flex; align-items:center; justify-content:space-between; gap:12px;}
 .pv-title{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:20px; line-height:24px; text-transform:uppercase; color:var(--brown);}
-.pv-req{font-family:'Gotham',sans-serif; font-size:12px; padding:3px 8px; border-radius:4px; background:#FBEAE7; color:var(--red); flex-shrink:0;}
-.pv-hint{font-family:'Gotham',sans-serif; font-size:13px; line-height:20px; color:var(--brown); margin:8px 0 20px;}
+.pv-req{font-family:'Gotham',sans-serif; font-size:14px; padding:3px 8px; border-radius:4px; background:#FBEAE7; color:var(--red); flex-shrink:0;}
+.pv-hint{font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; color:var(--brown); margin:4px 0 20px;}
 .pv-hint .pv-limit{color:var(--taupe); margin-left:4px;}
 .pv-hint.is-error{color:var(--red);}
 .pv-card{background:#fff; border-radius:8px; box-shadow:0 1px 4px rgba(69,21,0,.08); margin-bottom:16px; cursor:pointer;}
 .pv-row{display:flex; align-items:center; gap:12px; padding:16px;}
 .pv-row .pv-info{flex:1; min-width:0;}
-.pv-name{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:16px; line-height:20px; text-transform:uppercase; color:var(--brown);}
-.pv-meta{font-family:'Gotham',sans-serif; font-size:13px; line-height:20px; color:var(--brown); margin-top:2px;}
+.pv-name{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:18px; line-height:22px; text-transform:uppercase; color:var(--brown);}
+.pv-meta{font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; color:var(--brown); margin-top:4px;}
 .pv-meta b{font-weight:700;}
 .pv-meta .dot{margin:0 4px; color:var(--taupe);}
 .pv-meta .pv-muted{color:var(--taupe);}
 .pv-radio{width:22px; height:22px; border-radius:50%; border:2px solid #D9CBB8; flex-shrink:0; position:relative; box-sizing:border-box;}
+.pv-card.disabled{cursor:not-allowed; box-shadow:none; background:#F4F2EF;}
+.pv-card.disabled .pv-name{color:#B5A69C;}
+.pv-card.disabled .pv-radio{border-color:#E4DBD0; background:#EFEAE4;}
 .pv-card.selected .pv-radio::after{content:''; position:absolute; inset:4px; border-radius:50%; background:var(--brown);}
-.pv-required{display:flex; align-items:center; justify-content:space-between; margin:0 16px 16px; padding:10px 12px; background:#FBEAE7; color:var(--red); font-family:'Gotham',sans-serif; font-size:13px; line-height:18px;}
+.pv-required{display:flex; align-items:center; justify-content:space-between; margin:0 16px 16px; padding:10px 12px; background:#FBEAE7; color:var(--red); font-family:'Gotham',sans-serif; font-size:14px; line-height:18px;}
 .pv-foot{border-top:1px solid var(--tan-line); padding:12px 16px 18px;}
-.pv-foot .btn-add{width:100%;}
+.pv-foot{display:flex; gap:12px;}
+.pv-foot .btn-add{width:auto; flex:1;}
+.pv-remove{flex-shrink:0; height:52px; padding:0 18px; border:1.5px solid var(--brown); border-radius:4px; background:#fff; color:var(--brown); font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:16px; text-transform:uppercase; cursor:pointer;}
+.pv-remove.hidden{display:none;}
 
 .byo-footer-spacer{height:14px;}
+
+/* ---- Menu detail as a pop-up: slides up over the menu under the browser bar.
+   Sticky header (name + ✕), the hero image scrolls away with the content. ---- */
+.detail-screen{background:transparent; z-index:5;}
+.detail-screen > .statusbar, .detail-screen > .browser-bar{display:none;} /* the menu's own status bar shows, dimmed, behind the sheet */
+.detail-dim{position:absolute; inset:0; z-index:1; background:rgba(0,0,0,.6); animation:detailFade .28s ease-out;}
+.detail-pop{position:absolute; left:0; right:0; bottom:0; height:calc(100% - 48px); z-index:2; display:flex; flex-direction:column; background:var(--cream); border-radius:12px 12px 0 0; overflow:hidden; animation:detailUp .32s cubic-bezier(.2,.8,.2,1);}
+.detail-screen.closing .detail-pop{animation:detailDown .24s ease-in forwards;}
+.detail-screen.closing .detail-dim{animation:detailFadeOut .24s ease-in forwards;}
+@keyframes detailUp{from{transform:translateY(100%);} to{transform:none;}}
+@keyframes detailDown{from{transform:none;} to{transform:translateY(100%);}}
+@keyframes detailFade{from{opacity:0;} to{opacity:1;}}
+@keyframes detailFadeOut{from{opacity:1;} to{opacity:0;}}
+html.capture .detail-pop, html.capture .detail-dim{animation:none!important;}
+.detail-head{position:relative; flex-shrink:0; height:56px; border-radius:12px 12px 0 0; display:flex; align-items:center; justify-content:center; padding:0 56px; background:var(--cream); border-bottom:1px solid var(--tan-line); z-index:7;}
+.detail-title{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:18px; line-height:22px; text-transform:uppercase; color:var(--brown); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.detail-close{position:absolute; right:8px; top:50%; transform:translateY(-50%); width:40px; height:40px; border:none; background:none; color:var(--brown); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0;}
+.detail-pop .scroll{min-height:0;}
+.detail-pop .builder-hero .hero-top{justify-content:flex-end;}
+/* Footer: − 1 + quantity picker beside Add */
+.detail-pop .builder-footer{background:#fff; border-top:none; box-shadow:0 -4px 16px rgba(69,21,0,.08); padding:12px 16px 20px;}
+.detail-pop .footer-actions{gap:12px;}
+.detail-pop .qty-stepper{border:none; background:none; padding:0; gap:12px;}
+.detail-pop .qty-stepper .qty-btn{width:44px; height:44px; border-radius:4px; border:1.5px solid var(--brown); background:#fff; color:var(--brown); font-size:20px; font-weight:500; display:flex; align-items:center; justify-content:center;}
+.detail-pop .qty-stepper .qty-btn:disabled{opacity:1; border-color:var(--tan-line); color:#cbb9a3;}
+.detail-pop .qty-stepper .qty-value{font-family:'Gotham',sans-serif; font-weight:500; font-size:16px; min-width:16px;}
+.detail-pop .footer-actions .btn-add{height:52px; padding:0 20px;}
 .builder-footer{position:sticky; bottom:0; background:var(--cream); border-top:1px solid var(--tan-line); padding:12px 20px 18px;}
-.builder-footer-note{font-size:14px; color:var(--red); font-weight:700; margin-bottom:8px; text-align:center; display:none;}
+.builder-footer-note{font-size:14px; color:var(--red); font-weight:700; margin:4px 0 16px; text-align:center; display:none;}
 .builder-footer-note.show{display:block;}
 .builder-qty{display:flex; align-items:center; gap:14px; justify-content:center; margin-bottom:10px;}
 .qty-value{font-weight:800; font-size:16px; min-width:20px; text-align:center;}
@@ -552,7 +640,7 @@ button{font-family:inherit;}
 .cart-thumb{width:56px; height:56px; border-radius:10px; overflow:hidden; flex-shrink:0; background:#f4ece0; display:flex; align-items:center; justify-content:center;}
 .cart-thumb img{width:100%; height:100%; object-fit:cover;}
 .cart-item-name{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:18px; text-transform:uppercase; margin-bottom:3px;}
-.cart-item-custom-name{font-size:13px; font-style:italic; color:var(--red); margin-bottom:4px;}
+.cart-item-custom-name{font-size:14px; font-style:italic; color:var(--red); margin-bottom:4px;}
 .cart-item-lines{font-size:14px; color:var(--taupe); line-height:1.5; margin-bottom:10px;}
 .cart-item-bottom{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
 .cart-item-price{font-weight:800; font-size:14px;}
@@ -580,6 +668,14 @@ button{font-family:inherit;}
 /* ---------- checkout ---------- */
 .field-label{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:14px; color:var(--grey); text-transform:uppercase; letter-spacing:.3px; margin:18px 0 8px;}
 .text-input{width:100%; padding:13px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--grey-line); font-size:14px; font-family:inherit; background:#fff;}
+#meal-name-input{font-size:16px;}
+/* Character counter under the meal name (max 20). Over the limit: red field + counter, Add to Cart disabled. */
+.meal-name-meta{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:6px; font-family:'Gotham',sans-serif; font-size:14px; line-height:20px;}
+.meal-name-count{margin-left:auto; color:var(--taupe);}
+.meal-name-error{color:var(--red); visibility:hidden;}
+.meal-name-meta.is-error .meal-name-count{color:var(--red);}
+.meal-name-meta.is-error .meal-name-error{visibility:visible;}
+#meal-name-input.is-error, #meal-name-input.is-error:focus{border-color:var(--red); outline:none;} /* meal name field: 16px (also stops iOS zooming in on focus) */
 .pay-row{display:flex; align-items:center; gap:12px; padding:13px 14px; border:1.5px solid var(--grey-line); border-radius:var(--radius-md); background:#fff; margin-bottom:10px; cursor:pointer;}
 .pay-row.selected{border-color:var(--red); background:#fff;}
 .pay-row .icon{font-size:20px;}
@@ -596,6 +692,12 @@ button{font-family:inherit;}
 .checkout-info-card{display:flex; align-items:center; justify-content:space-between; background:#fff; border:1.5px solid var(--grey-line); border-radius:4px; padding:14px 16px; margin-bottom:10px; cursor:pointer;}
 .checkout-info-label{font-size:14px; color:var(--taupe); margin-bottom:3px;}
 .checkout-info-value{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:15px; text-transform:uppercase; color:#451400;}
+.checkout-time-card{justify-content:flex-start; gap:14px; border:2px solid var(--brown); padding:16px; margin-bottom:12px; box-shadow:0 2px 10px rgba(69,21,0,.08);}
+.checkout-time-card .ctc-icon{width:44px; height:44px; border-radius:50%; background:#F3EADF; color:var(--brown); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.checkout-time-card .ctc-text{flex:1; min-width:0;}
+.checkout-time-card .checkout-info-label{font-family:'Gotham',sans-serif; font-size:14px; color:var(--taupe); margin-bottom:2px;}
+.checkout-time-card .checkout-info-value{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-size:24px; line-height:28px; color:var(--brown);}
+.checkout-time-card .ctc-change{flex-shrink:0; padding:8px 12px; border:1.5px solid var(--brown); border-radius:4px; font-family:'Gotham',sans-serif; font-weight:500; font-size:14px; color:var(--brown); background:#fff;}
 .checkout-chevron{width:14px; height:14px; flex-shrink:0; background-color:var(--taupe); -webkit-mask:url('assets/alt-arrow-down-svgrepo-com.svg') no-repeat center / contain; mask:url('assets/alt-arrow-down-svgrepo-com.svg') no-repeat center / contain; transform:rotate(-90deg);}
 .checkout-divider{height:8px; background:var(--cream-deep); margin:8px 0;}
 .checkout-section-title{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:16px; text-transform:uppercase; color:var(--brown); margin-bottom:12px;}
@@ -742,6 +844,16 @@ button{font-family:inherit;}
 
 /* ---------- dev mode inspector ---------- */
 .devmode-toggle{position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; align-items:center; gap:8px; padding:11px 16px 11px 14px; border:none; border-radius:999px; background:#18181c; color:#fff; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.3); letter-spacing:.2px;}
+/* Bottom-left prototype tools: Index + phone frame on/off */
+.proto-tools{position:fixed; bottom:20px; left:20px; z-index:9999; display:flex; gap:8px;}
+.proto-tools .index-toggle{position:static;}
+.frame-toggle{display:flex; align-items:center; gap:8px; padding:11px 16px 11px 14px; border:none; border-radius:999px; background:#18181c; color:#fff; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.3); letter-spacing:.2px;}
+.frame-toggle svg{display:block; flex-shrink:0;}
+.frame-toggle .state{opacity:.6; font-weight:600;}
+/* Frame off: the prototype fills the window like a real mobile web page (max 430px wide, centred on desktop). */
+html.no-frame body{padding:0; align-items:flex-start; background:var(--cream);}
+html.no-frame .phone{width:100%; max-width:430px; height:100vh; height:100dvh; border-radius:0; box-shadow:none;}
+@media (min-width:431px){ html.no-frame body{background:#e7e5e1;} html.no-frame .phone{box-shadow:0 0 0 1px rgba(0,0,0,.06);} }
 .index-toggle{position:fixed; bottom:20px; left:20px; z-index:9999; display:flex; align-items:center; gap:8px; padding:11px 16px 11px 14px; border:none; border-radius:999px; background:#18181c; color:#fff; font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.3); letter-spacing:.2px; text-decoration:none;}
 .index-toggle svg{display:block; flex-shrink:0;}
 .devmode-toggle svg{display:block; flex-shrink:0;}
@@ -803,6 +915,10 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
 .comment-btn-post:hover{background:var(--red-dark);}
 .comment-btn-resolve{background:none; border:1.5px solid #d8cdb8!important; color:var(--brown);}
 .comment-btn-resolve.is-resolved{background:#e9e4d6; border-color:#e9e4d6!important;}
+/* Resolved comments are hidden; this pill (under the Comment button) shows them again. */
+.comment-resolved-toggle{position:fixed; top:58px; right:16px; z-index:9999; border:none; border-radius:999px; padding:7px 12px; background:#fff; color:var(--brown); font-family:'Nunito',sans-serif; font-size:11.5px; font-weight:800; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.2);}
+.comment-resolved-toggle.hidden{display:none;}
+body.comment-on .comment-resolved-toggle{top:100px;}
 </style>
 </head>
 <body>
@@ -813,7 +929,7 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
   <div class="screen hidden" id="screen-sidebar" style="justify-content:flex-start; background:rgba(0,0,0,.6);">
     <div class="sidebar-drawer">
       <div class="sidebar-drawer-top">
-        <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close"><img src="Icon%20X.svg" width="18" height="18" alt=""></button>
+        <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
         <div class="sidebar-logo"><img src="assets/logo-horizontal.svg" alt="Chipotle Mexican Grill"></div>
         <span class="sidebar-lang-pill"><img src="assets/Globe.svg" width="16" height="16" alt=""><img src="assets/CaretLeft.svg" width="10" height="10" alt="" style="transform:rotate(-90deg);"></span>
       </div>
@@ -838,12 +954,13 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
     </div>
   </div>
 
-  <div class="screen hidden" id="screen-mealname" style="justify-content:flex-end; background:rgba(0,0,0,.6);">
+  <div class="screen hidden" id="screen-mealname" style="justify-content:flex-end; background:rgba(0,0,0,.6); z-index:20;">
     <div class="order-type-sheet">
-      <button class="order-type-close" onclick="skipMealName()" aria-label="Close">✕</button>
+      <button class="order-type-close" onclick="skipMealName()" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
       <h2>Give this meal a name</h2>
-      <input type="text" class="text-input" id="meal-name-input" placeholder="e.g. My Favorite Burrito" maxlength="40">
-      <button class="btn-primary" style="margin-top:16px;" onclick="confirmMealName()">Add to Cart</button>
+      <input type="text" class="text-input" id="meal-name-input" placeholder="e.g. My Favorite Burrito" maxlength="60" oninput="updateMealNameCount()" aria-describedby="meal-name-count">
+      <div class="meal-name-meta"><span class="meal-name-error" id="meal-name-error">Name is too long</span><span class="meal-name-count" id="meal-name-count">0/20</span></div>
+      <button class="btn-primary" id="meal-name-add" style="margin-top:12px;" onclick="confirmMealName()">Add to Cart</button>
     </div>
   </div>
 
@@ -925,9 +1042,9 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
       <div class="alt-switch refined-only" role="group" aria-label="Layout"><button id="alt-a-btn" onclick="setMemberLayout('a')">ALT A</button><button id="alt-b-btn" onclick="setMemberLayout('b')">ALT B</button></div>
     </div>
     <div class="menu-header" id="menu-header">
-      <button class="icon-btn icon-btn-square" onclick="openSidebar()">☰</button>
+      <button class="icon-btn icon-btn-square" onclick="openSidebar()" aria-label="Open menu" style="color:var(--brown);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       <div class="menu-logo-text headline">Chipotle</div>
-      <img class="menu-outlet-pin" src="assets/MapPin.svg" width="16" height="16" alt="">
+      <img class="menu-outlet-pin" src="assets/MapPin.svg" width="20" height="20" alt="">
       <div class="menu-outlet" id="menu-outlet-name">Downtown</div>
       <button class="icon-btn icon-btn-square" id="menu-header-search-btn" onclick="openMenuSearch()" style="margin-left:auto;" aria-label="Search menu"><img src="assets/Magnify.svg" alt="" width="18" height="18"></button>
       <button class="menu-points-btn" id="menu-points-btn" onclick="showToast('Happy Points coming soon')" aria-label="Happy Points balance B$12.40"><small>B$</small>12.40</button>
@@ -937,7 +1054,7 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
       <button class="pf-type-pill refined-only" onclick="openOrderTypeSheet()">Pick up</button>
       <button class="filter-pill combined-filter-pill" id="menu-filter-pill" onclick="openOrderTypeSheet()">
         <span id="menu-filter-label">Pickup · ASAP (~30 min)</span>
-        <span class="chevron">⌄</span>
+        <span class="chevron"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
       </button>
     </div>
     <div class="search-bar-row hidden" id="search-bar-row">
@@ -950,10 +1067,14 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h6"/><circle cx="18" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></svg>
       </button>
     </div>
-    <div class="cat-scroll" id="cat-scroll"></div>
+    <div class="cat-row" id="cat-row">
+      <!-- Shown once the menu is scrolled: search moves in line with the categories and stays put while they slide -->
+      <button class="cat-search-btn" onclick="openMenuSearch()" aria-label="Search menu" tabindex="-1"><img src="assets/Magnify.svg" alt="" width="20" height="20"></button>
+      <div class="cat-scroll" id="cat-scroll"></div>
+    </div>
     <div class="scroll" id="menu-body-scroll">
       <div class="menu-points-card layout-b-only" onclick="openSidebar()">
-        <svg class="hp-rosette" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12.00,1.00 13.87,2.58 16.21,1.84 17.33,4.02 19.78,4.22 19.98,6.67 22.16,7.79 21.42,10.13 23.00,12.00 21.42,13.87 22.16,16.21 19.98,17.33 19.78,19.78 17.33,19.98 16.21,22.16 13.87,21.42 12.00,23.00 10.13,21.42 7.79,22.16 6.67,19.98 4.22,19.78 4.02,17.33 1.84,16.21 2.58,13.87 1.00,12.00 2.58,10.13 1.84,7.79 4.02,6.67 4.22,4.22 6.67,4.02 7.79,1.84 10.13,2.58" fill="#B4271C"/><rect x="10.2" y="5.2" width="3.6" height="4.2" rx=".7" fill="#fff"/><circle cx="12" cy="13.6" r="4.6" fill="#fff"/><circle cx="12" cy="13.6" r="2.1" fill="#B4271C"/></svg>
+        <img class="hp-rosette" src="assets/Loyalty%20icon/Rewards/Medallions/Large@3x.svg" alt="" aria-hidden="true">
         <div class="mpc-text"><div class="mpc-hi" id="mpc-hi">Hi John, you've got</div><div class="mpc-pts" id="mpc-pts">12 Happy Points</div></div>
         <span class="mpc-view">View</span>
       </div>
@@ -971,12 +1092,12 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
         </div>
       </div>
       <div class="menu-account-card is-guest" id="menu-account-card" onclick="openLogin()">
-        <button class="menu-account-close" onclick="event.stopPropagation(); dismissAccountCard();" aria-label="Close Join Happy Points">✕</button>
+        <img class="hp-rosette" src="assets/Loyalty%20icon/Rewards/Medallions/Large@3x.svg" alt="" aria-hidden="true">
         <div class="menu-account-text">
           <div class="menu-account-title" id="menu-account-title">Join Happy Points</div>
           <div class="menu-account-sub" id="menu-account-sub">Log in or sign up to start earning points</div>
         </div>
-        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+        <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </div>
       <div id="menu-sections"></div>
       <div style="height:20px;"></div>
@@ -990,7 +1111,7 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
   </div>
 
   <!-- ===================== QUICK-ADD DETAIL (non-burrito items) ===================== -->
-  <div class="screen hidden" id="screen-quickdetail">
+  <div class="screen hidden detail-screen" id="screen-quickdetail">
     <div class="statusbar">
       <span>9:41</span>
       <div class="icons">
@@ -1005,9 +1126,11 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
         chipotle.com/order
       </div>
     </div>
-    <div class="qd-topbar">
-      <div class="qd-topbar-title" id="qd-topbar-title">Item</div>
-      <button class="qd-close-btn" onclick="closeQuickDetail()">×</button>
+    <div class="detail-dim" onclick="closeQuickDetail()"></div>
+    <div class="detail-pop">
+    <div class="detail-head">
+      <div class="detail-title" id="qd-topbar-title">Item</div>
+      <button class="detail-close" onclick="closeQuickDetail()" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
     </div>
     <div class="scroll">
       <div class="qd-hero-wrap">
@@ -1032,10 +1155,11 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
         </button>
       </div>
     </div>
+    </div>
   </div>
 
   <!-- ===================== BURRITO BUILDER ===================== -->
-  <div class="screen hidden" id="screen-builder">
+  <div class="screen hidden detail-screen" id="screen-builder">
     <div class="statusbar">
       <span>9:41</span>
       <div class="icons">
@@ -1050,18 +1174,24 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
         chipotle.com/order
       </div>
     </div>
-    <div class="builder-hero">
-      <div class="hero-top">
-        <button class="icon-btn" onclick="closeBuilder()">←</button>
-        <div class="version-switch" id="builder-version-switch" role="group" aria-label="Builder version">
-          <button id="builder-v1-btn" class="selected" onclick="setBuilderVersion('v1')">V1</button>
-          <button id="builder-v2-btn" onclick="setBuilderVersion('v2')">V2</button>
-        </div>
-      </div>
-      <img id="builder-hero-img" src="Menu/Byo%20burrito/protein%3Aveggie/BYO%20burrito.png" alt="Build Your Own Burrito">
+    <div class="detail-dim" onclick="closeBuilder()"></div>
+    <div class="detail-pop">
+    <div class="detail-head">
+      <div class="detail-title" id="builder-head-title">Build Your Own Burrito</div>
+      <button class="detail-close" onclick="closeBuilder()" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
     </div>
-    <div class="progress-strip" id="progress-strip"></div>
     <div class="scroll">
+      <div class="builder-hero">
+        <div class="hero-top">
+          <span></span>
+          <div class="version-switch" id="builder-version-switch" role="group" aria-label="Builder version">
+            <button id="builder-v1-btn" class="selected" onclick="setBuilderVersion('v1')">V1</button>
+            <button id="builder-v2-btn" onclick="setBuilderVersion('v2')">V2</button>
+          </div>
+        </div>
+        <img id="builder-hero-img" src="Menu/Byo%20burrito/protein%3Aveggie/BYO%20burrito.png" alt="Build Your Own Burrito">
+      </div>
+      <div class="progress-strip" id="progress-strip"></div>
       <div class="builder-title-block">
         <div class="qd-name" id="builder-name">Build Your Own Burrito</div>
         <div class="qd-desc" id="builder-desc">Your choice of freshly grilled meat or sofritas wrapped in a warm flour tortilla with rice, beans, or fajita veggies, and topped with guac, salsa, queso blanco, sour cream or cheese.</div>
@@ -1072,11 +1202,17 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
     <div class="builder-footer">
       <div class="builder-footer-note" id="builder-note">Please choose your Protein, Rice and Beans to continue</div>
       <div class="footer-actions">
-        <button class="btn-add" id="byo-add-btn" onclick="addByoToCart()" style="width:100%;">
+        <div class="qty-stepper">
+          <button class="qty-btn" id="byo-qty-minus" onclick="changeByoQty(-1)" disabled aria-label="Decrease quantity">−</button>
+          <span class="qty-value" id="byo-qty-value">1</span>
+          <button class="qty-btn" onclick="changeByoQty(1)" aria-label="Increase quantity">+</button>
+        </div>
+        <button class="btn-add" id="byo-add-btn" onclick="addByoToCart()">
           <span id="byo-add-label">Add (1)</span>
           <span id="byo-add-price">$9.85</span>
         </button>
       </div>
+    </div>
     </div>
     <!-- Protein portion sheet (V1): level 1 = portion, level 2 = the other half -->
     <div class="pv-overlay hidden" id="pv-overlay" onclick="if(event.target===this) closePortionSheet()">
@@ -1087,6 +1223,7 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
         </div>
         <div class="pv-body" id="pv-body"></div>
         <div class="pv-foot">
+          <button class="pv-remove hidden" id="pv-remove" onclick="portionSheetRemove()">Remove</button>
           <button class="btn-add" onclick="portionSheetSelect()"><span>Select</span><span id="pv-price">$9.50</span></button>
         </div>
       </div>
@@ -1094,7 +1231,7 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
   </div>
 
   <!-- ===================== KID'S BUILD YOUR OWN ===================== -->
-  <div class="screen hidden" id="screen-kidsbuilder">
+  <div class="screen hidden detail-screen" id="screen-kidsbuilder">
     <div class="statusbar">
       <span>9:41</span>
       <div class="icons">
@@ -1109,13 +1246,16 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
         chipotle.com/order
       </div>
     </div>
-    <div class="builder-hero">
-      <div class="hero-top">
-        <button class="icon-btn" onclick="closeKidsBuilder()">←</button>
-      </div>
-      <div id="kb-hero" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:96px;"></div>
+    <div class="detail-dim" onclick="closeKidsBuilder()"></div>
+    <div class="detail-pop">
+    <div class="detail-head">
+      <div class="detail-title" id="kb-head-title">Kid's Build Your Own</div>
+      <button class="detail-close" onclick="closeKidsBuilder()" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
     </div>
     <div class="scroll">
+      <div class="builder-hero">
+        <div id="kb-hero" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:96px;"></div>
+      </div>
       <div class="builder-title-block">
         <div class="qd-name" id="kb-name">Kid's Build Your Own</div>
         <div class="qd-desc" id="kb-desc">Your choice of meat, guacamole or queso, and two toppings to go with a pair of crispy corn or soft flour tortillas. Includes fruit or kid's chips and organic juice or milk.</div>
@@ -1136,6 +1276,7 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
           <span id="kb-add-price">$0.00</span>
         </button>
       </div>
+    </div>
     </div>
   </div>
 
@@ -1204,19 +1345,20 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
       <div style="padding:20px 20px 4px;">
         <div class="checkout-section-row">
           <div class="checkout-section-label" id="checkout-pickup-label">Pick up</div>
-          <span class="checkout-change-link" onclick="openCheckoutPickupSheet()">Change</span>
+        </div>
+        <!-- The pickup time is the one thing to double-check before paying, so it leads the section. -->
+        <div class="checkout-info-card checkout-time-card" onclick="openCheckoutPickupSheet()">
+          <span class="ctc-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div class="ctc-text">
+            <div class="checkout-info-label" id="checkout-readytime-label">Ready time</div>
+            <div class="checkout-info-value" id="checkout-readytime-value">Today · ASAP</div>
+          </div>
+          <span class="ctc-change">Change</span>
         </div>
         <div class="checkout-info-card" onclick="openOrderTypeSheet()">
           <div>
             <div class="checkout-info-label">Outlet</div>
             <div class="checkout-info-value" id="checkout-outlet-value">Chipotle Downtown</div>
-          </div>
-          <span class="checkout-chevron"></span>
-        </div>
-        <div class="checkout-info-card" onclick="openCheckoutPickupSheet()">
-          <div>
-            <div class="checkout-info-label" id="checkout-readytime-label">Ready time</div>
-            <div class="checkout-info-value" id="checkout-readytime-value">Today · ASAP</div>
           </div>
           <span class="checkout-chevron"></span>
         </div>
@@ -1363,7 +1505,7 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
     </div>
     <div class="login-body">
       <img class="login-logo" src="assets/logo-horizontal.svg" alt="Chipotle Mexican Grill">
-      <div class="login-hp"><svg class="hp-rosette" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12.00,1.00 13.87,2.58 16.21,1.84 17.33,4.02 19.78,4.22 19.98,6.67 22.16,7.79 21.42,10.13 23.00,12.00 21.42,13.87 22.16,16.21 19.98,17.33 19.78,19.78 17.33,19.98 16.21,22.16 13.87,21.42 12.00,23.00 10.13,21.42 7.79,22.16 6.67,19.98 4.22,19.78 4.02,17.33 1.84,16.21 2.58,13.87 1.00,12.00 2.58,10.13 1.84,7.79 4.02,6.67 4.22,4.22 6.67,4.02 7.79,1.84 10.13,2.58" fill="#B4271C"/><rect x="10.2" y="5.2" width="3.6" height="4.2" rx=".7" fill="#fff"/><circle cx="12" cy="13.6" r="4.6" fill="#fff"/><circle cx="12" cy="13.6" r="2.1" fill="#B4271C"/></svg>Happy Points</div>
+      <div class="login-hp"><img class="hp-rosette" src="assets/Loyalty%20icon/Rewards/Medallions/Large@3x.svg" alt="" aria-hidden="true">Happy Points</div>
       <div class="login-title">Sign in or create an account</div>
       <div class="checkout-phone-row">
         <span class="checkout-phone-flag">🇺🇸</span><span class="checkout-phone-code">+1</span>
@@ -1612,10 +1754,16 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
 </div>
 
 <!-- ===================== INDEX SHORTCUT ===================== -->
-<a class="index-toggle devmode-ui" href="index.html">
+<div class="proto-tools devmode-ui">
+<a class="index-toggle" href="index.html">
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
   <span>Index</span>
 </a>
+<button class="frame-toggle" id="frame-toggle" onclick="togglePhoneFrame()" aria-pressed="true" title="Show or hide the phone mockup">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>
+  <span>Phone frame <span class="state" id="frame-toggle-state">On</span></span>
+</button>
+</div>
 
 <!-- ===================== DEV MODE INSPECTOR ===================== -->
 <button class="devmode-toggle devmode-ui" id="devmode-toggle" onclick="toggleDevMode()">
@@ -1643,6 +1791,7 @@ body.comment-on .screen:not(.hidden), body.comment-on .screen:not(.hidden) .scro
 </button>
 <div class="comment-hint devmode-ui" id="comment-hint">Click anywhere on the prototype to leave a comment</div>
 <div class="comment-popover devmode-ui hidden" id="comment-popover"></div>
+<button class="comment-resolved-toggle devmode-ui hidden" id="comment-resolved-toggle" onclick="toggleShowResolved()"></button>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
@@ -1670,10 +1819,10 @@ var PROTEIN_IMG = 'protein%3Aveggie/';
 var proteinImg = function(name){ return IMG + PROTEIN_IMG + encodeURIComponent(name) + '.png'; };
 
 var CATEGORIES = [
-  {id:'byo', label:'Build Your Own'},
-  {id:'family', label:'Family Meals'},
-  {id:'kids', label:'Kids Meal'},
-  {id:'chips', label:'Chips & Sides'}
+  {id:'byo', label:'Build your own'},
+  {id:'family', label:'Family meals'},
+  {id:'kids', label:'Kids meal'},
+  {id:'chips', label:'Chips & sides'}
 ];
 
 var MENU_ITEMS = {
@@ -1721,12 +1870,12 @@ var TACO_1_PRICES = {'Pollo Asado':3.75, 'Chicken':3.50, 'Steak':4.60, 'Beef Bar
 var RICE_OPTIONS = [
   {name:'White Rice', cal:210, img:IMG+'rice/white%20rice.png', modifiers:['Normal','Light','Extra','Side']},
   {name:'Brown Rice', cal:210, img:IMG+'rice/brown%20rice.png', modifiers:['Normal','Light','Extra','Side']},
-  {name:'No Rice', cal:0}
+  {name:'No Rice', cal:0, img:'Menu/no-selection-offset.svg'}
 ];
 var BEANS_OPTIONS = [
   {name:'Black Beans', cal:130, img:IMG+'beans/black%20beans.png', modifiers:['Normal','Light','Extra','Side']},
   {name:'Pinto Beans', cal:130, img:IMG+'beans/pinto%20beans.png', modifiers:['Normal','Light','Extra','Side']},
-  {name:'No Beans', cal:0}
+  {name:'No Beans', cal:0, img:'Menu/no-selection-offset.svg'}
 ];
 var TOPPINGS_OPTIONS = [
   {name:'Cilantro Lime Sauce', sub:'Made Fresh Daily', cal:80, price:1.00, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/cilantro%20lime%20sauce%20(new%20).png'},
@@ -1867,49 +2016,49 @@ function currentBuilderSections(){ return BUILDER_CONFIGS[currentBuilderId].sect
 var KIDS_SECTIONS = [
   { id:'ktortilla', num:1, title:'Tortilla', required:true, type:'single',
     options:[
-      {name:'2 Soft Flour Tortillas', cal:170, emoji:'🌯'},
-      {name:'2 Crispy Corn Tortillas', cal:140, emoji:'🌮'}
+      {name:'2 Soft Flour Tortillas', cal:170, emoji:'🌯', img:IMG+'Byo%20Kids/order%20(2).png'},
+      {name:'2 Crispy Corn Tortillas', cal:140, emoji:'🌮', img:IMG+'Byo%20Kids/order%20(3).png'}
     ]},
   { id:'kprotein', num:2, title:'Protein or Veggie', required:true, type:'single',
     options:[
-      {name:'Pollo Asado', sub:'Fresh Taste of Lime & Cilantro', tag:'ALL-NEW', cal:90, emoji:'🍗'},
-      {name:'Chicken', cal:90, emoji:'🍗'},
-      {name:'Steak', cal:70, emoji:'🥩'},
-      {name:'Beef Barbacoa', cal:80, emoji:'🥩'},
-      {name:'Carnitas', cal:110, emoji:'🍖'},
-      {name:'Sofritas', sub:'Plant-Based Protein', cal:70, emoji:'🌱'},
-      {name:'Queso Blanco', cal:120, emoji:'🧀'},
-      {name:'Guacamole', cal:110, emoji:'🥑'}
+      {name:'Pollo Asado', sub:'Fresh Taste of Lime & Cilantro', tag:'ALL-NEW', cal:90, emoji:'🍗', img:proteinImg('Pollo Asado')},
+      {name:'Chicken', cal:90, emoji:'🍗', img:proteinImg('Chicken')},
+      {name:'Steak', cal:70, emoji:'🥩', img:proteinImg('Steak')},
+      {name:'Beef Barbacoa', cal:80, emoji:'🥩', img:proteinImg('Beef Barbacoa')},
+      {name:'Carnitas', cal:110, emoji:'🍖', img:proteinImg('Carnitas')},
+      {name:'Sofritas', sub:'Plant-Based Protein', cal:70, emoji:'🌱', img:proteinImg('Sofritas')},
+      {name:'Queso Blanco', cal:120, emoji:'🧀', img:IMG+'top%20things%20off/order%20(9).png'},
+      {name:'Guacamole', cal:110, emoji:'🥑', img:IMG+'single%20sides/1%20side%20of%20guacamole.png'}
     ]},
   { id:'ktoppings', num:3, title:'Toppings', required:false, type:'multi',
     hint:'Choose up to 2 toppings, included.',
     options:[
-      {name:'White Rice', cal:210, emoji:'🍚'},
-      {name:'Brown Rice', cal:210, emoji:'🍚'},
-      {name:'Black Beans', cal:130, emoji:'🫘'},
-      {name:'Pinto Beans', cal:130, emoji:'🫘'},
-      {name:'Fresh Tomato Salsa', sub:'Mild', cal:25, emoji:'🍅'},
-      {name:'Roasted Chili-Corn Salsa', sub:'Medium', cal:80, emoji:'🌽'},
-      {name:'Tomatillo-Green Chili Salsa', sub:'Medium', cal:15, emoji:'🟢'},
-      {name:'Tomatillo-Red Chili Salsa', sub:'Hot', cal:30, emoji:'🔴'},
-      {name:'Sour Cream', cal:110, emoji:'🥛'},
-      {name:'Fajita Veggies', cal:20, emoji:'🫑'},
-      {name:'Cheese', cal:110, emoji:'🧀'},
-      {name:'Romaine Lettuce', cal:5, emoji:'🥬'},
+      {name:'White Rice', cal:210, emoji:'🍚', img:IMG+'rice/white%20rice.png'},
+      {name:'Brown Rice', cal:210, emoji:'🍚', img:IMG+'rice/brown%20rice.png'},
+      {name:'Black Beans', cal:130, emoji:'🫘', img:IMG+'beans/black%20beans.png'},
+      {name:'Pinto Beans', cal:130, emoji:'🫘', img:IMG+'beans/pinto%20beans.png'},
+      {name:'Fresh Tomato Salsa', sub:'Mild', cal:25, emoji:'🍅', img:IMG+'top%20things%20off/order%20(1).png'},
+      {name:'Roasted Chili-Corn Salsa', sub:'Medium', cal:80, emoji:'🌽', img:IMG+'top%20things%20off/order%20(2).png'},
+      {name:'Tomatillo-Green Chili Salsa', sub:'Medium', cal:15, emoji:'🟢', img:IMG+'top%20things%20off/order%20(3).png'},
+      {name:'Tomatillo-Red Chili Salsa', sub:'Hot', cal:30, emoji:'🔴', img:IMG+'top%20things%20off/order%20(4).png'},
+      {name:'Sour Cream', cal:110, emoji:'🥛', img:IMG+'top%20things%20off/order%20(5).png'},
+      {name:'Fajita Veggies', cal:20, emoji:'🫑', img:IMG+'top%20things%20off/order%20(6).png'},
+      {name:'Cheese', cal:110, emoji:'🧀', img:IMG+'top%20things%20off/order%20(7).png'},
+      {name:'Romaine Lettuce', cal:5, emoji:'🥬', img:IMG+'top%20things%20off/order%20(8).png'},
       {name:'No included toppings', cal:0, none:true, emoji:'🚫'}
     ]},
   { id:'ksides', num:4, title:'Included Sides', required:true, type:'single',
     options:[
-      {name:"Kid's Chips", cal:140, emoji:'🌽'},
-      {name:"Kid's Fruit", cal:35, emoji:'🍇'},
+      {name:"Kid's Chips", cal:140, emoji:'🌽', img:IMG+'Byo%20Kids/chips.png'},
+      {name:"Kid's Fruit", cal:35, emoji:'🍇', img:IMG+'Byo%20Kids/order%20(4).png'},
       {name:'No included sides', cal:0, none:true, emoji:'🚫'}
     ]},
   { id:'kdrink', num:5, title:'Drink', required:true, type:'single',
     options:[
-      {name:'Organic Chocolate Milk', cal:160, emoji:'🍫'},
-      {name:'Organic Milk', cal:110, emoji:'🥛'},
-      {name:'16 fl oz Soda/Iced Tea', cal:220, emoji:'🥤'},
-      {name:'Organic Apple Juice', cal:100, emoji:'🧃'},
+      {name:'Organic Chocolate Milk', cal:160, emoji:'🍫', img:IMG+'Byo%20Kids/order%20(5).png'},
+      {name:'Organic Milk', cal:110, emoji:'🥛', img:IMG+'Byo%20Kids/order%20(6).png'},
+      {name:'16 fl oz Soda/Iced Tea', cal:220, emoji:'🥤', img:IMG+'Byo%20Kids/order%20(7).png'},
+      {name:'Organic Apple Juice', cal:100, emoji:'🧃', img:IMG+'Byo%20Kids/order%20(8).png'},
       {name:'No drink', cal:0, none:true, emoji:'🚫'}
     ]}
 ];
@@ -1970,10 +2119,28 @@ var pendingCartItem = null;
 function openMealNameSheet(item){
   pendingCartItem = item;
   document.getElementById('meal-name-input').value = '';
+  updateMealNameCount();
+  // Sit over the screen it was opened from (e.g. the detail pop-up, with the menu under that).
+  var from = document.getElementById(currentScreenId);
   show('screen-mealname');
+  if(from && from.id!=='screen-mealname'){
+    from.classList.remove('hidden');
+    if(from.classList.contains('detail-screen')) document.getElementById('screen-menu').classList.remove('hidden');
+  }
 }
 function skipMealName(){ finalizeCartAdd(''); }
+var MEAL_NAME_MAX = 20;
+function updateMealNameCount(){
+  var input = document.getElementById('meal-name-input');
+  var n = input.value.length, over = n > MEAL_NAME_MAX;
+  document.getElementById('meal-name-count').textContent = n+'/'+MEAL_NAME_MAX;
+  input.classList.toggle('is-error', over);
+  input.setAttribute('aria-invalid', over ? 'true' : 'false');
+  document.querySelector('.meal-name-meta').classList.toggle('is-error', over);
+  document.getElementById('meal-name-add').disabled = over;
+}
 function confirmMealName(){
+  if(document.getElementById('meal-name-input').value.length > MEAL_NAME_MAX) return;
   var custom = document.getElementById('meal-name-input').value.trim();
   finalizeCartAdd(custom);
 }
@@ -2156,10 +2323,61 @@ function renderCatTabs(){
     return '<button class="cat-tab'+(c.id===currentCategory?' selected':'')+'" onclick="selectCategory(\''+c.id+'\')">'+c.label+'</button>';
   }).join('');
 }
-function selectCategory(id){
+/* All categories are listed in one scrolling page, each under its own title.
+   Tapping a pill scrolls to that category; scrolling highlights the pill of the category in view. */
+var menuSpyLock = null;
+// A section's top within the menu's scrolling content.
+function menuSecTop(sec){
+  var body = document.getElementById('menu-body-scroll');
+  return sec.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop;
+}
+function setActiveCatTab(id){
   currentCategory = id;
-  renderCatTabs();
-  renderMenuCategory(id);
+  var tabs = document.querySelectorAll('#cat-scroll .cat-tab'), active = null;
+  CATEGORIES.forEach(function(c, i){
+    if(!tabs[i]) return;
+    tabs[i].classList.toggle('selected', c.id===id);
+    if(c.id===id) active = tabs[i];
+  });
+  // Keep the active pill in view in the (horizontally scrolling) category row.
+  if(active){
+    var row = document.getElementById('cat-scroll');
+    var left = active.offsetLeft - row.offsetLeft - 16, right = left + active.offsetWidth + 32;
+    if(left < row.scrollLeft || right > row.scrollLeft + row.clientWidth) row.scrollTo({left:Math.max(0, left), behavior:'smooth'});
+  }
+}
+function selectCategory(id){
+  setActiveCatTab(id);
+  var body = document.getElementById('menu-body-scroll');
+  var sec = document.getElementById('menu-cat-'+id);
+  if(!sec) return;
+  var first = CATEGORIES[0].id===id;
+  // Hold the pill highlight on the tapped category until the scroll has finished.
+  clearTimeout(menuSpyLock);
+  menuSpyLock = setTimeout(function(){ menuSpyLock = null; }, 1500);
+  var release = function(){ body.removeEventListener('scrollend', release); clearTimeout(menuSpyLock); menuSpyLock = setTimeout(function(){ menuSpyLock = null; }, 80); };
+  var go = function(){
+    // First category returns to the very top (Join card included); others put their title 16px under the category row.
+    var title = sec.querySelector('.menu-cat-title');
+    var top = first ? 0 : Math.round(menuSecTop(title) - 16);
+    body.addEventListener('scrollend', release);
+    body.scrollTo({top:top, behavior:'smooth'});
+  };
+  // Collapse the header before measuring, so the target doesn't move mid-scroll.
+  var menu = document.getElementById('screen-menu');
+  if(!first && !menu.classList.contains('header-min')){ setMenuHeaderMin(true); setTimeout(go, 240); }
+  else go();
+}
+function updateCatFromScroll(){
+  if(menuSpyLock) return;
+  var body = document.getElementById('menu-body-scroll');
+  if(!document.getElementById('menu-cat-'+CATEGORIES[0].id)) return; // search results showing
+  var y = body.scrollTop + 40, current = CATEGORIES[0].id;
+  CATEGORIES.forEach(function(c){
+    var sec = document.getElementById('menu-cat-'+c.id);
+    if(sec && menuSecTop(sec) <= y) current = c.id;
+  });
+  if(current!==currentCategory) setActiveCatTab(current);
 }
 function mealCardHTML(catId, it){
   var thumb = it.img
@@ -2173,22 +2391,50 @@ function mealCardHTML(catId, it){
       '<div class="meal-price-row"><span class="meal-price"><span class="meal-price-from">From </span>$'+it.price.toFixed(2)+'</span></div>'+
     '</div></div>';
 }
+// Renders every category as its own titled section (the id argument is kept for older callers).
 function renderMenuCategory(id){
-  var cat = CATEGORIES.filter(function(c){return c.id===id;})[0];
-  var items = MENU_ITEMS[id] || [];
-  var html = '<div class="menu-grid">';
-  items.forEach(function(it){ html += mealCardHTML(id, it); });
-  html += '</div>';
+  var html = CATEGORIES.map(function(c){
+    var items = MENU_ITEMS[c.id] || [];
+    return '<section class="menu-cat" id="menu-cat-'+c.id+'">'+
+      '<h2 class="menu-cat-title">'+c.label+'</h2>'+
+      '<div class="menu-grid">'+items.map(function(it){ return mealCardHTML(c.id, it); }).join('')+'</div>'+
+    '</section>';
+  }).join('');
   document.getElementById('menu-sections').innerHTML = html;
-  document.getElementById('menu-body-scroll').scrollTop = 0;
+  var body = document.getElementById('menu-body-scroll');
+  body.scrollTop = 0;
+  sizeLastMenuCat();
+  setActiveCatTab(CATEGORIES[0].id);
 }
 
 /* ---- search ---- */
+/* Minimise the menu header once the list is scrolled (hysteresis so it doesn't flicker as the header resizes). */
+// Room after the last category so its title can still scroll up under the (collapsed) header.
+function sizeLastMenuCat(){
+  var body = document.getElementById('menu-body-scroll');
+  var last = document.getElementById('menu-cat-'+CATEGORIES[CATEGORIES.length-1].id);
+  if(last && body.clientHeight) last.style.minHeight = (body.clientHeight + 60)+'px';
+}
+function initMenuHeaderScroll(){
+  var body = document.getElementById('menu-body-scroll'), menu = document.getElementById('screen-menu');
+  if(window.ResizeObserver) new ResizeObserver(sizeLastMenuCat).observe(body);
+  body.addEventListener('scroll', function(){
+    var y = body.scrollTop;
+    if(y > 24 && !menu.classList.contains('header-min')) setMenuHeaderMin(true);
+    else if(y < 4 && menu.classList.contains('header-min')) setMenuHeaderMin(false);
+    updateCatFromScroll();
+  }, {passive:true});
+}
+function setMenuHeaderMin(on){
+  document.getElementById('screen-menu').classList.toggle('header-min', on);
+  var b = document.querySelector('.cat-search-btn');
+  if(b) b.tabIndex = on ? 0 : -1;
+}
 function openMenuSearch(){
   document.getElementById('menu-header').classList.add('hidden');
   document.getElementById('search-bar-row').classList.remove('hidden');
   document.getElementById('menu-filters-row').classList.add('hidden');
-  document.getElementById('cat-scroll').classList.add('hidden');
+  document.getElementById('cat-row').classList.add('hidden');
   var input = document.getElementById('menu-search-input');
   input.value = '';
   input.focus();
@@ -2198,7 +2444,7 @@ function closeMenuSearch(){
   document.getElementById('menu-header').classList.remove('hidden');
   document.getElementById('search-bar-row').classList.add('hidden');
   document.getElementById('menu-filters-row').classList.remove('hidden');
-  document.getElementById('cat-scroll').classList.remove('hidden');
+  document.getElementById('cat-row').classList.remove('hidden');
   document.getElementById('menu-search-input').value = '';
   renderMenuCategory(currentCategory);
 }
@@ -2239,10 +2485,12 @@ function openQuickDetail(item){
   document.getElementById('qd-name').textContent = item.name;
   document.getElementById('qd-desc').textContent = item.desc;
   document.getElementById('qd-price').textContent = '$'+item.price.toFixed(2);
+  document.getElementById('qd-qty-value').textContent = 1;
+  document.getElementById('qd-qty-minus').disabled = true;
   updateQdFooter();
-  show('screen-quickdetail');
+  openDetail('screen-quickdetail');
 }
-function closeQuickDetail(){ show('screen-menu'); }
+function closeQuickDetail(){ closeDetail('screen-quickdetail'); }
 function changeQdQty(delta){
   qd.qty = Math.max(1, qd.qty+delta);
   document.getElementById('qd-qty-value').textContent = qd.qty;
@@ -2286,10 +2534,30 @@ function openBuilder(item){
   renderBuilderVersionSwitch();
   renderByoSections();
   renderProgressStrip();
+  document.getElementById('builder-head-title').textContent = cfg.name;
+  document.getElementById('byo-qty-value').textContent = 1;
+  document.getElementById('byo-qty-minus').disabled = true;
   updateByoFooter();
-  show('screen-builder');
+  openDetail('screen-builder');
 }
-function closeBuilder(){ show('screen-menu'); }
+/* Detail pop-ups sit over the menu: keep the menu rendered underneath, and slide down on close. */
+function openDetail(id){
+  show(id);
+  document.getElementById('screen-menu').classList.remove('hidden');
+}
+function closeDetail(id){
+  var el = document.getElementById(id);
+  if(el.classList.contains('hidden')) return;
+  el.classList.add('closing');
+  setTimeout(function(){ el.classList.remove('closing'); show('screen-menu'); }, 230);
+}
+function closeBuilder(){ closePortionSheet(); closeDetail('screen-builder'); }
+function changeByoQty(delta){
+  byoQty = Math.max(1, byoQty+delta);
+  document.getElementById('byo-qty-value').textContent = byoQty;
+  document.getElementById('byo-qty-minus').disabled = byoQty<=1;
+  updateByoFooter();
+}
 
 /* Demo only: a returning, logged-in member sees their Happy Points balance on the
    landing (menu) card, so they can decide whether to order. Sign-in isn't built yet. */
@@ -2507,8 +2775,8 @@ function dismissAccountCard(){
   document.getElementById('menu-account-card').classList.add('dismissed');
 }
 /* Refined member menu: ALT A (grid) or ALT B (points card + list). */
-var memberLayout = 'a';
-var HP_ROSETTE = '<svg class="hp-rosette" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12.00,1.00 13.87,2.58 16.21,1.84 17.33,4.02 19.78,4.22 19.98,6.67 22.16,7.79 21.42,10.13 23.00,12.00 21.42,13.87 22.16,16.21 19.98,17.33 19.78,19.78 17.33,19.98 16.21,22.16 13.87,21.42 12.00,23.00 10.13,21.42 7.79,22.16 6.67,19.98 4.22,19.78 4.02,17.33 1.84,16.21 2.58,13.87 1.00,12.00 2.58,10.13 1.84,7.79 4.02,6.67 4.22,4.22 6.67,4.02 7.79,1.84 10.13,2.58" fill="#B4271C"/><rect x="10.2" y="5.2" width="3.6" height="4.2" rx=".7" fill="#fff"/><circle cx="12" cy="13.6" r="4.6" fill="#fff"/><circle cx="12" cy="13.6" r="2.1" fill="#B4271C"/></svg>';
+var memberLayout = 'b'; // ALT B (points card + one-column list) is the default
+var HP_ROSETTE = '<img class="hp-rosette" src="assets/Loyalty%20icon/Rewards/Medallions/Large@3x.svg" alt="" aria-hidden="true">';
 function setMemberLayout(l){
   memberLayout = l;
   var menu = document.getElementById('screen-menu');
@@ -2534,7 +2802,7 @@ function refreshMenuHeader(){
   var btn = document.getElementById('menu-points-btn');
   btn.classList.add('has-tier');
   if(member){ setMemberLayout(memberLayout); return; }
-  menu.classList.remove('layout-b');
+  menu.classList.add('layout-b'); // guests get the ALT B one-column list too, with the Join card instead of the points card
   btn.innerHTML = HP_ROSETTE+'<span class="pts-num">0</span><span class="pts-word">Points</span>';
   btn.setAttribute('aria-label', '0 Happy Points. Log in or join to start earning');
   btn.onclick = openLogin;
@@ -2544,22 +2812,107 @@ function setHeaderAltB(on, member){
 }
 function isV2Protein(sec){ return builderVersion==='v2' && sec.id==='protein'; }
 function isSheetProtein(sec){ return builderVersion==='v1' && sec.id==='protein'; }
+// V1 rice & beans: tapping an option with portions opens the portion sheet (Normal / Light / Extra / Side).
+function isSheetModSection(sec){ return builderVersion==='v1' && (sec.id==='rice' || sec.id==='beans' || sec.id==='toppings'); }
+function sectionById(secId){ return currentBuilderSections().filter(function(s){ return s.id===secId; })[0]; }
+// The section's selections if this option were picked with `mod` (multi-select keeps the others, in order).
+function withModSel(secId, opt, mod){
+  var sec = sectionById(secId), cur = byoSelections[secId], ns = modSel(opt, mod);
+  if(sec.type!=='multi') return [ns];
+  var found = false;
+  var out = cur.map(function(x){ if(x.name===opt.name){ found = true; return ns; } return x; });
+  if(!found) out.push(ns);
+  return out;
+}
+function removeModOption(secId, name){
+  byoSelections[secId] = byoSelections[secId].filter(function(x){ return x.name!==name; });
+  renderByoSections(); renderProgressStrip(); updateByoFooter();
+}
+function portionSheetRemove(){
+  var secId = pv.secId, name = pv.opt.name;
+  closePortionSheet();
+  removeModOption(secId, name);
+}
+function modSheetLabel(mod){ return mod==='Side' ? 'On the side' : mod; }
+function priceWithSection(secId, sels){
+  var keep = byoSelections[secId];
+  byoSelections[secId] = sels;
+  var t = byoUnitPrice()*byoQty;
+  byoSelections[secId] = keep;
+  return t;
+}
+function modSel(opt, mod){ return {name:opt.name, mod:mod, price:opt.price||0, doublePrice:opt.doublePrice||0, cal:opt.cal}; }
+function openModSheet(secId, idx){
+  var sec = currentBuilderSections().filter(function(s){ return s.id===secId; })[0];
+  var opt = sec.options[idx];
+  if(!opt.modifiers){ byoSelections[secId] = [modSel(opt, null)]; renderByoSections(); renderProgressStrip(); updateByoFooter(); return; }
+  var cur = byoSelections[secId].filter(function(x){ return x.name===opt.name; })[0];
+  pv = {kind:'mod', secId:secId, idx:idx, opt:opt, level:1, choice: cur ? (cur.mod||'Normal') : null, emptyError:false,
+        canRemove: !!cur && sec.type==='multi'};
+  document.getElementById('pv-overlay').classList.remove('hidden');
+  renderPortionSheet();
+}
+function renderModSelection(secId, idx){
+  var opt = sectionById(secId).options[idx];
+  var cur = byoSelections[secId].filter(function(x){ return x.name===opt.name; })[0];
+  return '<div class="pv-selection" onclick="openModSheet(\''+secId+'\','+idx+')">'+
+    '<div class="pv-sel-text"><div class="pv-sel-label">Selection</div><div class="pv-sel-value">'+modSheetLabel(cur.mod||'Normal')+'</div></div>'+
+    '<div class="pv-sel-right">'+(opt.price ? '+$'+opt.price.toFixed(2) : 'Included')+'</div>'+PV_CHEVRON_LG+
+  '</div>';
+}
+function renderModSheet(){
+  var opt = pv.opt, html = '';
+  html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+opt.name+'</div><span class="pv-req">Required</span></div>';
+  html += pv.emptyError
+    ? '<div class="pv-hint is-error">*Choose a portion to continue</div>'
+    : '<div class="pv-hint">Choose your portion.<span class="pv-limit">Choose 1</span></div>';
+  opt.modifiers.forEach(function(m){
+    // Only Normal has a second line (price · calories); Light / Extra / Side show the name alone.
+    var meta = m==='Normal' ? (opt.price ? '<b>+$'+opt.price.toFixed(2)+'</b><span class="dot">·</span>' : '')+opt.cal+' cal' : '';
+    html += '<div class="pv-card'+(pv.choice===m?' selected':'')+'" onclick="pickPortion(\''+m+'\')">'+
+      '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+m+'</div>'+(meta?'<div class="pv-meta">'+meta+'</div>':'')+'</div><div class="pv-radio"></div></div>'+
+    '</div>';
+  });
+  document.getElementById('pv-body').innerHTML = html;
+  document.getElementById('pv-back').style.visibility = 'hidden';
+  document.getElementById('pv-price').textContent = '$'+priceWithSection(pv.secId, withModSel(pv.secId, opt, pv.choice||'Normal')).toFixed(2);
+  document.getElementById('pv-remove').classList.toggle('hidden', !pv.canRemove);
+}
 
 /* ---- V1 protein portion sheet ----
-   Tap a protein → level 1: Regular / Half / Extra portion. Half → level 2: pick the other half.
+   Tap a protein → level 1: Normal / Half / Double portion / Two full proteins.
+   Half or Two full proteins → level 2: pick the other protein.
    Nothing is saved until Select; ✕ discards. */
 var pv = null;
 function proteinCharge(sels){ return proteinShares(sels).reduce(function(t,v){ return t+v; }, 0); }
 function proteinSel(name, mod){ var o = proteinOpt(name); return {name:name, mod:mod, price:o.price||0, doublePrice:0, cal:o.cal}; }
+// Proteins that can fill the other half (½ + ½), or be the second full protein (full + full).
 function halfPartners(name){
   return PROTEIN_OPTIONS.filter(function(o){ return o.name!==name && o.combinable!==false; });
 }
+function fullPartners(name){
+  return halfPartners(name).filter(function(o){ return proteinCanDouble(o.name); });
+}
+function pairPartners(name, mode){ return mode==='Full' ? fullPartners(name) : halfPartners(name); }
+// The two proteins as selections: ½ + ½ is mod 'Half'; full + full is two 'Normal' portions (simulator pricing).
+function pairSels(name, partner, mode){
+  var m = mode==='Full' ? 'Normal' : 'Half';
+  return [proteinSel(name, m), proteinSel(partner, m)];
+}
 function portionChoices(opt){
-  var list = [{mod:'Normal', label:'Regular portion'}];
+  var list = [{mod:'Normal', label:'Normal portion'}];
   if(proteinRules().split && opt.combinable!==false && halfPartners(opt.name).length) list.push({mod:'Half', label:'Half portion'});
-  if(proteinCanDouble(opt.name)) list.push({mod:'Double', label:'Extra portion'});
+  // Double stays visible but disabled when this protein (or this item) can't be doubled, e.g. Pollo Asado.
+  if(proteinCanDouble(opt.name)) list.push({mod:'Double', label:'Double portion'});
+  else list.push({mod:'Double', label:'Double portion', disabled:true,
+    reason: proteinRules().double ? 'Not available for '+opt.name : 'Not available for '+currentBuilderConfig().name});
+  // Two full proteins needs a doubleable protein; otherwise it shows disabled too (e.g. Pollo Asado, Quesadilla).
+  if(proteinRules().split && proteinCanDouble(opt.name) && fullPartners(opt.name).length) list.push({mod:'Full', label:'Two full proteins'});
+  else if(proteinRules().split && opt.combinable!==false) list.push({mod:'Full', label:'Two full proteins', disabled:true,
+    reason: proteinRules().double ? 'Not available for '+opt.name : 'Not available for '+currentBuilderConfig().name});
   return list;
 }
+function enabledPortionChoices(opt){ return portionChoices(opt).filter(function(c){ return !c.disabled; }); }
 // Item price if the protein section were `sels` (the sheet's Select button shows this).
 function priceWithProtein(sels){
   var keep = byoSelections.protein;
@@ -2570,37 +2923,41 @@ function priceWithProtein(sels){
 }
 function pendingSels(){
   var name = pv.opt.name;
-  if(pv.choice==='Half' && pv.partner) return [proteinSel(name,'Half'), proteinSel(pv.partner,'Half')];
+  if((pv.choice==='Half' || pv.choice==='Full') && pv.partner) return pairSels(name, pv.partner, pv.choice);
   if(pv.choice==='Normal' || pv.choice==='Double') return [proteinSel(name, pv.choice)];
   return null;
 }
 function moneyDelta(d){ return d>0.004 ? '+$'+d.toFixed(2) : ''; }
+function isFullPair(sels){ return sels.length===2 && sels[0].mod!=='Half'; }
 function portionSelectionText(sels){
+  if(isFullPair(sels)) return sels[0].name+' + '+sels[1].name+' (full portions)';
   if(sels.length===2) return 'Half '+sels[0].name+' + Half '+sels[1].name;
-  return sels[0].mod==='Double' ? 'Extra portion' : 'Regular portion';
+  return sels[0].mod==='Double' ? 'Double portion' : 'Normal portion';
 }
 function renderPortionSelection(idx){
   var sels = byoSelections.protein;
-  if(!sels.length || !portionChoices(proteinOpt(sels[0].name)).length || portionChoices(proteinOpt(sels[0].name)).length<2) return '';
+  if(!sels.length || enabledPortionChoices(proteinOpt(sels[0].name)).length<2) return '';
   var d = proteinCharge(sels) - proteinCharge([proteinSel(sels[0].name,'Normal')]);
   return '<div class="pv-selection" onclick="openPortionSheet('+idx+')">'+
     '<div class="pv-sel-text"><div class="pv-sel-label">Selection</div><div class="pv-sel-value">'+portionSelectionText(sels)+'</div></div>'+
     '<div class="pv-sel-right">'+(moneyDelta(d)||'Included')+'</div>'+
-    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'+
+    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'+
   '</div>';
 }
 function openPortionSheet(idx){
   var sec = currentBuilderSections().filter(function(s){ return s.id==='protein'; })[0];
   var opt = sec.options[idx];
-  if(portionChoices(opt).length<2){
+  if(enabledPortionChoices(opt).length<2){
     // Only one portion (e.g. Veggie): select it straight away, like a radio.
     byoSelections.protein = [proteinSel(opt.name, opt.combinable===false ? null : 'Normal')];
     renderByoSections(); renderProgressStrip(); updateByoFooter();
     return;
   }
   var cur = byoSelections.protein, mine = cur.length && cur[0].name===opt.name;
-  pv = {idx:idx, opt:opt, level:1, choice: mine ? (cur[0].mod||'Normal') : null,
-        partner: mine && cur[1] ? cur[1].name : null, halfMissing:false, emptyError:false, l2Error:false};
+  var choice = !mine ? null : cur.length===2 ? (isFullPair(cur) ? 'Full' : 'Half') : (cur[0].mod||'Normal');
+  // pv.mode: which pair the level 2 list is for ('Half' | 'Full'). pv.missing: that pair was started but no partner picked.
+  pv = {idx:idx, opt:opt, level:1, choice:choice, mode:null,
+        partner: mine && cur[1] ? cur[1].name : null, missing:null, emptyError:false, l2Error:false};
   document.getElementById('pv-overlay').classList.remove('hidden');
   renderPortionSheet();
 }
@@ -2608,42 +2965,52 @@ function closePortionSheet(){
   pv = null;
   document.getElementById('pv-overlay').classList.add('hidden');
 }
+var PV_CHEVRON_LG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
 var PV_CHEVRON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
 function renderPortionSheet(anim){
+  if(pv.kind==='mod'){ renderModSheet(); return; }
+  document.getElementById('pv-remove').classList.add('hidden');
   var opt = pv.opt, html = '';
   var regular = proteinCharge([proteinSel(opt.name,'Normal')]);
   if(pv.level===1){
     html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+opt.name+'</div><span class="pv-req">Required</span></div>';
     html += pv.emptyError
       ? '<div class="pv-hint is-error">*Choose a portion to continue</div>'
-      : '<div class="pv-hint">Choose your portion.'+(pv.halfMissing?'':'<span class="pv-limit">Choose 1</span>')+'</div>';
+      : '<div class="pv-hint">Choose your portion.'+(pv.missing?'':'<span class="pv-limit">Choose 1</span>')+'</div>';
     portionChoices(opt).forEach(function(c){
-      var selected = pv.choice===c.mod && (c.mod!=='Half' || pv.partner);
+      var pair = c.mod==='Half' || c.mod==='Full';
+      var done = pair && pv.choice===c.mod && pv.partner;
+      var selected = !c.disabled && pv.choice===c.mod && (!pair || pv.partner);
       var meta;
-      if(c.mod==='Half'){
-        meta = pv.partner && pv.choice==='Half'
-          ? (function(){ var d = moneyDelta(proteinCharge([proteinSel(opt.name,'Half'), proteinSel(pv.partner,'Half')]) - regular);
-              return (d?'<b>'+d+'</b><span class="dot">·</span>':'')+'With half '+pv.partner; })()
-          : Math.round(opt.cal/2)+' cal<span class="dot">·</span><span class="pv-muted">Pick your other half</span>';
+      if(c.disabled){
+        meta = '<span class="pv-muted">'+c.reason+'</span>';
+      } else if(done){
+        var d = moneyDelta(proteinCharge(pairSels(opt.name, pv.partner, c.mod)) - regular);
+        meta = (d?'<b>'+d+'</b><span class="dot">·</span>':'')+(c.mod==='Half' ? 'With half ' : 'With full ')+pv.partner;
+      } else if(c.mod==='Half'){
+        meta = Math.round(opt.cal/2)+' cal<span class="dot">·</span><span class="pv-muted">Pick your other half</span>';
+      } else if(c.mod==='Full'){
+        meta = opt.cal+' cal each<span class="dot">·</span><span class="pv-muted">Pick your second protein</span>';
       } else {
-        var d = moneyDelta(proteinCharge([proteinSel(opt.name,c.mod)]) - regular);
-        meta = (d?'<b>'+d+'</b><span class="dot">·</span>':'')+(c.mod==='Double' ? opt.cal*2 : opt.cal)+' cal';
+        var d2 = moneyDelta(proteinCharge([proteinSel(opt.name,c.mod)]) - regular);
+        meta = (d2?'<b>'+d2+'</b><span class="dot">·</span>':'')+(c.mod==='Double' ? opt.cal*2 : opt.cal)+' cal';
       }
-      html += '<div class="pv-card'+(selected?' selected':'')+'" onclick="pickPortion(\''+c.mod+'\')">'+
+      html += '<div class="pv-card'+(selected?' selected':'')+(c.disabled?' disabled':'')+'"'+(c.disabled?' aria-disabled="true"':' onclick="pickPortion(\''+c.mod+'\')"')+'>'+
         '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+c.label+'</div><div class="pv-meta">'+meta+'</div></div><div class="pv-radio"></div></div>'+
-        (c.mod==='Half' && pv.halfMissing ? '<div class="pv-required"><span>*This option is required</span>'+PV_CHEVRON+'</div>' : '')+
+        (pv.missing===c.mod ? '<div class="pv-required"><span>*This option is required</span>'+PV_CHEVRON+'</div>' : '')+
       '</div>';
     });
   } else {
-    html += '<div class="pv-head"><div class="pv-title" id="pv-title">Half portion</div><span class="pv-req">Required</span></div>';
+    var full = pv.mode==='Full';
+    html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+(full ? 'Second protein' : 'Half portion')+'</div><span class="pv-req">Required</span></div>';
     html += pv.l2Error
-      ? '<div class="pv-hint is-error">*Choose your other half to continue</div>'
-      : '<div class="pv-hint">Half '+opt.name+' and half of…</div>';
-    halfPartners(opt.name).forEach(function(p){
-      var d = moneyDelta(proteinCharge([proteinSel(opt.name,'Half'), proteinSel(p.name,'Half')]) - regular);
+      ? '<div class="pv-hint is-error">*'+(full ? 'Choose your second protein' : 'Choose your other half')+' to continue</div>'
+      : '<div class="pv-hint">'+(full ? 'Full '+opt.name+' and a full portion of…' : 'Half '+opt.name+' and half of…')+'</div>';
+    pairPartners(opt.name, pv.mode).forEach(function(p){
+      var d = moneyDelta(proteinCharge(pairSels(opt.name, p.name, pv.mode)) - regular);
       html += '<div class="pv-card'+(pv.partner===p.name?' selected':'')+'" onclick="pickPartner(\''+p.name.replace(/'/g,"\\'")+'\')">'+
-        '<div class="pv-row"><div class="pv-info"><div class="pv-name">Half '+p.name+(p.sub==='Plant-Based Protein'?' (Plant based protein)':'')+'</div>'+
-        '<div class="pv-meta">'+(d?'<b>'+d+'</b><span class="dot">·</span>':'')+Math.round(p.cal/2)+' cal</div></div><div class="pv-radio"></div></div>'+
+        '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+(full ? 'Full ' : 'Half ')+p.name+(p.sub==='Plant-Based Protein'?' (Plant based protein)':'')+'</div>'+
+        '<div class="pv-meta">'+(d?'<b>'+d+'</b><span class="dot">·</span>':'')+(full ? p.cal : Math.round(p.cal/2))+' cal</div></div><div class="pv-radio"></div></div>'+
       '</div>';
     });
   }
@@ -2652,30 +3019,45 @@ function renderPortionSheet(anim){
   body.classList.remove('slide-in','slide-back');
   if(anim){ void body.offsetWidth; body.classList.add(anim); body.scrollTop = 0; }
   document.getElementById('pv-back').style.visibility = pv.level===2 ? 'visible' : 'hidden';
-  var sels = pv.level===2 && pv.partner ? [proteinSel(opt.name,'Half'), proteinSel(pv.partner,'Half')] : (pendingSels() || [proteinSel(opt.name,'Normal')]);
+  var sels = pv.level===2 && pv.partner ? pairSels(opt.name, pv.partner, pv.mode) : (pendingSels() || [proteinSel(opt.name,'Normal')]);
   document.getElementById('pv-price').textContent = '$'+priceWithProtein(sels).toFixed(2);
 }
 function pickPortion(mod){
   pv.emptyError = false;
-  if(mod==='Half'){ pv.level = 2; pv.l2Error = false; renderPortionSheet('slide-in'); return; }
-  pv.choice = mod; pv.halfMissing = false;
+  if(pv.kind==='mod'){ pv.choice = mod; renderModSheet(); return; }
+  if(mod==='Half' || mod==='Full'){
+    // Switching between ½ + ½ and full + full keeps the partner only if it's allowed in the new list.
+    if(pv.partner && !pairPartners(pv.opt.name, mod).some(function(p){ return p.name===pv.partner; })) pv.partner = null;
+    if(pv.choice!==mod && pv.choice!=='Half' && pv.choice!=='Full') pv.partner = null;
+    pv.mode = mod; pv.level = 2; pv.l2Error = false;
+    renderPortionSheet('slide-in');
+    return;
+  }
+  pv.choice = mod; pv.missing = null;
   renderPortionSheet();
 }
 function pickPartner(name){ pv.partner = name; pv.l2Error = false; renderPortionSheet(); }
 function portionSheetBack(){
   pv.level = 1;
-  if(pv.partner){ pv.choice = 'Half'; pv.halfMissing = false; }
-  else if(pv.choice!=='Normal' && pv.choice!=='Double'){ pv.halfMissing = true; }
+  if(pv.partner){ pv.choice = pv.mode; pv.missing = null; }
+  else { pv.choice = null; pv.missing = pv.mode; }
   renderPortionSheet('slide-back');
 }
 function portionSheetSelect(){
+  if(pv.kind==='mod'){
+    if(!pv.choice){ pv.emptyError = true; renderModSheet(); return; }
+    byoSelections[pv.secId] = withModSel(pv.secId, pv.opt, pv.choice);
+    closePortionSheet();
+    renderByoSections(); renderProgressStrip(); updateByoFooter();
+    return;
+  }
   if(pv.level===2){
     if(!pv.partner){ pv.l2Error = true; renderPortionSheet(); return; }
-    pv.choice = 'Half';
+    pv.choice = pv.mode;
   }
   var sels = pendingSels();
   if(!sels){
-    if(!pv.halfMissing) pv.emptyError = true;
+    if(!pv.missing) pv.emptyError = true;
     renderPortionSheet();
     return;
   }
@@ -2791,10 +3173,12 @@ function renderByoSections(){
     var isProt = sec.id==='protein', rules = proteinRules();
     var nu = builderVersion==='v1', sheetProt = isSheetProtein(sec);
     var v2Hint = rules.split ? 'Choose up to 2, then pick a portion for each.' : 'Choose 1 protein (one per order).';
-    var sheetHint = 'Choose 1, then pick your portion';
-    html += '<div class="byo-section-hint">'+(v2 ? v2Hint : sheetProt ? sheetHint : sec.hint)+'</div>';
+    var sheetHint = 'Choose then pick your portion';
+    // V1 has no 50/50 split for rice or beans, so drop that from the hint too.
+    var hint = nu ? sec.hint.replace(', split it 50/50', '') : sec.hint;
+    html += '<div class="byo-section-hint">'+(v2 ? v2Hint : sheetProt ? sheetHint : hint)+'</div>';
 
-    if(sec.allowSplit && !v2 && !sheetProt && (!isProt || rules.split)){
+    if(sec.allowSplit && !v2 && !nu && (!isProt || rules.split)){
       html += '<div class="split-toggle"><span>Split 50/50 between two '+(sec.splitLabel||'options')+'</span>'+
         '<div class="switch'+(byoSplitOn[sec.id]?' on':'')+'" id="split-switch-'+sec.id+'" onclick="toggleSplit(\''+sec.id+'\')"><div class="knob"></div></div></div>';
     }
@@ -2809,9 +3193,10 @@ function renderByoSections(){
       var mod = getSelectionModifier(sec.id, idx);
       var thumb = opt.img ? '<div class="variant-thumb"><img src="'+opt.img+'" alt="'+opt.name+'"></div>' : '';
       var control = sec.type==='multi' || splitActive || (v2 && rules.split)
-        ? '<div class="variant-check"></div>'
+        ? '<div class="variant-check"'+(nu && isSelected && sec.id==='toppings' ? ' onclick="event.stopPropagation(); removeModOption(\'toppings\',\''+opt.name.replace(/'/g,"\\'")+'\')"' : '')+'></div>'
         : '<div class="variant-radio"></div>';
-      var showModifiers = opt.modifiers && isSelected && !splitActive && !v2 && !sheetProt && (!isProt || proteinCanDouble(opt.name));
+      var sheetMod = isSheetModSection(sec);
+      var showModifiers = opt.modifiers && isSelected && !splitActive && !v2 && !sheetProt && !sheetMod && (!isProt || proteinCanDouble(opt.name));
       var priceTag = (isSelected && mod==='Double') ? opt.doublePrice : opt.price;
       if(isProt){
         priceTag = r2(proteinBase(opt.name) - proteinMinBase());     // surcharge over the cheapest protein
@@ -2820,7 +3205,7 @@ function renderByoSections(){
       }
       var veggieBlocked = (splitActive && opt.name==='Veggie' && !isSelected) ||
         (v2 && !isSelected && totalSelected>=2);
-      var tap = sheetProt ? 'openPortionSheet('+idx+')' : 'toggleOption(\''+sec.id+'\','+idx+')';
+      var tap = sheetProt ? 'openPortionSheet('+idx+')' : sheetMod ? 'openModSheet(\''+sec.id+'\','+idx+')' : 'toggleOption(\''+sec.id+'\','+idx+')';
       if(nu) html += '<div class="variant-card">';
       var info = nu
         ? '<div class="variant-name">'+opt.name+'</div>'+
@@ -2841,6 +3226,7 @@ function renderByoSections(){
         html += renderModRow(sec.id, idx, opt.modifiers);
       }
       if(sheetProt && isSelected) html += renderPortionSelection(idx);
+      if(sheetMod && isSelected && opt.modifiers) html += renderModSelection(sec.id, idx);
       if(nu) html += '</div>';
       if(v2 && isSelected && proteinHasPortions(opt)){
         html += renderPortionRow(sec.id, idx);
@@ -3055,7 +3441,7 @@ function addByoToCart(){
     if(needsHalfPartner('protein')){ halfPartnerError = true; renderByoSections(); }
     note.textContent = needsHalfPartner('protein') && missing.length===1
       ? 'Please choose another protein for the other half'
-      : 'Please choose your '+missing.map(function(s){return s.title;}).join(' and ')+' to continue';
+      : 'Please make a selection for each item marked Required.';
     note.classList.add('show');
     scrollToSection(missing[0].id);
     return;
@@ -3068,9 +3454,10 @@ function addByoToCart(){
       return s.name+modTxt;
     }).join(', ');
     if(isSheetProtein(sec)){
-      // e.g. "Half Chicken / Half Steak" or "Chicken (Extra)".
+      // e.g. "Half Chicken / Half Steak" or "Chicken (Double)".
       var ps = byoSelections[sec.id];
-      text = ps.length===2 ? 'Half '+ps[0].name+' / Half '+ps[1].name : ps[0].name+(ps[0].mod==='Double' ? ' (Extra)' : '');
+      text = isFullPair(ps) ? 'Full '+ps[0].name+' / Full '+ps[1].name
+        : ps.length===2 ? 'Half '+ps[0].name+' / Half '+ps[1].name : ps[0].name+(ps[0].mod==='Double' ? ' (Double)' : '');
     } else if(isV2Protein(sec)){
       // e.g. "Chicken (Half), Steak (Half)" or, for full + full, "Chicken (Full), Steak (Full)".
       if(byoSelections[sec.id].length===2 && byoSelections[sec.id][0].mod==='Normal') text = byoSelections[sec.id].map(function(x){ return x.name+' (Full)'; }).join(', ');
@@ -3106,9 +3493,10 @@ function openKidsBuilder(item){
   document.getElementById('kb-qty-minus').disabled = true;
   renderKbSections();
   updateKbFooter();
-  show('screen-kidsbuilder');
+  document.getElementById('kb-head-title').textContent = item.name;
+  openDetail('screen-kidsbuilder');
 }
-function closeKidsBuilder(){ show('screen-menu'); }
+function closeKidsBuilder(){ closeDetail('screen-kidsbuilder'); }
 function isKidsOptionSelected(secId, opt){
   return kidsSelections[secId].indexOf(opt)>-1;
 }
@@ -3124,16 +3512,17 @@ function renderKbSections(){
       var control = sec.type==='multi'
         ? '<div class="variant-check'+(isSelected?' selected':'')+'"></div>'
         : '<div class="variant-radio'+(isSelected?' selected':'')+'"></div>';
-      html += '<div class="variant-row'+(isSelected?' selected':'')+'" onclick="toggleKidsOption(\''+sec.id+'\','+idx+')">'+
-        '<div class="variant-thumb" style="font-size:28px;">'+(opt.emoji||'🌯')+'</div>'+
+      // Same card + left-cropped photo as the V1 builder; "No …" options have no photo.
+      html += '<div class="variant-card"><div class="variant-row'+(isSelected?' selected':'')+(opt.img?'':' no-thumb')+'" onclick="toggleKidsOption(\''+sec.id+'\','+idx+')">'+
+        (opt.img ? '<div class="variant-thumb"><img src="'+opt.img+'" alt="'+opt.name+'"></div>' : '')+
         '<div class="variant-info">'+
         (opt.tag?'<span class="kb-tag">'+opt.tag+'</span>':'')+
-        '<div class="variant-name">'+opt.name+(opt.price?' <span style="color:var(--red); font-weight:800;">$'+opt.price.toFixed(2)+'</span>':'')+'</div>'+
+        '<div class="variant-name">'+opt.name+'</div>'+
+        '<div class="variant-meta">'+(opt.price?'<b>$'+opt.price.toFixed(2)+'</b><span class="dot">·</span>':'')+opt.cal+' cal</div>'+
         (opt.sub?'<div class="variant-sub">'+opt.sub+'</div>':'')+
-        '<div class="variant-cal">'+opt.cal+' Cal</div>'+
         '</div>'+
         control+
-      '</div>';
+      '</div></div>';
     });
     html += '</div>';
   });
@@ -3195,7 +3584,7 @@ function addKbToCart(){
   var missing = kbMissingRequired();
   if(missing.length>0){
     var note = document.getElementById('kb-note');
-    note.textContent = 'Please choose your '+missing.map(function(s){return s.title;}).join(' and ')+' to continue';
+    note.textContent = 'Please make a selection for each item marked Required.';
     scrollToSection(missing[0].id.replace('k','k'));
     var el = document.getElementById('kb-sec-'+missing[0].id);
     if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
@@ -3915,7 +4304,7 @@ function openThreadPopover(docId, data, clientX, clientY){
     '<textarea id="comment-reply-text" placeholder="Reply…"></textarea>'+
     '<input type="text" id="comment-reply-name" placeholder="Add your name" value="'+escapeCommentHtml(getSavedCommenterName())+'">'+
     '<div class="comment-popover-actions">'+
-    '<button class="comment-btn-resolve'+(data.resolved?' is-resolved':'')+'" onclick="toggleResolveComment(\''+docId+'\','+(!data.resolved)+')">'+(data.resolved?'Resolved ✓':'Resolve')+'</button>'+
+    '<button class="comment-btn-resolve'+(data.resolved?' is-resolved':'')+'" onclick="toggleResolveComment(\''+docId+'\','+(!data.resolved)+')">'+(data.resolved?'Reopen':'Resolve')+'</button>'+
     '<button class="comment-btn-post" onclick="submitReply(\''+docId+'\')">Reply</button>'+
     '</div>';
   positionPopover(clientX, clientY);
@@ -3945,10 +4334,16 @@ function submitReply(docId){
   });
 }
 
+// Resolving hides the pin (it stays saved, so "Show resolved" can bring it back).
 function toggleResolveComment(docId, resolved){
   commentsDb.collection('comments').doc(docId).update({ resolved: resolved })
-    .then(closeCommentPopover)
-    .catch(function(err){ console.error('resolve failed', err); });
+    .then(function(){ closeCommentPopover(); showToast(resolved ? 'Comment resolved' : 'Comment reopened'); })
+    .catch(function(err){ console.error('resolve failed', err); showToast('Could not update comment'); });
+}
+var showResolvedComments = false, lastCommentDocs = [];
+function toggleShowResolved(){
+  showResolvedComments = !showResolvedComments;
+  renderCommentDocs(lastCommentDocs);
 }
 
 function clearCommentPins(){
@@ -3957,11 +4352,18 @@ function clearCommentPins(){
 }
 
 function renderCommentDocs(docs){
+  lastCommentDocs = docs;
   clearCommentPins();
+  var resolvedCount = docs.filter(function(d){ return d.data().resolved; }).length;
+  var rt = document.getElementById('comment-resolved-toggle');
+  if(!resolvedCount) showResolvedComments = false;
+  rt.classList.toggle('hidden', !resolvedCount);
+  rt.textContent = (showResolvedComments ? 'Hide resolved' : 'Show resolved') + ' (' + resolvedCount + ')';
   var container = getCommentContainer();
   if(!container) return;
   docs.forEach(function(docSnap){
     var data = docSnap.data();
+    if(data.resolved && !showResolvedComments) return;
     var left = (data.xPct/100) * container.scrollWidth;
     var top = (data.yPct/100) * container.scrollHeight;
     var el = document.createElement('div');
@@ -4002,6 +4404,27 @@ window.addEventListener('resize', function(){ if(currentScreenId) onScreenChange
    &hl=<selector>        outlines an element on that screen
    ========================================================= */
 if(new URLSearchParams(location.search).get('view')==='desktop') document.documentElement.classList.add('is-desktop');
+
+/* Phone frame on/off. ?frame=0|1 forces it; otherwise the last choice is remembered,
+   and on a real phone (narrow window) it starts off so the prototype fills the screen. */
+function setPhoneFrame(on, remember){
+  document.documentElement.classList.toggle('no-frame', !on);
+  var btn = document.getElementById('frame-toggle');
+  if(btn){ btn.setAttribute('aria-pressed', on ? 'true' : 'false'); document.getElementById('frame-toggle-state').textContent = on ? 'On' : 'Off'; }
+  if(remember){ try{ localStorage.setItem('chipotle-phone-frame', on ? '1' : '0'); }catch(e){} }
+}
+function togglePhoneFrame(){
+  setPhoneFrame(document.documentElement.classList.contains('no-frame'), true);
+  // Drop a ?frame= from the URL so a reload keeps the choice just made.
+  var u = new URL(location.href);
+  if(u.searchParams.has('frame')){ u.searchParams.delete('frame'); history.replaceState(history.state, '', u.toString()); }
+}
+(function(){
+  var q = new URLSearchParams(location.search).get('frame'), saved = null;
+  try{ saved = localStorage.getItem('chipotle-phone-frame'); }catch(e){}
+  var on = q!==null ? q!=='0' : saved!==null ? saved==='1' : window.innerWidth>500;
+  setPhoneFrame(on, false);
+})();
 
 function findMenuItem(id){
   for(var c in MENU_ITEMS){
@@ -4059,7 +4482,7 @@ var ROUTES = {
   'sidebar':       function(arg){ goToMenu(); if(arg==='member') setDemoMember(true); openSidebar(); },
   'ordertype':     function(){ goToMenu(); openOrderTypeSheet(); },
   'schedule':      function(){ goToMenu(); scheduleMode = 'schedule'; openOrderTypeSheet(); },
-  'menu':          function(arg){ goToMenu(); if(arg==='member'){ setHeaderAltB(true, true); setMemberLayout('b'); } if(arg==='member-b'){ setHeaderAltB(true, true); setMemberLayout('a'); } if(arg==='guest-b') setHeaderAltB(true, false); },
+  'menu':          function(arg){ goToMenu(); if(arg==='scrolled'){ setTimeout(function(){ document.getElementById('menu-body-scroll').scrollTop = 260; }, 400); } if(arg==='member'){ setHeaderAltB(true, true); setMemberLayout('b'); } if(arg==='member-b'){ setHeaderAltB(true, true); setMemberLayout('a'); } if(arg==='guest-b') setHeaderAltB(true, false); },
   'menu-closed':   function(){ forceStoreClosed = true; goToMenu(); openOrderTypeSheet(); },
   'menu-search':   function(arg){ goToMenu(); openMenuSearch(); if(arg){ document.getElementById('menu-search-input').value = arg; onMenuSearchInput(); } },
   'quickdetail':   function(arg){ goToMenu(); openQuickDetail(findMenuItem(arg || 'family-chicken')); },
@@ -4068,14 +4491,23 @@ var ROUTES = {
   'builder-portion': function(arg){
     goToMenu(); builderVersion = 'v1'; openBuilder(findMenuItem('byo-burrito'));
     var ci = PROTEIN_OPTIONS.map(function(o){ return o.name; }).indexOf('Chicken');
+    if(arg==='rice'){ openModSheet('rice', 0); return; }
+    if(arg==='rice-selected'){
+      byoSelections.protein = [proteinSel('Chicken','Normal')];
+      byoSelections.rice = [modSel(RICE_OPTIONS[0], 'Light')];
+      renderByoSections(); renderProgressStrip(); updateByoFooter();
+      setTimeout(function(){ scrollToSection('rice'); }, 350);
+      return;
+    }
     if(arg==='selected'){
       byoSelections.protein = [proteinSel('Chicken','Half'), proteinSel('Steak','Half')];
       renderByoSections(); renderProgressStrip(); updateByoFooter();
       return;
     }
     openPortionSheet(ci);
-    if(arg==='required'){ pv.halfMissing = true; renderPortionSheet(); }
-    if(arg==='half'){ pv.level = 2; pv.partner = 'Steak'; renderPortionSheet(); }
+    if(arg==='required'){ pv.missing = 'Half'; renderPortionSheet(); }
+    if(arg==='half'){ pv.level = 2; pv.mode = 'Half'; pv.partner = 'Steak'; renderPortionSheet(); }
+    if(arg==='full'){ pv.level = 2; pv.mode = 'Full'; pv.partner = 'Steak'; renderPortionSheet(); }
   },
   'builder-v2':    function(arg){ goToMenu(); builderVersion = 'v2'; openBuilder(findMenuItem(arg || 'byo-burrito')); },
   'kidsbuilder':   function(){ goToMenu(); openKidsBuilder(findMenuItem('kids-tortillas')); },
@@ -4126,6 +4558,7 @@ window.addEventListener('hashchange', openRouteFromHash);
    ========================================================= */
 refreshMenuHeader();
 initOtpBoxes();
+initMenuHeaderScroll();
 if(!openRouteFromHash()){
   // The menu is the landing page. Only interrupt with the time picker when ASAP isn't possible.
   goToMenu();

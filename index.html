@@ -109,6 +109,13 @@
   .cover-cta svg{flex:none;}
   .cover-cta-ghost{background:transparent;color:#fbf3e4;border:1px solid rgba(255,255,255,.35);box-shadow:none;}
   .cover-cta-ghost:hover{background:rgba(255,255,255,.08);}
+  /* Phone frame on/off: shared with the prototype (same saved setting), and added to every link as &frame= */
+  .frame-switch{display:inline-flex;align-items:center;gap:10px;padding:0 14px 0 12px;min-height:40px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fbf3e4;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}
+  .frame-switch:hover{background:rgba(255,255,255,.08);}
+  .frame-switch .track{width:30px;height:18px;border-radius:999px;background:rgba(255,255,255,.3);position:relative;transition:background .15s;flex:none;}
+  .frame-switch .track::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s;}
+  .frame-switch[aria-checked="true"] .track{background:#D9A63E;}
+  .frame-switch[aria-checked="true"] .track::after{transform:translateX(12px);}
 
   /* ---------- Section ---------- */
   .section{margin-top:38px;}
@@ -228,6 +235,10 @@
       <a class="cover-cta cover-cta-ghost" href="Chipotle%20Online%20Ordering.html?view=desktop&from=index">Open desktop prototype
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
       </a>
+      <button type="button" class="frame-switch" id="frame-switch" role="switch" aria-checked="true" onclick="setFrame(this.getAttribute('aria-checked')!=='true')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>
+        Phone frame <span class="track" aria-hidden="true"></span>
+      </button>
       <a class="cover-cta cover-cta-ghost" href="design-system.html?from=index">Design system
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
       </a>
@@ -261,10 +272,11 @@
     ]},
     {title:'Home & Navigation', items:[
       {label:'Landing — Menu (Happy Points card, ASAP pickup)', route:'menu'},
-      {label:'Landing — Menu, returning member A (B$ indicator at corner) — recommended', route:'menu:member-b'},
-      {label:'Landing — Menu, returning member B (B$ indicator as a card) — alternative', route:'menu:member'},
-      {label:'Landing — Menu, guest A (B$0.00 indicator at corner)', route:'menu:guest-b'},
+      {label:'Landing — Menu, returning member B (points card, one-column list) — default', route:'menu:member'},
+      {label:'Landing — Menu, returning member A (points at corner, grid) — alternative', route:'menu:member-b'},
+      {label:'Landing — Menu, guest (Join card, one-column list) — default', route:'menu:guest-b'},
       {label:'Landing — Store closed (time picker opens)', route:'menu-closed'},
+      {label:'Menu — scrolled (minimised header, search beside categories)', route:'menu:scrolled'},
       {label:'Sign in — mobile number', route:'login'},
       {label:'Sign in — number entered', route:'login:filled'},
       {label:'Sign in — verify number (OTP)', route:'login:code'},
@@ -279,21 +291,6 @@
     {title:'Menu', items:[
       {label:'Menu Search — Empty State', route:'menu-search'},
       {label:'Menu Search — Results', route:'menu-search:chicken'}
-    ]},
-    {title:'Item Customisation', items:[
-      {label:'Build Your Own Burrito — Builder V1 (new design)', route:'builder'},
-      {label:'Builder V1 — Protein portion sheet (level 1)', route:'builder-portion:sheet'},
-      {label:'Builder V1 — Portion required (half not completed)', route:'builder-portion:required'},
-      {label:'Builder V1 — Other half (level 2)', route:'builder-portion:half'},
-      {label:'Builder V1 — Protein selected (half + half)', route:'builder-portion:selected'},
-      {label:'Build Your Own Burrito — Builder V2 (protein checklist + portions)', route:'builder-v2'},
-      {label:"Kid's Build Your Own — Builder", route:'kidsbuilder'},
-      {label:'Quick-add Detail — Burrito Bowl', route:'quickdetail:byo-bowl'},
-      {label:'Quick-add Detail — Salad', route:'quickdetail:byo-salad'},
-      {label:'Quick-add Detail — Quesadilla', route:'quickdetail:byo-quesadilla'},
-      {label:'Quick-add Detail — Taco', route:'quickdetail:byo-taco'},
-      {label:'Quick-add Detail — Family Meal', route:'quickdetail:family-chicken'},
-      {label:'Name Your Meal Sheet', route:'mealname'}
     ]},
     {title:'Cart', items:[
       {label:'Your Order — Cart & Upsell', route:'cart'},
@@ -351,6 +348,26 @@
           f.items.map(function(it){ return itemHTML(it, 'desktop'); }).join('') + '</div>' +
       '</div></div>';
   }).join('');
+
+  // Phone frame on/off for the prototype links. Same saved setting as the prototype's own button.
+  function frameOn(){
+    var saved = null;
+    try{ saved = localStorage.getItem('chipotle-phone-frame'); }catch(e){}
+    return saved !== null ? saved === '1' : window.innerWidth > 500;
+  }
+  function setFrame(on){
+    try{ localStorage.setItem('chipotle-phone-frame', on ? '1' : '0'); }catch(e){}
+    applyFrame(on);
+  }
+  function applyFrame(on){
+    document.getElementById('frame-switch').setAttribute('aria-checked', on ? 'true' : 'false');
+    document.querySelectorAll('a[href^="' + PROTO + '"]').forEach(function(a){
+      var h = a.getAttribute('href').replace(/&frame=[01]/, '');
+      var i = h.indexOf('#');
+      a.setAttribute('href', i < 0 ? h + '&frame=' + (on ? 1 : 0) : h.slice(0, i) + '&frame=' + (on ? 1 : 0) + h.slice(i));
+    });
+  }
+  applyFrame(frameOn());
 </script>
 </body>
 </html>
