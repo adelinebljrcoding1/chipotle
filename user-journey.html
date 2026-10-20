@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobile Ordering Journey</title>
+<link rel="stylesheet" href="design-system.css">
+<style>
+  :root{
+    --bg:#f7f5f2; --surface:#fff; --ink:#1f1a17; --muted:#6b625c; --line:#e3ddd6;
+    --entry:#a8e4fb; --key:#fde48a; --win:#b4e566; --neutral:#e2e0da;
+    --pos:#3d8b37; --neu:#b08a1e; --neg:#c0392b;
+    --member:#451400; --guest:#6b625c;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171412; --surface:#221e1b; --ink:#f2ede8; --muted:#a69d96; --line:#3a332e;
+      --entry:#1f5368; --key:#5e4d12; --win:#3f5a1b; --neutral:#3a3733;
+      --pos:#7ccf74; --neu:#e2bd52; --neg:#ef7d6f; --member:#f2b48c; --guest:#a69d96;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.45}
+  /* Full bleed: the tables run the full width of their content, with an 80px bleed on all four sides. */
+  header{padding:80px 80px 8px;margin:0}
+  h1{font-family:var(--font-display);text-transform:uppercase;font-size:28px;margin:0 0 4px;letter-spacing:.01em}
+  header p{margin:0;color:var(--muted);max-width:70ch}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0 0;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .wrap{margin:16px 0 0;padding:0 80px 80px;width:max-content;min-width:100%}
+  .scroller{border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+  @media (max-width:700px){ header{padding:24px 16px 8px} .wrap{padding:0 16px 40px} }
+  table{border-collapse:separate;border-spacing:0;min-width:1700px;width:100%}
+  th,td{vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);text-align:left}
+  tr:last-child td,tr:last-child th{border-bottom:0}
+  th:last-child,td:last-child{border-right:0}
+  tbody th{position:sticky;left:0;z-index:1;background:var(--surface);width:130px;min-width:130px;
+    font-family:var(--font-display);text-transform:uppercase;font-size:16px;letter-spacing:.02em}
+  thead th{position:sticky;top:0;background:var(--surface);z-index:2}
+  thead th:first-child{left:0;z-index:3}
+  .stage{display:block;font-family:var(--font-display);text-transform:uppercase;font-size:18px;line-height:1.1}
+  .num{display:inline-block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+  .chip{display:inline-block;padding:3px 8px;border-radius:999px;font-size:12px;font-weight:700;margin:0 4px 4px 0;color:var(--ink)}
+  .c-entry{background:var(--entry)} .c-key{background:var(--key)} .c-win{background:var(--win)} .c-neutral{background:var(--neutral)}
+  ul{margin:0;padding-left:18px} li{margin:0 0 4px}
+  .split{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+  .who{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+  .who.m{color:var(--member)} .who.g{color:var(--guest)}
+  .quote{font-style:italic}
+  .feel{display:inline-block;font-weight:700;font-size:12px;margin-bottom:4px}
+  .feel.pos{color:var(--pos)} .feel.neu{color:var(--neu)} .feel.neg{color:var(--neg)}
+  .curve td{height:96px;position:relative;padding:0}
+  .curve .dot{position:absolute;left:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:2px solid var(--surface)}
+  .curve .dot.m{background:var(--member)} .curve .dot.g{background:var(--guest);opacity:.75}
+  .curve .emo{position:absolute;left:50%;transform:translate(-50%,-50%);font-size:26px;line-height:1}
+  .curve .mid{position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line)}
+  .opp{color:var(--muted)}
+  .shot{display:block;width:173px;height:362px;border-radius:18px;overflow:hidden;border:6px solid #1f1a17;background:#fff;position:relative;margin:0 auto;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+  .shot iframe{width:402px;height:874px;border:0;transform:scale(.4);transform-origin:0 0;pointer-events:none;filter:grayscale(1)} /* screens shown in greyscale */
+  .shot-cap{display:block;text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
+  .shot-cap a{color:inherit}
+  .shot.off{display:flex;flex-direction:column;justify-content:center;gap:8px;padding:12px;background:var(--bg);border-style:dashed;border-color:var(--line);color:var(--muted);font-size:12px;text-align:center}
+  .hint{font-size:12px;color:var(--muted);margin-top:8px}
+  .tabs{display:inline-flex;gap:4px;padding:4px;margin-top:16px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+  .tabs button{border:0;background:none;color:var(--muted);font:700 14px var(--font-body);padding:8px 16px;border-radius:999px;cursor:pointer}
+  .tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+  .journey[hidden]{display:none}
+  .intro{color:var(--muted);margin:0 0 12px;max-width:80ch}
+  .intro .who{display:inline;margin-right:8px}
+  .todo{color:var(--neg);font-weight:700}
+  .shot.off span{display:block}
+  .shot-alts{display:flex;gap:16px}
+  ol.steps{margin:0;padding-left:20px} ol.steps li{margin:0 0 6px}
+  ol.steps li.key{font-weight:700}
+  .key-tag{display:inline-block;margin-left:4px;padding:1px 7px;border-radius:999px;background:var(--win);color:var(--ink);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;vertical-align:1px}
+  .supp{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);color:var(--muted)}
+  .supp-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+  ul.edge{margin:0;padding-left:16px;color:var(--ink)} ul.edge li{margin:0 0 6px;font-size:13px}
+  .handled{display:inline-block;margin-left:4px;padding:0 6px;border-radius:999px;background:var(--neutral);color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;vertical-align:1px}
+  .scn-col{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);width:max-content}
+  .scn-col-head{font-family:var(--font-display);text-transform:uppercase;font-size:16px;margin-bottom:10px}
+  .scn{margin-bottom:20px} .scn:last-child{margin-bottom:0}
+  .scn-head{display:flex;align-items:center;gap:8px;margin-bottom:2px;flex-wrap:wrap}
+  .scn-badge{padding:2px 8px;border-radius:999px;background:var(--key);color:var(--ink);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  .scn-name{font-weight:700;font-size:13px}
+  .scn-intro{margin:0 0 12px;color:var(--muted);font-size:12px;max-width:420px}
+  .scn-steps{display:grid;grid-template-columns:repeat(3,133px);gap:16px 14px}
+  .scn-step{position:relative}
+  .scn-step .shot{width:133px;height:277px;margin:0;border-width:5px;border-radius:14px}
+  .scn-step .shot iframe{transform:scale(.305)}
+  .scn-num{position:absolute;top:-8px;left:-8px;z-index:2;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .scn-step.branch .scn-num{background:var(--muted)}
+  .scn-step.branch .shot{border-style:dashed}
+  .scn-title{font-weight:700;font-size:12.5px;margin-top:6px}
+  .scn-desc{font-size:11.5px;color:var(--muted);margin-top:2px}
+  html.print-mode td .scn-col p{max-width:420px}
+  .alt-note{font-size:12px;color:var(--muted);margin:0 0 12px;max-width:540px}
+  .alt-note strong{color:var(--ink)}
+  .alt-note .rec,.rec-badge{color:var(--pos);font-weight:700}
+  .rec-badge,.alt-badge{display:inline-block;margin-top:4px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .alt-badge{color:var(--muted)}
+  /* Print mode (?print=member|guest): one journey per page, full width, no tabs. Used for the PDF export. */
+  html.print-mode{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html.print-mode .tabs,html.print-mode .hint,html.print-mode .parked-note{display:none}
+  html.print-mode .scroller{overflow:visible;width:max-content}
+  html.print-mode .wrap{min-width:0}
+  html.print-mode tbody th,html.print-mode thead th{position:static}
+  html.print-mode td ul,html.print-mode td ol,html.print-mode td p,html.print-mode td .supp,html.print-mode td .opp,html.print-mode td .feel{max-width:250px;display:block} /* wrap text so columns stay readable */
+</style>
+</head>
+<body>
+<header>
+  <p class="parked-note"><a href="index.html" style="color:inherit">← Flow index</a> · <strong>Parked</strong>: UI snapshots to be revisited after the UI update.</p>
+  <h1>Mobile web ordering: user journeys</h1>
+  <p>Two journeys through the same eight stages: a logged-in member and a guest. Every entry point lands on the menu. Red captions mark screens that aren't built yet.</p>
+  <div class="legend">
+    <span><i class="sw c-entry"></i>Entry point</span>
+    <span><i class="sw c-key"></i>Key loyalty moment</span>
+    <span><i class="sw c-win"></i>Member payoff</span>
+    <span><i class="sw c-neutral"></i>Ordering step</span>
+  </div>
+  <div class="tabs" role="tablist">
+    <button role="tab" data-tab="member" aria-selected="true">Logged-in member</button>
+    <button role="tab" data-tab="guest" aria-selected="false">Guest</button>
+  </div>
+</header>
+
+<div class="wrap">
+<section class="journey" id="journey-member" data-key="member">
+<p class="intro"><span class="who m">Logged-in member</span>A returning customer who is already logged in. Their Happy Points balance is visible from the first screen and pays off at checkout and confirmation.</p>
+<div class="scroller">
+<table>
+  <thead><tr><th></th><th><span class="num">01</span><span class="stage">Reopen &amp; check balance</span></th><th><span class="num">02</span><span class="stage">Check pickup time</span></th><th><span class="num">03</span><span class="stage">Build the order</span></th><th><span class="num">04</span><span class="stage">Review cart</span></th><th><span class="num">05</span><span class="stage">Confirm pickup time</span></th><th><span class="num">06</span><span class="stage">Redeem B$ or voucher</span></th><th><span class="num">07</span><span class="stage">Pay</span></th><th><span class="num">08</span><span class="stage">Confirmation + B$ earned</span></th></tr></thead>
+  <tbody>
+    <tr>
+      <th>UI snapshot</th>
+      <td><div class="alt-note"><strong>A and B are alternatives</strong> for the logged-in landing page. <span class="rec">A is recommended</span>: the menu stays first, and the balance stays visible in the header while browsing.</div><div class="shot-alts"><div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:member-b" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:member-b" loading="lazy" tabindex="-1" title="A: B$ indicator at corner"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:member-b" target="_blank">A: B$ indicator at corner</a><br><span class="rec-badge">★ Recommended</span></span></div><div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:member" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:member" loading="lazy" tabindex="-1" title="B: B$ indicator as a card"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:member" target="_blank">B: B$ indicator as a card</a><br><span class="alt-badge">Alternative</span></span></div><div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#sidebar:member" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#sidebar:member" loading="lazy" tabindex="-1" title="Sidebar (logged in)"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#sidebar:member" target="_blank">Sidebar (logged in)</a></span></div></div></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:member-b" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:member-b" loading="lazy" tabindex="-1" title="Menu with pickup pill"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:member-b" target="_blank">Menu with pickup pill</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#builder-v2" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#builder-v2" loading="lazy" tabindex="-1" title="Builder (V2 proteins)"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#builder-v2" target="_blank">Builder (V2 proteins)</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cart" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cart" loading="lazy" tabindex="-1" title="Your order"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cart" target="_blank">Your order</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout" loading="lazy" tabindex="-1" title="Confirm pickup time"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout" target="_blank">Confirm pickup time</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:member" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:member" loading="lazy" tabindex="-1" title="Checkout with B$ &amp; voucher"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:member" target="_blank">Checkout with B$ &amp; voucher</a></span><div class="scn-col"><div class="scn-col-head">Checkout scenarios</div><div class="scn"><div class="scn-head"><span class="scn-badge">Scenario 3</span><span class="scn-name">Already logged in</span></div><p class="scn-intro">A member who is logged in before reaching checkout.</p><div class="scn-steps"><div class="scn-step"><div class="scn-num">1</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:account" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:account" loading="lazy" tabindex="-1" title="Account card"></iframe></a><div class="scn-title">Account card</div><div class="scn-desc">Checkout shows the account card (name, phone, email, tier) instead of contact fields.</div></div><div class="scn-step"><div class="scn-num">2</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:recipient" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:recipient" loading="lazy" tabindex="-1" title="Add a different recipient"></iframe></a><div class="scn-title">Add a different recipient</div><div class="scn-desc">Enters who is picking up and their phone; the member still earns the Happy Points.</div></div><div class="scn-step"><div class="scn-num">3</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:change" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:change" loading="lazy" tabindex="-1" title="Change account"></iframe></a><div class="scn-title">Change account</div><div class="scn-desc">Logs out and reopens the mobile number step to log in with another number.</div></div></div></div></div></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cardsheet" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cardsheet" loading="lazy" tabindex="-1" title="Card payment sheet"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cardsheet" target="_blank">Card payment sheet</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#order-success:member" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#order-success:member" loading="lazy" tabindex="-1" title="Order confirmed"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#order-success:member" target="_blank">Order confirmed</a></span></td>
+    </tr>
+    <tr>
+      <th>Touchpoints</th>
+      <td><span class="chip c-entry">Saved link</span> <span class="chip c-entry">Reopened tab</span> <span class="chip c-entry">In-store QR</span></td>
+      <td><span class="chip c-neutral">Pickup pill on menu</span></td>
+      <td><span class="chip c-neutral">Item builder</span></td>
+      <td><span class="chip c-neutral">Cart</span></td>
+      <td><span class="chip c-neutral">Pickup time sheet</span></td>
+      <td><span class="chip c-key">Redeem B$</span> <span class="chip c-key">Apply voucher</span> <span class="chip c-neutral">No redemption</span></td>
+      <td><span class="chip c-neutral">Pay by card</span></td>
+      <td><span class="chip c-win">Confirmation + B$ earned</span></td>
+    </tr>
+    <tr>
+      <th>Key tasks</th>
+      <td><ol class="steps"><li>Reopen the site, still logged in, and land on the menu</li><li class="key">Start ordering: browse the menu and pick a meal <span class="key-tag">Key task</span></li></ol><div class="supp"><span class="supp-label">Supplementary · optional</span><ul><li>Glance at the B$ balance (header corner in A, card in B)</li><li>Open the sidebar for tier, rewards and order history</li></ul></div></td>
+      <td><ol class="steps"><li>See “Pickup · ASAP (~30 min)” on the menu</li><li>Tap the pill only to schedule a later time</li></ol></td>
+      <td><ol class="steps"><li>Browse categories, pick a meal</li><li>Pick up to 2 proteins and a portion for each (a Half needs a second protein)</li><li>Add to cart; repeat for the group</li></ol></td>
+      <td><ol class="steps"><li>Check items, quantities and total</li><li>Edit or remove items</li><li>Go to checkout</li></ol></td>
+      <td><ol class="steps"><li>Pick from the next available times (kitchen demand)</li><li>Confirm and continue</li></ol></td>
+      <td><ol class="steps"><li>Compare B$ balance against available vouchers</li><li>Pick one: redeem B$, apply a voucher, or neither</li><li>See the new total and the B$ this order will earn</li></ol></td>
+      <td><ol class="steps"><li>Enter or confirm card details</li><li>Check final amount</li><li>Place order</li></ol></td>
+      <td><ol class="steps"><li>See order number and pickup time</li><li>See B$ earned, plus any redemption or voucher used</li></ol></td>
+    </tr>
+    <tr>
+      <th>Mental state</th>
+      <td><span class="feel pos">Hungry · ready to order</span><p class="quote">“Same as last time. Oh nice, I’ve got B$12.40.”</p><span class="opp">The balance is a pleasant extra, not a decision to make before ordering.</span></td>
+      <td><span class="feel pos">Settled · in control</span><p class="quote">“ASAP is fine, let's eat.”</p></td>
+      <td><span class="feel pos">Engaged · creative</span><p class="quote">“Half chicken, half steak… what does that cost?”</p><span class="opp">Portion prices on the buttons answer this in place.</span></td>
+      <td><span class="feel neu">Checking · cost-conscious</span><p class="quote">“Is everything right? How much is it?”</p></td>
+      <td><span class="feel neu">Mildly impatient</span><p class="quote">“Why ask the time again?”</p><span class="opp">Explain it's based on current kitchen demand.</span></td>
+      <td><span class="feel pos">Savvy · rewarded</span><p class="quote">“Which saves me more: points or the voucher?”</p><span class="opp">Can stall if the comparison isn't obvious.</span></td>
+      <td><span class="feel neu">Cautious · wants it done</span><p class="quote">“Is this secure? Just take my money.”</p><span class="opp"></span></td>
+      <td><span class="feel pos">Satisfied · rewarded</span><p class="quote">“Done, and I earned points.”</p></td>
+    </tr>
+    <tr>
+      <th>Edge cases</th>
+      <td><ul class="edge"><li>Session expired: show the guest view with a quiet “Log in” prompt; keep the cart after login</li><li>Store closed: the time picker opens straight away and ASAP is disabled <span class="handled">Handled in prototype</span></li><li>Very large balance (B$1,000+): the store name shortens to fit, never the balance</li></ul></td>
+      <td><ul class="edge"><li>ASAP no longer possible near closing time: ASAP disabled, pick a later slot <span class="handled">Handled in prototype</span></li><li>Scheduled slot passes while browsing: re-check and offer the next slot at checkout</li></ul></td>
+      <td><ul class="edge"><li>Ingredient sold out at this store: show it greyed out as “Sold out”</li><li>Half protein without a second one: blocked with “Choose another protein” <span class="handled">Handled in prototype</span></li><li>Veggie picked with a protein: Veggie replaces it <span class="handled">Handled in prototype</span></li></ul></td>
+      <td><ul class="edge"><li>Price changed since the item was added: show the new price before checkout</li><li>Item unavailable after a store change: flag it and offer a swap or removal</li><li>Cart emptied: show the empty state with a way back to the menu</li></ul></td>
+      <td><ul class="edge"><li>No pickup slots left today: say so clearly and suggest another store</li><li>Chosen slot fills up mid-checkout: offer the next available slot</li></ul></td>
+      <td><ul class="edge"><li>B$ covers the whole total: card payment is $0, so no B$ is earned; say this before paying</li><li>Voucher invalid, expired or below minimum spend: inline error, other options stay available</li><li>B$0.00 balance: hide or disable “Use Brandollars”</li></ul></td>
+      <td><ul class="edge"><li>Card declined: stay on the payment sheet; keep the B$ redemption reserved</li><li>Double tap or slow network: place and charge the order only once</li></ul></td>
+      <td><ul class="edge"><li>Payment succeeds but the page fails to load: the order still appears in Order history</li><li>B$ earned is pending until pickup: label it as pending, not yet in the balance</li></ul></td>
+    </tr>
+    <tr class="curve">
+      <th style="padding:12px 14px">Emotion</th>
+      <td><i class="mid"></i><span class="emo" style="top:30%" role="img" aria-label="Positive" title="Positive">🙂</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:30%" role="img" aria-label="Positive" title="Positive">🙂</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:25%" role="img" aria-label="Positive" title="Positive">🙂</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:45%" role="img" aria-label="Neutral" title="Neutral">😐</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:55%" role="img" aria-label="Uneasy" title="Uneasy">😕</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:30%" role="img" aria-label="Positive" title="Positive">🙂</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:45%" role="img" aria-label="Neutral" title="Neutral">😐</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:15%" role="img" aria-label="Delighted" title="Delighted">😄</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</section>
+<section class="journey" hidden id="journey-guest" data-key="guest">
+<p class="intro"><span class="who g">Guest</span>A customer who doesn't log in. Happy Points is offered but never blocks ordering; the last nudge comes at checkout.</p>
+<div class="scroller">
+<table>
+  <thead><tr><th></th><th><span class="num">01</span><span class="stage">Discover &amp; land</span></th><th><span class="num">02</span><span class="stage">Check pickup time</span></th><th><span class="num">03</span><span class="stage">Build the order</span></th><th><span class="num">04</span><span class="stage">Review cart</span></th><th><span class="num">05</span><span class="stage">Confirm pickup time</span></th><th><span class="num">06</span><span class="stage">Last nudge to log in</span></th><th><span class="num">07</span><span class="stage">Pay as guest</span></th><th><span class="num">08</span><span class="stage">Confirmation</span></th></tr></thead>
+  <tbody>
+    <tr>
+      <th>UI snapshot</th>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:guest-b" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:guest-b" loading="lazy" tabindex="-1" title="Menu with B$0.00 button"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:guest-b" target="_blank">Menu with B$0.00 button</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:guest-b" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:guest-b" loading="lazy" tabindex="-1" title="Menu with pickup pill"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#menu:guest-b" target="_blank">Menu with pickup pill</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#builder-v2" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#builder-v2" loading="lazy" tabindex="-1" title="Builder (V2 proteins)"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#builder-v2" target="_blank">Builder (V2 proteins)</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cart" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cart" loading="lazy" tabindex="-1" title="Your order"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cart" target="_blank">Your order</a><br><span class="todo">“Earn B$1.20” banner not shown yet</span></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout" loading="lazy" tabindex="-1" title="Confirm pickup time"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout" target="_blank">Confirm pickup time</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:confirmed" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:confirmed" loading="lazy" tabindex="-1" title="Checkout rewards banner"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:confirmed" target="_blank">Checkout rewards banner</a></span><div class="scn-col"><div class="scn-col-head">Checkout scenarios</div><div class="scn"><div class="scn-head"><span class="scn-badge">Scenario 1</span><span class="scn-name">Guest who joins Happy Points</span></div><p class="scn-intro">A guest with no account claims points for this order by joining with their mobile number.</p><div class="scn-steps"><div class="scn-step"><div class="scn-num">1</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:banner" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:banner" loading="lazy" tabindex="-1" title="Claim banner"></iframe></a><div class="scn-title">Claim banner</div><div class="scn-desc">Sees “Claim your B$0.51 Happy Points” at checkout and taps it.</div></div><div class="scn-step"><div class="scn-num">2</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:join-phone" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:join-phone" loading="lazy" tabindex="-1" title="Mobile number"></iframe></a><div class="scn-title">Mobile number</div><div class="scn-desc">Enters their mobile number and taps <b>Send code</b>.</div></div><div class="scn-step"><div class="scn-num">3</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:join-code" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:join-code" loading="lazy" tabindex="-1" title="Code"></iframe></a><div class="scn-title">Code</div><div class="scn-desc">Enters the 6-digit code sent by text and taps <b>Verify</b>.</div></div><div class="scn-step"><div class="scn-num">4</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:join-signup" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:join-signup" loading="lazy" tabindex="-1" title="You’re new here!"></iframe></a><div class="scn-title">You’re new here!</div><div class="scn-desc">Adds their name (email optional), agrees to the Terms and taps <b>Join &amp; continue</b>.</div></div><div class="scn-step"><div class="scn-num">5</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:joined" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:joined" loading="lazy" tabindex="-1" title="Logged in"></iframe></a><div class="scn-title">Logged in</div><div class="scn-desc">The account card replaces the contact fields, the order earns B$0.51, and the button reads <b>Place order</b>.</div></div><div class="scn-step branch"><div class="scn-num">↳</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:guest-continue" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:guest-continue" loading="lazy" tabindex="-1" title="Branch: continue as guest"></iframe></a><div class="scn-title">Branch: continue as guest</div><div class="scn-desc">At steps 2–4, taps <b>Continue as guest instead</b>: the sheet closes and they finish with <b>Pay as a guest</b>.</div></div></div></div><div class="scn"><div class="scn-head"><span class="scn-badge">Scenario 2</span><span class="scn-name">Guest who logs in to an existing account</span></div><p class="scn-intro">Same path as joining, but the number belongs to a member, so sign-up is skipped.</p><div class="scn-steps"><div class="scn-step"><div class="scn-num">1</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:banner" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:banner" loading="lazy" tabindex="-1" title="Claim banner"></iframe></a><div class="scn-title">Claim banner</div><div class="scn-desc">Sees “Claim your B$0.51 Happy Points” at checkout and taps it.</div></div><div class="scn-step"><div class="scn-num">2</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:login-phone" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:login-phone" loading="lazy" tabindex="-1" title="Existing number"></iframe></a><div class="scn-title">Existing number</div><div class="scn-desc">Enters <b>89029187</b> (demo existing member) and taps <b>Send code</b>.</div></div><div class="scn-step"><div class="scn-num">3</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:login-code" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:login-code" loading="lazy" tabindex="-1" title="Code"></iframe></a><div class="scn-title">Code</div><div class="scn-desc">Enters the code and taps <b>Verify</b>. No sign-up step.</div></div><div class="scn-step"><div class="scn-num">4</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:login-done" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:login-done" loading="lazy" tabindex="-1" title="Balance appears"></iframe></a><div class="scn-title">Balance appears</div><div class="scn-desc">Logged in as John Smith: the account card shows, and the B$12.40 Happy Points balance is applied in Savings.</div></div><div class="scn-step"><div class="scn-num">5</div><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:login-card" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#checkout:login-card" loading="lazy" tabindex="-1" title="Saved card"></iframe></a><div class="scn-title">Saved card</div><div class="scn-desc">Their saved VISA •••• 4242 is selected, so <b>Place order</b> skips entering card details.</div></div></div></div></div></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cardsheet" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cardsheet" loading="lazy" tabindex="-1" title="Card payment sheet"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#cardsheet" target="_blank">Card payment sheet</a></span></td>
+      <td><a class="shot" href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#order-success" target="_blank" title="Open screen"><iframe src="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#order-success" loading="lazy" tabindex="-1" title="Order confirmed"></iframe></a><span class="shot-cap"><a href="Chipotle%20Online%20Ordering.html?view=mobile&amp;from=index#order-success" target="_blank">Order confirmed</a></span></td>
+    </tr>
+    <tr>
+      <th>Touchpoints</th>
+      <td><span class="chip c-entry">In-store QR poster</span> <span class="chip c-entry">Google “Chipotle order”</span> <span class="chip c-entry">Google “Chipotle”</span> <span class="chip c-key">Marketing site → Order now</span><br>All land on the menu page</td>
+      <td><span class="chip c-neutral">Pickup pill on menu</span></td>
+      <td><span class="chip c-neutral">Item builder</span></td>
+      <td><span class="chip c-neutral">Cart</span> <span class="chip c-key">“Earn B$1.20 if you log in” banner</span></td>
+      <td><span class="chip c-neutral">Pickup time sheet</span></td>
+      <td><span class="chip c-key">Checkout rewards banner</span> <span class="chip c-neutral">Pay as a guest</span></td>
+      <td><span class="chip c-neutral">Pay by card</span></td>
+      <td><span class="chip c-neutral">Order confirmation</span></td>
+    </tr>
+    <tr>
+      <th>Key tasks</th>
+      <td><ol class="steps"><li>Scan the QR poster while queuing, or search Google</li><li>Land straight on the menu</li><li class="key">Start ordering: browse the menu and pick a meal <span class="key-tag">Key task</span></li></ol><div class="supp"><span class="supp-label">Supplementary · optional</span><ul><li>Notice the “Join Happy Points” card: tap to log in, or close it</li><li>See B$0.00 in the header corner</li></ul></div></td>
+      <td><ol class="steps"><li>See “Pickup · ASAP (~30 min)” on the menu</li><li>Tap the pill only to schedule a later time</li></ol></td>
+      <td><ol class="steps"><li>Browse categories, pick a meal</li><li>Pick up to 2 proteins and a portion for each (a Half needs a second protein)</li><li>Add to cart; repeat for the group</li></ol></td>
+      <td><ol class="steps"><li>Check items, quantities and total</li><li>See the “Earn B$1.20 if you log in” banner</li><li>Ignore it, or log in (→ member journey)</li></ol></td>
+      <td><ol class="steps"><li>Pick from the next available times (kitchen demand)</li><li>Confirm and continue</li></ol></td>
+      <td><ol class="steps"><li>Enter name and contact details</li><li>See the rewards banner one last time</li><li>Tap “Pay as a guest”</li></ol></td>
+      <td><ol class="steps"><li>Enter card details</li><li>Check final amount</li><li>Place order</li></ol></td>
+      <td><ol class="steps"><li>See order number and pickup time</li></ol></td>
+    </tr>
+    <tr>
+      <th>Mental state</th>
+      <td><span class="feel neu">Hungry · goal-driven · impatient</span><p class="quote">“I just want to order before I reach the counter.”</p><span class="opp">The card must not read as a sign-in gate.</span></td>
+      <td><span class="feel pos">Settled · in control</span><p class="quote">“ASAP is fine, let's eat.”</p></td>
+      <td><span class="feel pos">Engaged · creative</span><p class="quote">“Half chicken, half steak… what does that cost?”</p><span class="opp">Peak focus; any interruption here hurts most.</span></td>
+      <td><span class="feel neu">Tempted vs. wary</span><p class="quote">“B$1.20 is free money… but will logging in lose my cart?”</p><span class="opp">The banner must keep the cart if they log in.</span></td>
+      <td><span class="feel neu">Mildly impatient</span><p class="quote">“Why ask the time again?”</p><span class="opp">Explain it's based on current kitchen demand.</span></td>
+      <td><span class="feel neg">Resistant · time-pressed</span><p class="quote">“I'm not making an account just to get a burrito.”</p><span class="opp">One nudge is enough; don't repeat it at payment.</span></td>
+      <td><span class="feel neu">Cautious · wants it done</span><p class="quote">“Is this secure? Just take my money.”</p></td>
+      <td><span class="feel pos">Relieved</span><p class="quote">“Done. Where do I pick it up?”</p></td>
+    </tr>
+    <tr>
+      <th>Edge cases</th>
+      <td><ul class="edge"><li>QR scanned at one store but another store is selected: confirm the store before ordering</li><li>Old link from the marketing site: still lands on the menu, not an error page</li><li>“Join Happy Points” card closed: stays hidden for the rest of the visit</li></ul></td>
+      <td><ul class="edge"><li>Store closed: the time picker opens straight away and ASAP is disabled <span class="handled">Handled in prototype</span></li><li>Scheduled slot passes while browsing: re-check and offer the next slot at checkout</li></ul></td>
+      <td><ul class="edge"><li>Ingredient sold out at this store: show it greyed out as “Sold out”</li><li>Half protein without a second one: blocked with “Choose another protein” <span class="handled">Handled in prototype</span></li></ul></td>
+      <td><ul class="edge"><li>Logs in from the banner: the cart is kept and the balance appears</li><li>Logs in with a saved cart from another visit: merge, or ask which cart to keep</li></ul></td>
+      <td><ul class="edge"><li>No pickup slots left today: say so clearly and suggest another store</li><li>Chosen slot fills up mid-checkout: offer the next available slot</li></ul></td>
+      <td><ul class="edge"><li>Email or phone matches an existing member: suggest logging in to earn B$ on this order</li><li>No phone given: explain they won’t get a “ready” text</li></ul></td>
+      <td><ul class="edge"><li>Card declined: stay on the payment sheet and keep the details entered</li><li>Double tap or slow network: place and charge the order only once</li></ul></td>
+      <td><ul class="edge"><li>Wants points after ordering: offer “Sign up to claim B$ for this order”</li><li>Leaves the page: no order history, so show the order number clearly and email it</li></ul></td>
+    </tr>
+    <tr class="curve">
+      <th style="padding:12px 14px">Emotion</th>
+      <td><i class="mid"></i><span class="emo" style="top:55%" role="img" aria-label="Uneasy" title="Uneasy">😕</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:35%" role="img" aria-label="Positive" title="Positive">🙂</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:25%" role="img" aria-label="Positive" title="Positive">🙂</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:50%" role="img" aria-label="Neutral" title="Neutral">😐</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:55%" role="img" aria-label="Uneasy" title="Uneasy">😕</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:70%" role="img" aria-label="Frustrated" title="Frustrated">😣</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:55%" role="img" aria-label="Uneasy" title="Uneasy">😕</span></td>
+      <td><i class="mid"></i><span class="emo" style="top:30%" role="img" aria-label="Positive" title="Positive">🙂</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</section>
+<p class="hint">Scroll sideways to see all stages.</p>
+</div>
+<script>
+  // Member / Guest tabs; the choice is kept in the URL hash (#member, #guest).
+  (function(){
+    var tabs = document.querySelectorAll('.tabs button');
+    function select(key){
+      tabs.forEach(function(b){ b.setAttribute('aria-selected', b.dataset.tab===key ? 'true' : 'false'); });
+      document.querySelectorAll('.journey').forEach(function(s){ s.hidden = s.dataset.key!==key; });
+    }
+    tabs.forEach(function(b){ b.addEventListener('click', function(){ select(b.dataset.tab); history.replaceState(null,'','#'+b.dataset.tab); }); });
+    var printKey = new URLSearchParams(location.search).get('print');
+    if(printKey){
+      document.documentElement.classList.add('print-mode');
+      select(printKey==='guest' ? 'guest' : 'member');
+      // Load every snapshot now (they're lazy on screen), then size the page to the content.
+      document.querySelectorAll('.journey:not([hidden]) .shot iframe').forEach(function(f){ f.loading='eager'; f.src=f.getAttribute('src'); });
+      requestAnimationFrame(function(){
+        // Size the page to the content (not the window), so the 80px bleed is exact on every side.
+        var wrap = document.querySelector('.wrap'), box = wrap.getBoundingClientRect();
+        var w = Math.ceil(box.width), h = Math.ceil(box.bottom + window.scrollY);
+        var st = document.createElement('style');
+        st.textContent = '@page{size:'+w+'px '+h+'px;margin:0}';
+        document.head.appendChild(st);
+      });
+    } else {
+      select(location.hash==='#guest' ? 'guest' : 'member');
+    }
+  })();
+</script>
+<script>
+  // Snapshots are same-origin: hide the prototype's dev-mode controls inside each frame.
+  document.querySelectorAll('.shot iframe').forEach(function(f){
+    f.addEventListener('load', function(){
+      try {
+        var st = f.contentDocument.createElement('style');
+        st.textContent = '.devmode-ui{display:none!important}html,body{margin:0!important;padding:0!important;overflow:hidden!important;background:#fff!important}.phone{margin:0!important;border:0!important;border-radius:0!important;box-shadow:none!important}';
+        f.contentDocument.head.appendChild(st);
+      } catch(e){}
+    });
+  });
+</script>
+</body>
+</html>
