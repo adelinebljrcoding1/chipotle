@@ -10,7 +10,7 @@
 // &from=index; anything opened directly (double-clicked, bare bookmark, typed URL)
 // gets sent to the index first.
 if (new URLSearchParams(location.search).get('from') !== 'index') {
-  location.replace('index.html');
+  location.replace('index.html');  // on github.io this then opens the prototype (see index.html)
 }
 // ?capture=1 crops to the phone screen with no dev controls (used for screen exports).
 if (new URLSearchParams(location.search).get('capture')) document.documentElement.classList.add('capture');
@@ -563,6 +563,9 @@ button{font-family:inherit;}
 .pv-selection .pv-sel-value{font-size:14px; line-height:20px; color:var(--taupe); margin-top:4px;}
 .pv-selection .pv-sel-right{display:flex; flex-direction:column; align-items:flex-end; gap:2px; font-size:14px; font-weight:500; color:var(--brown);}
 .pv-selection svg{color:var(--taupe); flex-shrink:0;}
+.pv-selection .pv-sel-action{color:var(--brown); font-weight:500;}
+.pv-reset{display:block; margin:4px auto 0; border:none; background:none; padding:10px; font-family:'Gotham',sans-serif; font-size:14px; font-weight:500; color:var(--brown); text-decoration:underline; cursor:pointer;}
+.pv-card .pv-row > svg{color:var(--taupe); flex-shrink:0;}
 
 .pv-overlay{position:absolute; inset:0; z-index:130; background:rgba(0,0,0,.6); display:flex; flex-direction:column; justify-content:flex-end;}
 .pv-overlay.hidden{display:none!important;}
@@ -1776,7 +1779,7 @@ body.comment-on .comment-resolved-toggle{top:100px;}
 <!-- ===================== INDEX SHORTCUT ===================== -->
 <button class="tools-tab devmode-ui" id="tools-tab" onclick="toggleProtoTools()" aria-label="Show prototype tools" aria-expanded="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg></button>
 <div class="proto-tools devmode-ui">
-<a class="index-toggle" href="index.html" aria-label="Index" title="Index">
+<a class="index-toggle" href="index.html?index" aria-label="Index" title="Index">
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
   <span>Index</span>
 </a>
@@ -2398,6 +2401,8 @@ function updateCatFromScroll(){
     var sec = document.getElementById('menu-cat-'+c.id);
     if(sec && menuSecTop(sec) <= y) current = c.id;
   });
+  // No spacer after the last category: at the bottom of the list, it's the one in view.
+  if(body.scrollTop + body.clientHeight >= body.scrollHeight - 4) current = CATEGORIES[CATEGORIES.length-1].id;
   if(current!==currentCategory) setActiveCatTab(current);
 }
 function mealCardHTML(catId, it){
@@ -2424,21 +2429,13 @@ function renderMenuCategory(id){
   document.getElementById('menu-sections').innerHTML = html;
   var body = document.getElementById('menu-body-scroll');
   body.scrollTop = 0;
-  sizeLastMenuCat();
   setActiveCatTab(CATEGORIES[0].id);
 }
 
 /* ---- search ---- */
 /* Minimise the menu header once the list is scrolled (hysteresis so it doesn't flicker as the header resizes). */
-// Room after the last category so its title can still scroll up under the (collapsed) header.
-function sizeLastMenuCat(){
-  var body = document.getElementById('menu-body-scroll');
-  var last = document.getElementById('menu-cat-'+CATEGORIES[CATEGORIES.length-1].id);
-  if(last && body.clientHeight) last.style.minHeight = (body.clientHeight + 60)+'px';
-}
 function initMenuHeaderScroll(){
   var body = document.getElementById('menu-body-scroll'), menu = document.getElementById('screen-menu');
-  if(window.ResizeObserver) new ResizeObserver(sizeLastMenuCat).observe(body);
   body.addEventListener('scroll', function(){
     var y = body.scrollTop;
     if(y > 24 && !menu.classList.contains('header-min')) setMenuHeaderMin(true);
@@ -2882,6 +2879,7 @@ function renderModSelection(secId, idx){
   '</div>';
 }
 function renderModSheet(){
+  document.querySelector('.pv-foot').style.display = '';
   var opt = pv.opt, html = '';
   html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+opt.name+'</div><span class="pv-req">Required</span></div>';
   html += pv.emptyError
@@ -2920,20 +2918,14 @@ function pairSels(name, partner, mode){
   var m = mode==='Full' ? 'Normal' : 'Half';
   return [proteinSel(name, m), proteinSel(partner, m)];
 }
-function portionChoices(opt){
-  var list = [{mod:'Normal', label:'Normal portion'}];
-  if(proteinRules().split && opt.combinable!==false && halfPartners(opt.name).length) list.push({mod:'Half', label:'Half portion'});
-  // Double stays visible but disabled when this protein (or this item) can't be doubled, e.g. Pollo Asado.
-  if(proteinCanDouble(opt.name)) list.push({mod:'Double', label:'Double portion'});
-  else list.push({mod:'Double', label:'Double portion', disabled:true,
-    reason: proteinRules().double ? 'Not available for '+opt.name : 'Not available for '+currentBuilderConfig().name});
-  // Two full proteins needs a doubleable protein; otherwise it shows disabled too (e.g. Pollo Asado, Quesadilla).
-  if(proteinRules().split && proteinCanDouble(opt.name) && fullPartners(opt.name).length) list.push({mod:'Full', label:'Two full proteins'});
-  else if(proteinRules().split && opt.combinable!==false) list.push({mod:'Full', label:'Two full proteins', disabled:true,
-    reason: proteinRules().double ? 'Not available for '+opt.name : 'Not available for '+currentBuilderConfig().name});
-  return list;
-}
-function enabledPortionChoices(opt){ return portionChoices(opt).filter(function(c){ return !c.disabled; }); }
+/* ---- V1 protein portion: tap a protein = 1 portion of it (no sheet). "Customise" under the card opens:
+   level 1 — Half (½ + ½ with another protein) or Extra (2 portions: the same protein doubled, or + another protein)
+   level 2 — pick that second protein. ---- */
+// Can this protein be customised at all, and which of Half / Extra are possible?
+function canHalf(opt){ return proteinRules().split && opt.combinable!==false && halfPartners(opt.name).length>0; }
+function canExtra(opt){ return proteinCanDouble(opt.name); }
+function extraPartners(opt){ return [opt].concat(proteinRules().split ? fullPartners(opt.name) : []); }
+function hasPortionOptions(opt){ return opt.combinable!==false && (canHalf(opt) || canExtra(opt)); }
 // Item price if the protein section were `sels` (the sheet's Select button shows this).
 function priceWithProtein(sels){
   var keep = byoSelections.protein;
@@ -2942,43 +2934,51 @@ function priceWithProtein(sels){
   byoSelections.protein = keep;
   return t;
 }
-function pendingSels(){
-  var name = pv.opt.name;
-  if((pv.choice==='Half' || pv.choice==='Full') && pv.partner) return pairSels(name, pv.partner, pv.choice);
-  if(pv.choice==='Normal' || pv.choice==='Double') return [proteinSel(name, pv.choice)];
-  return null;
-}
 function moneyDelta(d){ return d>0.004 ? '+$'+d.toFixed(2) : ''; }
 function isFullPair(sels){ return sels.length===2 && sels[0].mod!=='Half'; }
-function portionSelectionText(sels){
-  if(isFullPair(sels)) return sels[0].name+' + '+sels[1].name+' (full portions)';
-  if(sels.length===2) return 'Half '+sels[0].name+' + Half '+sels[1].name;
-  return sels[0].mod==='Double' ? 'Double portion' : 'Normal portion';
+// The selections for a mode + second protein: Half = ½ + ½; Extra with itself = double; Extra with another = full + full.
+function customSels(name, mode, partner){
+  if(mode==='Half') return [proteinSel(name,'Half'), proteinSel(partner,'Half')];
+  if(partner===name) return [proteinSel(name,'Double')];
+  return [proteinSel(name,'Normal'), proteinSel(partner,'Normal')];
 }
+function currentPortionMode(sels){
+  if(sels.length===2) return isFullPair(sels) ? 'Extra' : 'Half';
+  return sels[0] && sels[0].mod==='Double' ? 'Extra' : null;
+}
+function portionSelectionText(sels){
+  if(sels.length===2 && !isFullPair(sels)) return 'Half '+sels[0].name+' + Half '+sels[1].name;
+  if(sels.length===2) return '2 portions · '+sels[0].name+' + '+sels[1].name;
+  return sels[0].mod==='Double' ? '2 portions · '+sels[0].name : '1 portion · '+sels[0].name;
+}
+// The panel under the selected protein: what's chosen now, and the way into Customise.
 function renderPortionSelection(idx){
   var sels = byoSelections.protein;
-  if(!sels.length || enabledPortionChoices(proteinOpt(sels[0].name)).length<2) return '';
-  var d = proteinCharge(sels) - proteinCharge([proteinSel(sels[0].name,'Normal')]);
+  if(!sels.length || !hasPortionOptions(proteinOpt(sels[0].name))) return '';
+  var d = moneyDelta(proteinCharge(sels) - proteinCharge([proteinSel(sels[0].name,'Normal')]));
   return '<div class="pv-selection" onclick="openPortionSheet('+idx+')">'+
-    '<div class="pv-sel-text"><div class="pv-sel-label">Selection</div><div class="pv-sel-value">'+portionSelectionText(sels)+'</div></div>'+
-    '<div class="pv-sel-right">'+(moneyDelta(d)||'Included')+'</div>'+
-    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'+
+    '<div class="pv-sel-text"><div class="pv-sel-label">Portion size</div><div class="pv-sel-value">'+portionSelectionText(sels)+(d?' · '+d:'')+'</div></div>'+
+    '<div class="pv-sel-right pv-sel-action">Customise</div>'+PV_CHEVRON_LG+
   '</div>';
 }
+// Tapping a protein card: choose it at 1 portion. (Tapping the chosen one again keeps its customisation.)
+function selectProtein(idx){
+  var opt = sectionById('protein').options[idx];
+  var cur = byoSelections.protein;
+  if(cur.length && cur[0].name===opt.name) return;
+  byoSelections.protein = [proteinSel(opt.name, opt.combinable===false ? null : 'Normal')];
+  renderByoSections(); renderProgressStrip(); updateByoFooter();
+}
+// "Customise" → the portion sheet (level 1).
 function openPortionSheet(idx){
-  var sec = currentBuilderSections().filter(function(s){ return s.id==='protein'; })[0];
-  var opt = sec.options[idx];
-  if(enabledPortionChoices(opt).length<2){
-    // Only one portion (e.g. Veggie): select it straight away, like a radio.
-    byoSelections.protein = [proteinSel(opt.name, opt.combinable===false ? null : 'Normal')];
-    renderByoSections(); renderProgressStrip(); updateByoFooter();
-    return;
-  }
-  var cur = byoSelections.protein, mine = cur.length && cur[0].name===opt.name;
-  var choice = !mine ? null : cur.length===2 ? (isFullPair(cur) ? 'Full' : 'Half') : (cur[0].mod||'Normal');
-  // pv.mode: which pair the level 2 list is for ('Half' | 'Full'). pv.missing: that pair was started but no partner picked.
-  pv = {idx:idx, opt:opt, level:1, choice:choice, mode:null,
-        partner: mine && cur[1] ? cur[1].name : null, missing:null, emptyError:false, l2Error:false};
+  var opt = sectionById('protein').options[idx];
+  var cur = byoSelections.protein;
+  if(!cur.length || cur[0].name!==opt.name){ selectProtein(idx); cur = byoSelections.protein; }
+  if(!hasPortionOptions(opt)) return;
+  var mode = currentPortionMode(cur);
+  pv = {kind:'prot', idx:idx, opt:opt, level:1, mode:mode,
+        partner: mode==='Half' || (mode==='Extra' && cur.length===2) ? cur[1].name : (mode==='Extra' ? opt.name : null),
+        l2Error:false};
   document.getElementById('pv-overlay').classList.remove('hidden');
   renderPortionSheet();
 }
@@ -2991,78 +2991,69 @@ var PV_CHEVRON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" st
 function renderPortionSheet(anim){
   if(pv.kind==='mod'){ renderModSheet(); return; }
   document.getElementById('pv-remove').classList.add('hidden');
-  var opt = pv.opt, html = '';
-  var regular = proteinCharge([proteinSel(opt.name,'Normal')]);
+  var opt = pv.opt, html = '', regular = proteinCharge([proteinSel(opt.name,'Normal')]);
+  var cur = byoSelections.protein, applied = currentPortionMode(cur);
+  var foot = document.querySelector('.pv-foot');
   if(pv.level===1){
-    html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+opt.name+'</div><span class="pv-req">Required</span></div>';
-    html += pv.emptyError
-      ? '<div class="pv-hint is-error">*Choose a portion to continue</div>'
-      : '<div class="pv-hint">Choose your portion.'+(pv.missing?'':'<span class="pv-limit">Choose 1</span>')+'</div>';
-    portionChoices(opt).forEach(function(c){
-      var pair = c.mod==='Half' || c.mod==='Full';
-      var done = pair && pv.choice===c.mod && pv.partner;
-      var selected = !c.disabled && pv.choice===c.mod && (!pair || pv.partner);
-      var meta;
-      if(c.disabled){
-        meta = '<span class="pv-muted">'+c.reason+'</span>';
-      } else if(done){
-        var d = moneyDelta(proteinCharge(pairSels(opt.name, pv.partner, c.mod)) - regular);
-        meta = (d?'<b>'+d+'</b><span class="dot">·</span>':'')+(c.mod==='Half' ? 'With half ' : 'With full ')+pv.partner;
-      } else if(c.mod==='Half'){
-        meta = Math.round(opt.cal/2)+' cal<span class="dot">·</span><span class="pv-muted">Pick your other half</span>';
-      } else if(c.mod==='Full'){
-        meta = opt.cal+' cal each<span class="dot">·</span><span class="pv-muted">Pick your second protein</span>';
-      } else {
-        var d2 = moneyDelta(proteinCharge([proteinSel(opt.name,c.mod)]) - regular);
-        meta = (d2?'<b>'+d2+'</b><span class="dot">·</span>':'')+(c.mod==='Double' ? opt.cal*2 : opt.cal)+' cal';
-      }
-      html += '<div class="pv-card'+(selected?' selected':'')+(c.disabled?' disabled':'')+'"'+(c.disabled?' aria-disabled="true"':' onclick="pickPortion(\''+c.mod+'\')"')+'>'+
-        '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+c.label+'</div><div class="pv-meta">'+meta+'</div></div><div class="pv-radio"></div></div>'+
-        (pv.missing===c.mod ? '<div class="pv-required"><span>*This option is required</span>'+PV_CHEVRON+'</div>' : '')+
+    html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+opt.name+'</div></div>';
+    html += '<div class="pv-hint">Customise your portion.<span class="pv-limit">Choose 1</span></div>';
+    var cards = [
+      {mode:'Half', name:'Half portion', ok:canHalf(opt),
+       meta: Math.round(opt.cal/2)+' cal<span class="dot">·</span><span class="pv-muted">Half '+opt.name+' + Half another protein</span>'},
+      {mode:'Extra', name:'Extra portion', ok:canExtra(opt),
+       meta: '<span class="pv-muted">2 portions: more '+opt.name+', or add another protein</span>'}
+    ];
+    cards.forEach(function(c){
+      var on = applied===c.mode, why = proteinRules().double||c.mode==='Half' ? 'Not available for '+opt.name : 'Not available for '+currentBuilderConfig().name;
+      var meta = !c.ok ? '<span class="pv-muted">'+why+'</span>'
+        : on ? '<span class="pv-muted">'+portionSelectionText(cur)+'</span>' : c.meta;
+      html += '<div class="pv-card'+(on?' selected':'')+(c.ok?'':' disabled')+'"'+(c.ok?' onclick="pickPortion(\''+c.mode+'\')"':' aria-disabled="true"')+'>'+
+        '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+c.name+'</div><div class="pv-meta">'+meta+'</div></div>'+(c.ok?PV_CHEVRON_LG:'<div class="pv-radio"></div>')+'</div>'+
       '</div>';
     });
+    if(applied) html += '<button class="pv-reset" onclick="resetPortion()">Back to 1 portion</button>';
+    foot.style.display = 'none';
   } else {
-    var full = pv.mode==='Full';
-    html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+(full ? 'Second protein' : 'Half portion')+'</div><span class="pv-req">Required</span></div>';
+    var half = pv.mode==='Half';
+    html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+(half?'Half portion':'Extra portion')+'</div><span class="pv-req">Required</span></div>';
     html += pv.l2Error
-      ? '<div class="pv-hint is-error">*'+(full ? 'Choose your second protein' : 'Choose your other half')+' to continue</div>'
-      : '<div class="pv-hint">'+(full ? 'Full '+opt.name+' and a full portion of…' : 'Half '+opt.name+' and half of…')+'</div>';
-    pairPartners(opt.name, pv.mode).forEach(function(p){
-      var d = moneyDelta(proteinCharge(pairSels(opt.name, p.name, pv.mode)) - regular);
+      ? '<div class="pv-hint is-error">*Choose a protein to continue</div>'
+      : '<div class="pv-hint">'+(half ? 'Half '+opt.name+' and half of…' : 'Your 2nd portion. Pick '+opt.name+' again for a double portion.')+'</div>';
+    var list = half ? halfPartners(opt.name) : extraPartners(opt);
+    list.forEach(function(p){
+      var d = moneyDelta(proteinCharge(customSels(opt.name, pv.mode, p.name)) - regular);
+      var same = p.name===opt.name;
+      var name = half ? 'Half '+p.name : (same ? p.name+' (double)' : p.name);
+      var cal = half ? Math.round(p.cal/2) : p.cal;
       html += '<div class="pv-card'+(pv.partner===p.name?' selected':'')+'" onclick="pickPartner(\''+p.name.replace(/'/g,"\\'")+'\')">'+
-        '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+(full ? 'Full ' : 'Half ')+p.name+(p.sub==='Plant-Based Protein'?' (Plant based protein)':'')+'</div>'+
-        '<div class="pv-meta">'+(d?'<b>'+d+'</b><span class="dot">·</span>':'')+(full ? p.cal : Math.round(p.cal/2))+' cal</div></div><div class="pv-radio"></div></div>'+
+        '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+name+(p.sub==='Plant-Based Protein'?' (Plant based)':'')+'</div>'+
+        '<div class="pv-meta">'+(d?'<b>'+d+'</b><span class="dot">·</span>':'')+cal+' cal</div></div><div class="pv-radio"></div></div>'+
       '</div>';
     });
+    foot.style.display = '';
+    var sels = pv.partner ? customSels(opt.name, pv.mode, pv.partner) : [proteinSel(opt.name,'Normal')];
+    document.getElementById('pv-price').textContent = '$'+priceWithProtein(sels).toFixed(2);
   }
   var body = document.getElementById('pv-body');
   body.innerHTML = html;
   body.classList.remove('slide-in','slide-back');
   if(anim){ void body.offsetWidth; body.classList.add(anim); body.scrollTop = 0; }
   document.getElementById('pv-back').style.visibility = pv.level===2 ? 'visible' : 'hidden';
-  var sels = pv.level===2 && pv.partner ? pairSels(opt.name, pv.partner, pv.mode) : (pendingSels() || [proteinSel(opt.name,'Normal')]);
-  document.getElementById('pv-price').textContent = '$'+priceWithProtein(sels).toFixed(2);
 }
 function pickPortion(mod){
-  pv.emptyError = false;
-  if(pv.kind==='mod'){ pv.choice = mod; renderModSheet(); return; }
-  if(mod==='Half' || mod==='Full'){
-    // Switching between ½ + ½ and full + full keeps the partner only if it's allowed in the new list.
-    if(pv.partner && !pairPartners(pv.opt.name, mod).some(function(p){ return p.name===pv.partner; })) pv.partner = null;
-    if(pv.choice!==mod && pv.choice!=='Half' && pv.choice!=='Full') pv.partner = null;
-    pv.mode = mod; pv.level = 2; pv.l2Error = false;
-    renderPortionSheet('slide-in');
-    return;
-  }
-  pv.choice = mod; pv.missing = null;
-  renderPortionSheet();
+  if(pv.kind==='mod'){ pv.emptyError = false; pv.choice = mod; renderModSheet(); return; }
+  // Keep the second protein only if it's valid for the new mode.
+  var list = mod==='Half' ? halfPartners(pv.opt.name) : extraPartners(pv.opt);
+  if(pv.mode!==mod || !list.some(function(p){ return p.name===pv.partner; })) pv.partner = null;
+  pv.mode = mod; pv.level = 2; pv.l2Error = false;
+  renderPortionSheet('slide-in');
 }
 function pickPartner(name){ pv.partner = name; pv.l2Error = false; renderPortionSheet(); }
-function portionSheetBack(){
-  pv.level = 1;
-  if(pv.partner){ pv.choice = pv.mode; pv.missing = null; }
-  else { pv.choice = null; pv.missing = pv.mode; }
-  renderPortionSheet('slide-back');
+function portionSheetBack(){ pv.level = 1; renderPortionSheet('slide-back'); }
+function resetPortion(){
+  byoSelections.protein = [proteinSel(pv.opt.name,'Normal')];
+  closePortionSheet();
+  renderByoSections(); renderProgressStrip(); updateByoFooter();
 }
 function portionSheetSelect(){
   if(pv.kind==='mod'){
@@ -3072,17 +3063,8 @@ function portionSheetSelect(){
     renderByoSections(); renderProgressStrip(); updateByoFooter();
     return;
   }
-  if(pv.level===2){
-    if(!pv.partner){ pv.l2Error = true; renderPortionSheet(); return; }
-    pv.choice = pv.mode;
-  }
-  var sels = pendingSels();
-  if(!sels){
-    if(!pv.missing) pv.emptyError = true;
-    renderPortionSheet();
-    return;
-  }
-  byoSelections.protein = sels;
+  if(!pv.partner){ pv.l2Error = true; renderPortionSheet(); return; }
+  byoSelections.protein = customSels(pv.opt.name, pv.mode, pv.partner);
   closePortionSheet();
   renderByoSections(); renderProgressStrip(); updateByoFooter();
 }
@@ -3226,7 +3208,7 @@ function renderByoSections(){
       }
       var veggieBlocked = (splitActive && opt.name==='Veggie' && !isSelected) ||
         (v2 && !isSelected && totalSelected>=2);
-      var tap = sheetProt ? 'openPortionSheet('+idx+')' : sheetMod ? 'openModSheet(\''+sec.id+'\','+idx+')' : 'toggleOption(\''+sec.id+'\','+idx+')';
+      var tap = sheetProt ? 'selectProtein('+idx+')' : sheetMod ? 'openModSheet(\''+sec.id+'\','+idx+')' : 'toggleOption(\''+sec.id+'\','+idx+')';
       if(nu) html += '<div class="variant-card">';
       var info = nu
         ? '<div class="variant-name">'+opt.name+'</div>'+
@@ -4523,6 +4505,7 @@ var ROUTES = {
   'quickdetail':   function(arg){ goToMenu(); openQuickDetail(findMenuItem(arg || 'family-chicken')); },
   'builder':       function(arg){ goToMenu(); builderVersion = 'v1'; openBuilder(findMenuItem(arg || 'byo-burrito')); },
   // V1 protein portion sheet states, on the Burrito with Chicken.
+  // V1 protein portion states, on the Burrito with Chicken.
   'builder-portion': function(arg){
     goToMenu(); builderVersion = 'v1'; openBuilder(findMenuItem('byo-burrito'));
     var ci = PROTEIN_OPTIONS.map(function(o){ return o.name; }).indexOf('Chicken');
@@ -4534,15 +4517,13 @@ var ROUTES = {
       setTimeout(function(){ scrollToSection('rice'); }, 350);
       return;
     }
-    if(arg==='selected'){
-      byoSelections.protein = [proteinSel('Chicken','Half'), proteinSel('Steak','Half')];
-      renderByoSections(); renderProgressStrip(); updateByoFooter();
-      return;
-    }
+    if(arg==='selected'){ byoSelections.protein = customSels('Chicken','Half','Steak'); renderByoSections(); renderProgressStrip(); updateByoFooter(); return; }
+    selectProtein(ci);
+    if(arg==='chosen') return;
     openPortionSheet(ci);
-    if(arg==='required'){ pv.missing = 'Half'; renderPortionSheet(); }
     if(arg==='half'){ pv.level = 2; pv.mode = 'Half'; pv.partner = 'Steak'; renderPortionSheet(); }
-    if(arg==='full'){ pv.level = 2; pv.mode = 'Full'; pv.partner = 'Steak'; renderPortionSheet(); }
+    if(arg==='full' || arg==='extra'){ pv.level = 2; pv.mode = 'Extra'; pv.partner = 'Steak'; renderPortionSheet(); }
+    if(arg==='required'){ pv.level = 2; pv.mode = 'Half'; pv.l2Error = true; renderPortionSheet(); }
   },
   'builder-v2':    function(arg){ goToMenu(); builderVersion = 'v2'; openBuilder(findMenuItem(arg || 'byo-burrito')); },
   'kidsbuilder':   function(){ goToMenu(); openKidsBuilder(findMenuItem('kids-tortillas')); },

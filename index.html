@@ -4,8 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>00. Design Handoff &amp; Flow Index</title>
+<script>
+// For now, the hosted site (github.io) opens the prototype directly. The index is still reachable at
+// index.html?index (the prototype's Index button links there). Local previews are unchanged.
+(function(){
+  var q = new URLSearchParams(location.search);
+  if (location.hostname.endsWith('github.io') && !q.has('index')) {
+    location.replace('Chipotle%20Online%20Ordering.html?view=mobile&from=index' + (q.has('frame') ? '&frame=' + q.get('frame') : ''));
+  }
+})();
+</script>
 <link rel="stylesheet" href="design-system.css">
 <style>
+  /* Index headings use the prototype's Trade Gothic LT Com Bold (regular width), not the condensed cut. */
+  @font-face{font-family:'Trade Gothic LT Com';src:url('assets/fonts/TradeGothicLTCom-Bold.ttf') format('truetype');font-weight:700;font-style:normal}
+  :root{--font-display:'Trade Gothic LT Com','Trade Gothic',Arial,sans-serif;}
   :root{
     --ink:#2b1204;
     --paper:#fbf6ec;
@@ -109,6 +122,7 @@
   .cover-cta svg{flex:none;}
   .cover-cta-ghost{background:transparent;color:#fbf3e4;border:1px solid rgba(255,255,255,.35);box-shadow:none;}
   .cover-cta-ghost:hover{background:rgba(255,255,255,.08);}
+  .cover-cta.is-disabled{opacity:.4; cursor:not-allowed; pointer-events:none;}
   /* Phone frame on/off: shared with the prototype (same saved setting), and added to every link as &frame= */
   .frame-switch{display:inline-flex;align-items:center;gap:10px;padding:0 14px 0 12px;min-height:40px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fbf3e4;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;}
   .frame-switch:hover{background:rgba(255,255,255,.08);}
@@ -232,16 +246,14 @@
       <a class="cover-cta" href="Chipotle%20Online%20Ordering.html?view=mobile&from=index">Open mobile prototype
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
       </a>
-      <a class="cover-cta cover-cta-ghost" href="Chipotle%20Online%20Ordering.html?view=desktop&from=index">Open desktop prototype
+      <!-- Disabled for now: no desktop layout yet. Restore href="Chipotle%20Online%20Ordering.html?view=desktop&from=index" to re-enable. -->
+      <a class="cover-cta cover-cta-ghost is-disabled" role="link" aria-disabled="true" title="Coming soon">Open desktop prototype
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
       </a>
       <button type="button" class="frame-switch" id="frame-switch" role="switch" aria-checked="true" onclick="setFrame(this.getAttribute('aria-checked')!=='true')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg>
         Phone frame <span class="track" aria-hidden="true"></span>
       </button>
-      <a class="cover-cta cover-cta-ghost" href="design-system.html?from=index">Design system
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-      </a>
     </div>
   </div>
 
@@ -265,64 +277,39 @@
   var PROTO = 'Chipotle%20Online%20Ordering.html';
   var FLOWS = [
     {title:'Foundations', items:[
-      {label:'Design System — Typography, spacing & components', href:'design-system.html', desktop:true}
+      {label:'Design System', href:'design-system.html', desktop:true}
     ]},
     {title:'Research', items:[
-      {label:'User Journey — Mobile web ordering (parked: UI snapshots pending UI update)', href:'user-journey.html', desktop:true}
+      {label:'User Journey', href:'user-journey.html', desktop:true}
     ]},
-    {title:'Home & Navigation', items:[
-      {label:'Landing — Menu (Happy Points card, ASAP pickup)', route:'menu'},
-      {label:'Landing — Menu, returning member B (points card, one-column list) — default', route:'menu:member'},
-      {label:'Landing — Menu, returning member A (points at corner, grid) — alternative', route:'menu:member-b'},
-      {label:'Landing — Menu, guest (Join card, one-column list) — default', route:'menu:guest-b'},
-      {label:'Landing — Store closed (time picker opens)', route:'menu-closed'},
-      {label:'Menu — scrolled (minimised header, search beside categories)', route:'menu:scrolled'},
-      {label:'Sign in — mobile number', route:'login'},
-      {label:'Sign in — number entered', route:'login:filled'},
-      {label:'Sign in — verify number (OTP)', route:'login:code'},
-      {label:'Sign in — OTP entered', route:'login:code-filled'},
-      {label:'Sidebar Menu — guest (Log in / Sign up)', route:'sidebar'},
-      {label:'Sidebar Menu — logged-in member (balance, tier, account)', route:'sidebar:member'}
+    {title:'Menu (landing page)', items:[
+      {label:'Menu — guest', route:'menu'}
+    ]},
+    {title:'Navigation', items:[
+      {label:'Sidebar — guest', route:'sidebar'},
+      {label:'Sidebar — member', route:'sidebar:member'}
+    ]},
+    {title:'Sign in', items:[
+      {label:'Sign in — mobile number', route:'login'}
     ]},
     {title:'Order Setup', items:[
       {label:'Pickup Time Sheet — ASAP (from menu pill)', route:'ordertype'},
-      {label:'Pickup Time Sheet — Schedule a time', route:'schedule'}
-    ]},
-    {title:'Menu', items:[
-      {label:'Menu Search — Empty State', route:'menu-search'},
-      {label:'Menu Search — Results', route:'menu-search:chicken'}
+      {label:'Pickup Time Sheet — schedule a time', route:'schedule'}
     ]},
     {title:'Cart', items:[
-      {label:'Your Order — Cart & Upsell', route:'cart'},
-      {label:'Your Order — Empty Cart', route:'cart:empty'}
+      {label:'Your Order — cart & upsell', route:'cart'},
+      {label:'Your Order — empty cart', route:'cart:empty'}
     ]},
     {title:'Check Out', items:[
-      {label:'Checkout — Confirm pickup time sheet', route:'checkout'},
-      {label:'Checkout — Page (time confirmed)', route:'checkout:confirmed'},
-      {label:'Checkout — Logged-in member (B$ / voucher, new total)', route:'checkout:member'},
-      {label:'Checkout — Guest: Claim Happy Points banner', route:'checkout:banner'},
-      {label:'Checkout — Join 1: mobile number', route:'checkout:join-phone'},
-      {label:'Checkout — Join 2: code', route:'checkout:join-code'},
-      {label:'Checkout — Join 3: You\'re new here! (sign-up)', route:'checkout:join-signup'},
-      {label:'Checkout — Join 4: logged in as new member', route:'checkout:joined'},
-      {label:'Checkout — Join branch: continue as guest', route:'checkout:guest-continue'},
-      {label:'Checkout — Log in 1: existing number (89029187)', route:'checkout:login-phone'},
-      {label:'Checkout — Log in 2: code', route:'checkout:login-code'},
-      {label:'Checkout — Log in 3: balance applied', route:'checkout:login-done'},
-      {label:'Checkout — Log in 4: saved card', route:'checkout:login-card'},
-      {label:'Checkout — Logged in: account card', route:'checkout:account'},
-      {label:'Checkout — Logged in: add a different recipient', route:'checkout:recipient'},
-      {label:'Checkout — Logged in: change account', route:'checkout:change'},
-      {label:'Checkout — Dine in', route:'checkout:dinein'},
-      {label:'Card Payment Sheet', route:'cardsheet'},
-      {label:'Payment Processing (auto-advances)', route:'payment'}
+      {label:'Checkout (guest) — mobile number', route:'checkout:join-phone'},
+      {label:'Checkout (guest) — sign up', route:'checkout:join-signup'},
+      {label:'Checkout (guest) — joined', route:'checkout:joined'},
+      {label:'Checkout (guest) — continue as guest', route:'checkout:guest-continue'},
+      {label:'Checkout (log in) — existing number', route:'checkout:login-phone'}
     ]},
     {title:'Post-order', items:[
       {label:'Order Confirmed — guest', route:'order-success'},
-      {label:'Order Confirmed — member (B$ redeemed, earned, new balance)', route:'order-success:member'},
-      {label:'Order Status — Preparing', route:'order-status:preparing'},
-      {label:'Order Status — Ready for pickup', route:'order-status:ready'},
-      {label:'Order Status — Complete', route:'order-status:complete'},
+      {label:'Order Confirmed — logged in', route:'order-success:member'},
       {label:'Order Details (receipt)', route:'order-details'}
     ]}
   ];
