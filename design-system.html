@@ -231,6 +231,26 @@
   .frame-rules{margin:12px 0 0;padding-left:20px;font-size:13.5px;line-height:1.6;}
   @media (max-width:720px){.frame-grid{grid-template-columns:minmax(0,1fr);}}
 
+  /* ---- Typography in use (menu + menu detail) ---- */
+  @font-face{font-family:'Trade Gothic LT Com';src:url('assets/fonts/TradeGothicLTCom-Bold.ttf') format('truetype');font-weight:700;font-style:normal}
+  @font-face{font-family:'Gotham';src:url('assets/fonts/Gotham%20Book.otf') format('opentype');font-weight:400;font-style:normal}
+  @font-face{font-family:'Gotham';src:url('assets/fonts/Gotham%20Medium.otf') format('opentype');font-weight:500;font-style:normal}
+  @font-face{font-family:'Gotham';src:url('assets/fonts/Gotham%20Bold.otf') format('opentype');font-weight:700;font-style:normal}
+  .fam-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px;}
+  .fam{padding:18px 18px 16px;}
+  .fam .s{font-size:30px;line-height:1.1;color:#451500;margin-bottom:8px;}
+  .fam .k{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .fam .n{font-size:13px;line-height:1.5;margin-top:6px;}
+  .type-table td{vertical-align:middle;}
+  .type-table .spec{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--muted);}
+  .type-table .where{font-size:12.5px;color:var(--muted);}
+  .tg{font-family:'Trade Gothic LT Com',Arial,sans-serif;font-weight:700;text-transform:uppercase;color:#451500;}
+  .gb{font-family:'Gotham',sans-serif;}
+  .chip-sample{display:inline-block;padding:3px 8px;border-radius:4px;background:#FBEAE7;color:#AC2424;font-family:'Gotham',sans-serif;font-size:14px;}
+  .pill-sample{display:inline-flex;align-items:center;padding:12px 18px;border-radius:999px;background:#451500;color:#fff;font-family:'Gotham',sans-serif;font-weight:500;font-size:14px;line-height:14px;}
+  .legacy{border-left:3px solid #D9A63E;}
+  @media (max-width:720px){.fam-grid{grid-template-columns:minmax(0,1fr);}}
+
   footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
 
   @media (max-width:640px){
@@ -247,17 +267,18 @@
   <div class="cover">
     <div class="eyebrow"><span class="dot"></span> Chipotle &middot; Order Online Reimagining</div>
     <h1>01. Design System</h1>
-    <p>Typography, colour, spacing and components for every screen, mobile and desktop. Pick a text style by its <b>role</b> (screen title, sheet title, section heading…), never by eye. Chipotle has two type tiers: condensed uppercase <b>display</b> type for anything that labels, and <b>Nunito</b> for anything you read. Desktop only enlarges the four title tiers; reading sizes stay put.</p>
+    <p>Typography, colour, spacing and components for every screen, mobile and desktop. Pick a text style by its <b>role</b> (product title, section title, card title, description…), never by eye. The type now follows the tidied <b>Menu</b> and <b>Menu detail</b> pages: <b>Trade Gothic LT Com Bold</b> in uppercase for anything that labels, and <b>Gotham</b> for anything you read or tap.</p>
     <div class="cover-meta">
       <span class="meta-pill">Tokens <b>design-system.css</b></span>
-      <span class="meta-pill">Fonts <b>Trade Gothic Condensed · Nunito</b></span>
-      <span class="meta-pill">Weights <b>400 · 700</b></span>
+      <span class="meta-pill">Fonts <b>Trade Gothic LT Com · Gotham</b></span>
+      <span class="meta-pill">Weights <b>Gotham 400 · 500 · 700 · Trade Gothic 700</b></span>
     </div>
   </div>
 
   <nav class="panel toc" aria-label="Contents">
     <div class="toc-title">Contents</div>
     <ol>
+      <li><a href="#typography">Typography in use &middot; menu, menu detail &amp; cart</a></li>
       <li><a href="#audit">Why this exists &middot; audit</a></li>
       <li><a href="#type-scale">Type scale</a></li>
       <li><a href="#weights">Weights</a></li>
@@ -270,6 +291,47 @@
       <li><a href="#usage">Using it in the prototype</a></li>
     </ol>
   </nav>
+
+  <!-- Typography in use -->
+  <div class="section" id="typography">
+    <div class="section-head"><h2>Typography in use &middot; menu, menu detail &amp; cart</h2><span class="section-count">Read from the live pages</span></div>
+    <p class="lede">The source of truth for type. These are the styles on the tidied <b>Menu</b> page (incl. the scrolled header) and the <b>Menu detail</b> pages (burrito / kids builder, quick detail, portion sheets) and the <b>Cart</b>. New screens should reuse these roles. Sizes are mobile, line-height after the slash.</p>
+
+    <div class="fam-grid">
+      <div class="panel fam"><div class="s tg">Burrito Bowl</div><div class="k">Display &middot; Trade Gothic LT Com Bold 700</div><div class="n">Always <b>uppercase</b>, colour <code>#451500</code>. Three sizes: 24 &middot; 20 &middot; 18. Regular width, not the condensed cut.</div></div>
+      <div class="panel fam"><div class="s gb" style="font-weight:400">Fresh &amp; warm</div><div class="k">Body &middot; Gotham 400 &middot; 500 &middot; 700</div><div class="n">Sentence case. <b>14px</b> is the body size everywhere (no 13px). 400 reads, 500 is for controls and prices, 700 only for the points number.</div></div>
+      <div class="panel fam"><div class="s" style="font-family:Roboto,-apple-system,sans-serif;font-weight:700">9:41</div><div class="k">Device &middot; Roboto Bold 700</div><div class="n">Status-bar time only (14px). Part of the phone chrome, not the product UI.</div></div>
+    </div>
+
+    <div class="panel table-wrap">
+      <table class="type-table">
+        <thead><tr><th>Role</th><th>Sample</th><th>Spec</th><th>Used for</th></tr></thead>
+        <tbody>
+          <tr><td><b>Product title</b></td><td><span class="tg" style="font-size:24px;line-height:28px">Build your own burrito</span></td><td class="spec">TG 700 · 24/28 · #451500</td><td class="where">Title under the hero on detail pages (<code>.qd-name</code>)</td></tr>
+          <tr><td><b>Section title</b></td><td><span class="tg" style="font-size:20px;line-height:24px">Build your own</span></td><td class="spec">TG 700 · 20/24 · #451500</td><td class="where">Menu category headings, menu item names, portion-sheet titles; cart headings (Review • Pick up, Order, You might also like)</td></tr>
+          <tr><td><b>Card title</b></td><td><span class="tg" style="font-size:18px;line-height:22px">Chicken</span></td><td class="spec">TG 700 · 18/22 · #451500</td><td class="where">Builder section titles (Protein or Veggie, Rice, Beans…), option names, portion options, Join Happy Points, sticky pop-up header</td></tr>
+          <tr><td><b>Cart item name</b></td><td><span class="gb" style="font-size:16px;line-height:22px;font-weight:500;color:#451500">1 x Burrito Bowl</span></td><td class="spec">Gotham 500 · 16/22 · #451500 · sentence case</td><td class="where">Item names on cart cards and upsell cards. The item total sits on the same row, right-aligned.</td></tr>
+          <tr><td><b>Pickup time</b></td><td><span class="gb" style="font-size:16px;line-height:22px;font-weight:500;color:#451500">ASAP</span></td><td class="spec">Gotham 500 · 16/22 · #451500</td><td class="where">First line of the cart's Review • Pick up card ("ASAP", or the chosen time)</td></tr>
+          <tr><td><b>Description</b></td><td><span class="gb" style="font-size:14px;line-height:20px;color:#806C62">Choose your protein, rice, beans &amp; toppings.</span></td><td class="spec">Gotham 400 · 14/20 · #806C62</td><td class="where">Item and option descriptions, section hints, Selection value, "Choose 1", character counter. Product description uses 14/22. In the cart: ingredient lines and their prices ($0.00, $2.00), "Pick up from Chipotle Downtown", upsell "Chips &amp; dips • 540 cal", Subtotal and Tax.</td></tr>
+          <tr><td><b>Meta</b></td><td><span class="gb" style="font-size:14px;line-height:20px;color:#451500">180 cal</span></td><td class="spec">Gotham 400 · 14/20 · #451500</td><td class="where">Calorie line on option cards, sheet hint ("Customise your portion.")</td></tr>
+          <tr><td><b>Price / emphasis</b></td><td><span class="gb" style="font-size:14px;line-height:20px;font-weight:500;color:#451500">+$0.60</span> &nbsp; <span class="gb" style="font-size:14px;line-height:20px;font-weight:500;color:#451500">From $9.50</span></td><td class="spec">Gotham 500 · 14/20 · #451500</td><td class="where">Option surcharges, menu "From $9.50", "Portion size" label, cart item totals and upsell prices</td></tr>
+          <tr><td><b>Control</b></td><td><span class="pill-sample">Build your own</span> &nbsp; <span class="gb" style="font-size:14px;font-weight:500;color:#451500">ASAP (~30 min)</span></td><td class="spec">Gotham 500 · 14 · sentence case</td><td class="where">Category pills, Pick up / ASAP pills, "Customise", cart "Edit" (right end of the picker row) and "+ Add more" button (#3C1400)</td></tr>
+          <tr><td><b>Header</b></td><td><span class="gb" style="font-size:14px;color:#451500">Downtown</span> &nbsp; <span class="gb" style="font-size:14px;color:#451500"><b style="font-weight:700">0</b> Points</span></td><td class="spec">Gotham 400 · 14 (number 700)</td><td class="where">Store name and points in the menu header</td></tr>
+          <tr><td><b>Tag</b></td><td><span class="chip-sample">Required</span></td><td class="spec">Gotham 400 · 14 · #AC2424 on #FBEAE7</td><td class="where">Required on sections and sheets. Optional sections have no tag.</td></tr>
+          <tr><td><b>Quantity</b></td><td><span class="gb" style="font-size:16px;font-weight:500;color:#451500">1</span></td><td class="spec">Gotham 500 · 16</td><td class="where">Number in the − 1 + picker</td></tr>
+          <tr><td><b>Checkout bar</b></td><td><span class="tg" style="font-size:20px;line-height:24px">Checkout</span> &nbsp; <span style="font-family:Nunito,sans-serif;font-weight:800;font-size:14px">$29.12</span></td><td class="spec">TG 700 · 20/24 + Nunito 800 · 14 · white on #451500</td><td class="where">Cart bar, matching the menu's "1 ITEM · View cart" bar: label on the left, order total on the right</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel" style="margin-top:12px"><b>Cart controls.</b> The − / + buttons and <b>+ Add more</b> share one outlined style: white fill, 1.5px <code>#E6D8BD</code> border (the ASAP pill's outline), 8px corners, 40px tall; − is greyed out at 1. The bin next to the picker is a 22px <code>#AC2424</code> line icon and removes the item. <b>Edit</b> sits on the same row as the picker and bin, right-aligned to the card edge (10px tap padding above and below). A thin <code>--tan-line</code> divider separates the items, the upsell section and the totals, and another sits between Tax and Total.</div>
+
+    <div class="panel" style="margin-top:12px"><b>Cart containers.</b> The Review • Pick up card, item cards and upsell cards use the menu card style (as on Join Happy Points): white <code>#fff</code>, no border, 2px corners (<code>--radius-lg</code>), <code>--shadow-card</code> (<code>0 2px 10px rgba(69,20,0,.08)</code>). Item cards have 16px padding and 16px between them. Name groups sit 20px below "Order", and each following name group starts 32px below the card above it.</div>
+
+    <div class="panel" style="margin-top:12px"><b>Checkout bar.</b> Same specs and position as the menu's cart bar: <code>#451500</code> fill, 370 × 52, 16px from the sides and 14px from the bottom, 14 / 18px padding, 2px corners, <code>0 4px 14px rgba(69,21,0,.3)</code> shadow, with a cream fade behind it instead of a divider. "CHECKOUT" is Trade Gothic LT Com 20/24 uppercase (like "1 ITEM"); the total on the right is Nunito 800 14px (like "View cart · $10.10").</div>
+
+    <div class="panel retired-row legacy" style="margin-top:12px"><b>Still on the older fonts (not yet tidied):</b> the main buttons <b>Add (1) $9.50</b>, <b>Select</b>, <b>Add to cart</b> and the cart bar's <b>1 ITEM</b> use Trade Gothic <i>Condensed</i> 20px; the cart bar total and the quick-detail price use Nunito 800; the red "Please complete all required items." and the − / + buttons use Nunito; the meal-name sheet title is Trade Gothic Condensed 20px and its field is Nunito 16px. One mismatch: option prices are Gotham 500 on cards but 700 inside the portion sheet. The phone's URL pill (Nunito 600) is device chrome and stays as is.</div>
+  </div>
 
   <!-- Audit -->
   <div class="section" id="audit">
@@ -291,7 +353,7 @@
         <button type="button" data-view="desktop" aria-pressed="false">🖥 Desktop</button>
       </div>
     </div>
-    <p class="lede">Specimens render at real size from <code>design-system.css</code>. Toggle to Desktop to see which tiers grow (<span style="color:var(--mark);font-weight:700">orange</span>). The values on the right are read live from the page. Display-tier copy is written in sentence case in the markup; the class uppercases it.</p>
+    <p class="lede"><b>Earlier proposal</b> (Trade Gothic Condensed + Nunito), kept for reference; for the menu, menu detail and cart pages, <a href="#typography">Typography in use</a> above takes precedence. Specimens render at real size from <code>design-system.css</code>. Toggle to Desktop to see which tiers grow (<span style="color:var(--mark);font-weight:700">orange</span>). The values on the right are read live from the page. Display-tier copy is written in sentence case in the markup; the class uppercases it.</p>
     <div class="panel scale" id="scale"></div>
   </div>
 

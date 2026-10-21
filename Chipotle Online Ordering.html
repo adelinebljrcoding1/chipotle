@@ -208,6 +208,19 @@ button{font-family:inherit;}
 .time-slot.selected{border-color:var(--avocado); background:#E8ECE3; color:var(--avocado);}
 .time-slot-check{display:none; position:absolute; top:4px; right:4px; color:var(--avocado);}
 .time-slot.selected .time-slot-check{display:inline-flex;}
+.time-slot.is-full{color:#B9AC9E; background:#F4EFE8; border-color:#EAE2D6; cursor:default;}
+.time-slot-full{display:block; font-family:'Gotham',sans-serif; font-weight:400; font-size:12px; line-height:16px; margin-top:2px;}
+/* Checkout pickup: "Later time" row under the quick options, opening today's remaining windows */
+.later-time-row{display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; margin-top:16px; padding:14px 16px; text-align:left;
+  background:#fff; border:none; border-radius:var(--radius-lg); box-shadow:var(--shadow-card); color:var(--brown); cursor:pointer;}
+.later-time-row.is-selected{box-shadow:inset 0 0 0 1.5px var(--avocado), var(--shadow-card);}
+.later-time-text{display:flex; flex-direction:column; min-width:0;}
+.later-time-title{font-family:'Gotham',sans-serif; font-weight:500; font-size:16px; line-height:22px;}
+.later-time-sub{font-family:'Gotham',sans-serif; font-weight:400; font-size:14px; line-height:20px; color:var(--taupe);}
+.later-time-row.is-selected .later-time-sub{color:var(--avocado); font-weight:500;}
+.later-time-chev{flex-shrink:0; transition:transform .15s ease;}
+.later-time-chev.is-open{transform:rotate(180deg);}
+.later-time-list{padding-top:4px;}
 
 
 /* ---------- header (menu / detail) ---------- */
@@ -269,7 +282,7 @@ button{font-family:inherit;}
 
 .menu-cart-bar-wrap{position:sticky; bottom:0; padding:10px 16px 14px; background:linear-gradient(180deg,rgba(251,243,228,0) 0%, var(--cream) 40%);}
 .menu-cart-bar{display:flex; align-items:center; justify-content:space-between; background:var(--brown); color:#fff; border-radius:var(--radius-lg); padding:14px 18px; font-weight:800; font-size:14px; cursor:pointer; box-shadow:0 4px 14px rgba(69,21,0,.3);}
-#menu-cart-bar-count{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:20px; text-transform:uppercase;}
+#menu-cart-bar-count{font-family:'Trade Gothic LT Com','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:20px; line-height:24px; text-transform:uppercase;}
 
 /* ---------- meal detail (simple quick-add) ---------- */
 .qd-topbar{position:relative; display:flex; align-items:center; justify-content:center; padding:14px 16px; background:var(--cream); border-bottom:1px solid var(--tan-line);}
@@ -494,8 +507,7 @@ button{font-family:inherit;}
 #screen-menu.refined .menu-account-sub{font-family:'Gotham','Nunito',sans-serif; font-weight:400; font-size:14px; line-height:20px; color:var(--taupe);}
 #screen-menu.refined .meal-price,
 #screen-menu.refined .meal-price-from{font-family:'Gotham','Nunito',sans-serif; font-weight:500; font-size:14px; line-height:20px;}
-#screen-menu.refined .meal-price{color:var(--red);}
-#screen-menu.refined .meal-price-from{color:var(--taupe);}
+#screen-menu.refined .meal-price, #screen-menu.refined .meal-price-from{color:var(--brown);} /* "From $9.50" in #451500 */
 
 /* ---- Builder V2: protein checklist + per-protein portion (Half / Normal / Double) ---- */
 .version-switch{display:flex; background:#fff; border-radius:999px; box-shadow:var(--shadow-card); padding:3px; height:36px; align-items:center;}
@@ -514,7 +526,7 @@ button{font-family:inherit;}
 /* ---- Builder V1 (new design): white option cards, and the protein portion is picked
    in an almost-full bottom sheet (level 1: portion · level 2: the other half). ---- */
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .progress-strip{display:none;}
-:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .builder-title-block{padding:24px 16px 4px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .builder-title-block{padding:32px 16px 4px;}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .qd-name,
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-title,
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-name{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; color:var(--brown); text-transform:uppercase;}
@@ -522,11 +534,11 @@ button{font-family:inherit;}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .qd-desc{font-family:'Gotham',sans-serif; font-size:14px; line-height:22px; color:var(--taupe);}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section{padding:28px 16px 8px; border-top:none;}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-head{align-items:center; margin-bottom:4px;}
-:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-title{font-size:20px; line-height:24px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-title{font-size:18px; line-height:22px;}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-title .num{display:none;}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-req-tag{font-family:'Gotham',sans-serif; font-size:14px; padding:3px 8px;}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-req-tag.optional{display:none;} /* only Required is tagged; untagged sections read as optional */
-:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-hint{font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; margin:0 0 16px;}
+:is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .byo-section-hint{font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; margin:8px 0 16px;}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .split-toggle{border:none; box-shadow:0 1px 4px rgba(69,21,0,.08); font-family:'Gotham',sans-serif; font-size:14px;}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-card{display:flow-root; background:#fff; border-radius:8px; box-shadow:0 1px 4px rgba(69,21,0,.08); margin-bottom:12px;}
 :is(#screen-builder.builder-new, #screen-kidsbuilder, #screen-quickdetail) .variant-row{border:none; background:none; margin:0; padding:16px; gap:12px; box-shadow:none;}
@@ -644,6 +656,13 @@ html.capture .detail-pop, html.capture .detail-dim{animation:none!important;}
 .cart-thumb img{width:100%; height:100%; object-fit:cover;}
 .cart-item-name{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:18px; text-transform:uppercase; margin-bottom:3px;}
 .cart-item-custom-name{font-size:14px; font-style:italic; color:var(--red); margin-bottom:4px;}
+/* Cart grouped by meal name */
+.cart-group{margin-top:20px;}
+.cart-group + .cart-group{margin-top:32px;} /* more room above the next name */
+.cart-group-head{display:flex; align-items:baseline; gap:8px; margin:0 0 10px;}
+.cart-group-name{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:18px; line-height:22px; text-transform:uppercase; color:var(--brown); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.cart-group-rename{display:flex; align-items:center; justify-content:center; width:32px; height:32px; margin:-8px 0 -8px -6px; padding:0; border:none; background:none; color:#3C1400; cursor:pointer; align-self:center;}
+.cart-group-count{font-family:'Gotham',sans-serif; font-size:14px; color:#3C1400; flex-shrink:0; margin-left:auto;}
 .cart-item-lines{font-size:14px; color:var(--taupe); line-height:1.5; margin-bottom:10px;}
 .cart-item-bottom{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
 .cart-item-price{font-weight:800; font-size:14px;}
@@ -653,6 +672,58 @@ html.capture .detail-pop, html.capture .detail-dim{animation:none!important;}
 .cart-section-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
 .cart-section-label{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:16px; text-transform:uppercase; color:var(--brown); margin-bottom:0;}
 .cart-empty{text-align:center; padding:60px 30px; color:var(--taupe);}
+/* ---- Cart type, per the Design System's "Typography in use" (Trade Gothic LT Com + Gotham) ---- */
+#screen-cart .checkout-top-title{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:18px; line-height:22px;}   /* card title */
+#screen-cart .cart-section-label,
+#screen-cart .cart-upsell-title{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:20px; line-height:24px; text-transform:uppercase; color:var(--brown);} /* section title */
+#screen-cart .cart-item-name,
+#screen-cart .cart-upsell-name{font-family:'Gotham',sans-serif; font-weight:500; font-size:16px; line-height:22px; text-transform:none; color:var(--brown);} /* card title */
+#screen-cart .cart-item-lines{font-family:'Gotham',sans-serif; font-weight:400; font-size:14px; line-height:20px; color:var(--taupe); margin-top:8px;}  /* description */
+#screen-cart .cart-item-custom-name{font-family:'Gotham',sans-serif; font-weight:400; font-size:14px; line-height:20px;}
+#screen-cart .cart-item-total,
+#screen-cart .cart-upsell-price{font-family:'Gotham',sans-serif; font-weight:500; font-size:14px; line-height:20px; color:var(--brown);} /* price */
+#screen-cart .btn-add-item{font-family:'Gotham',sans-serif; font-weight:500; font-size:14px; text-transform:none;                    /* control: text link */
+  height:40px; border:1.5px solid #E6D8BD; border-radius:8px; background:#fff; padding:0 16px; color:#3C1400; text-decoration:none;} /* outlined like the qty picker */
+#screen-cart .cart-upsell-badge{font-family:'Gotham',sans-serif; font-weight:500; font-size:14px;}
+#screen-cart .qty-value{font-family:'Gotham',sans-serif; font-weight:500; font-size:16px;}                                             /* quantity */
+#screen-cart .qty-btn{font-family:'Gotham',sans-serif; font-weight:500;}
+#screen-cart .cart-item-bottom{margin-top:12px; margin-bottom:0;}
+#screen-cart .cart-order-card{padding:16px; margin-bottom:16px;}
+/* Cart containers use the menu card style (Join Happy Points): white, no border, 2px corners, card shadow */
+#screen-cart .cart-order-card,
+#screen-cart .cart-pickup-card,
+#screen-cart .cart-upsell-card{background:#fff; border:none; border-radius:var(--radius-lg); box-shadow:var(--shadow-card);}
+/* Roll'd-style cart: pickup review card, total on the name row, option prices, bin, dividers, total in the button */
+#screen-cart .cart-pickup-card{padding:16px; margin:12px 0 0;}
+#screen-cart .cart-pickup-time{font-family:'Gotham',sans-serif; font-weight:500; font-size:16px; line-height:22px; color:var(--brown);}
+#screen-cart .cart-pickup-store{font-family:'Gotham',sans-serif; font-weight:400; font-size:14px; line-height:20px; color:var(--taupe); margin-top:2px;}
+#screen-cart .cart-order-row{margin-top:24px;}
+#screen-cart .cart-item-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
+#screen-cart .cart-item-head .cart-item-total{flex-shrink:0; line-height:22px;}
+#screen-cart .cart-line{display:flex; justify-content:space-between; gap:12px;}
+#screen-cart .cart-line-price{flex-shrink:0;}
+#screen-cart .cart-item-remove{display:flex; align-items:center; justify-content:center; width:40px; height:40px; margin-left:4px; padding:0; border:none; background:none; color:var(--red); cursor:pointer;}
+#screen-cart .cart-qty .qty-btn:disabled{color:#C9BBA8; cursor:default;}
+#screen-cart .cart-upsell-meta{font-family:'Gotham',sans-serif; font-weight:400; font-size:14px; line-height:20px; color:var(--taupe); margin:2px 0 2px;}
+#screen-cart .cart-totals{margin-top:24px; padding-top:20px; border-top:1px solid var(--tan-line);}
+#screen-cart .cart-totals .totals-row.total{border-top:1px solid var(--tan-line); padding-top:12px; margin-top:12px; margin-bottom:0;}
+/* Checkout bar: same specs and position as the menu's cart bar (.menu-cart-bar-wrap / .menu-cart-bar) */
+#screen-cart .cart-footer{padding:10px 16px 14px; background:linear-gradient(180deg,rgba(251,243,228,0) 0%, var(--cream) 40%);}
+#screen-cart #cart-checkout-btn{display:flex; align-items:center; justify-content:space-between; width:100%; height:auto; margin:0; border:none;
+  background:var(--brown); color:#fff; border-radius:var(--radius-lg); padding:14px 18px; box-shadow:0 4px 14px rgba(69,21,0,.3);}
+#screen-cart #cart-checkout-btn:disabled{opacity:.5; box-shadow:none;}
+#cart-checkout-total{font-family:'Nunito',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; font-weight:800; font-size:14px; line-height:normal; text-transform:none;}
+#screen-cart .cart-item-edit{display:block; margin:0 0 0 auto; padding:10px 0; border:none; background:none; color:#3C1400; font-family:'Gotham',sans-serif; font-weight:500; font-size:14px; line-height:20px; text-decoration:none; cursor:pointer;}
+#screen-cart .cart-upsell{margin-top:24px; padding-top:28px;} /* more room above "You might also like" */
+#cart-checkout-btn{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:20px; line-height:24px; text-transform:uppercase;} /* Checkout, like "1 ITEM" */
+#screen-cart .checkout-back-btn{background:none; box-shadow:none; color:var(--brown); width:40px; height:40px; left:8px;} /* plain arrow, no white box */
+/* Thumb-sized quantity buttons (40px tap target), styled like the detail pop-up's − 1 + picker */
+#screen-cart .cart-qty{gap:12px;}
+#screen-cart .cart-qty .qty-btn{width:40px; height:40px; padding:0; border-radius:8px; border:1.5px solid #E6D8BD; background:#fff; color:var(--brown); font-size:20px; line-height:1; display:flex; align-items:center; justify-content:center;}
+#screen-cart .cart-qty .qty-value{min-width:20px; text-align:center;} /* space between the item name / lines and the quantity picker */
+#screen-cart .totals-row{font-family:'Gotham',sans-serif; font-weight:400; font-size:14px; line-height:20px; color:var(--taupe);}     /* description */
+#screen-cart .totals-row.total{font-weight:500; font-size:16px; color:var(--brown);}
+#screen-cart .cart-empty{font-family:'Gotham',sans-serif; font-size:14px; line-height:20px;}
 .cart-empty .emoji{font-size:44px; margin-bottom:12px;}
 .btn-add-item{flex-shrink:0; display:flex; align-items:center; justify-content:center; gap:4px; padding:9px 14px; border-radius:4px; border:1.5px solid var(--red); background:#fff; color:var(--red); font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:16px; text-transform:uppercase; cursor:pointer; white-space:nowrap;}
 .cart-upsell{margin-top:8px; padding-top:16px; border-top:1px solid var(--tan-line);}
@@ -666,6 +737,11 @@ html.capture .detail-pop, html.capture .detail-dim{animation:none!important;}
 .cart-upsell-name{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:14px; text-transform:uppercase; line-height:1.25; margin-bottom:3px;}
 .cart-upsell-price{font-size:14px; color:var(--red); font-weight:800;}
 .totals-row{display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px; color:#6b5c4f;}
+.co-sum-group{margin-bottom:12px;}
+.co-sum-head{display:flex; align-items:baseline; gap:8px; margin-bottom:6px;}
+.co-sum-name{font-family:'Gotham',sans-serif; font-weight:500; font-size:14px; color:var(--brown); text-transform:uppercase; letter-spacing:.02em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.co-sum-count{font-family:'Gotham',sans-serif; font-size:14px; color:var(--taupe); flex-shrink:0;}
+.co-sum-group .totals-row{padding-left:12px;}
 .totals-row.total{font-weight:800; font-size:16px; color:var(--brown); border-top:1px solid var(--tan-line); padding-top:10px; margin-top:6px;}
 
 /* ---------- checkout ---------- */
@@ -979,9 +1055,9 @@ body.comment-on .comment-resolved-toggle{top:100px;}
 
   <div class="screen hidden" id="screen-mealname" style="justify-content:flex-end; background:rgba(0,0,0,.6); z-index:20;">
     <div class="order-type-sheet">
-      <button class="order-type-close" onclick="skipMealName()" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-      <h2>Give this meal a name</h2>
-      <input type="text" class="text-input" id="meal-name-input" placeholder="e.g. My Favorite Burrito" maxlength="60" oninput="updateMealNameCount()" aria-describedby="meal-name-count">
+      <button class="order-type-close" onclick="closeMealNameSheet()" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+      <h2 id="meal-name-title">Who's this meal for?</h2>
+      <input type="text" class="text-input" id="meal-name-input" placeholder="e.g. Mel" maxlength="60" oninput="updateMealNameCount()" aria-describedby="meal-name-count">
       <div class="meal-name-meta"><span class="meal-name-error" id="meal-name-error">Name is too long</span><span class="meal-name-count" id="meal-name-count">0/20</span></div>
       <button class="btn-primary" id="meal-name-add" style="margin-top:12px;" onclick="confirmMealName()">Add to Cart</button>
     </div>
@@ -1320,27 +1396,36 @@ body.comment-on .comment-resolved-toggle{top:100px;}
       </div>
     </div>
     <div class="checkout-top-bar">
-      <button class="checkout-back-btn" onclick="backFromCart()">←</button>
-      <div class="checkout-top-title">Your Order</div>
+      <button class="checkout-back-btn" onclick="backFromCart()" aria-label="Back"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      <div class="checkout-top-title">Your cart</div>
     </div>
     <div class="scroll">
       <div style="padding:16px 20px;">
         <div class="cart-section-row">
+          <div class="cart-section-label">Review • Pick up</div>
+        </div>
+        <div class="cart-pickup-card">
+          <div class="cart-pickup-time" id="cart-pickup-time">ASAP</div>
+          <div class="cart-pickup-store" id="cart-pickup-store">Pick up from Chipotle Downtown</div>
+        </div>
+        <div class="cart-section-row cart-order-row">
           <div class="cart-section-label">Order</div>
-          <button class="btn-add-item" onclick="backFromCart()">+ Add item</button>
+          <button class="btn-add-item" onclick="backFromCart()">+ Add more</button>
         </div>
         <div id="cart-order-list"></div>
         <div class="cart-upsell" id="cart-upsell">
           <div class="cart-upsell-title">You might also like</div>
           <div class="cart-upsell-scroll" id="cart-upsell-scroll"></div>
         </div>
+        <div class="cart-totals">
+          <div class="totals-row"><span>Subtotal</span><span id="cart-subtotal-value">$0.00</span></div>
+          <div class="totals-row"><span>Tax</span><span id="cart-tax-value">$0.00</span></div>
+          <div class="totals-row total"><span>Total</span><span id="cart-total-value">$0.00</span></div>
+        </div>
       </div>
     </div>
-    <div style="padding:16px 20px 20px; border-top:1px solid var(--tan-line);">
-      <div class="totals-row"><span>Subtotal</span><span id="cart-subtotal-value">$0.00</span></div>
-      <div class="totals-row"><span>Tax</span><span id="cart-tax-value">$0.00</span></div>
-      <div class="totals-row total"><span>Total</span><span id="cart-total-value">$0.00</span></div>
-      <button class="btn-primary" style="margin-top:14px;" id="cart-checkout-btn" onclick="goToCheckout()">Go to Checkout</button>
+    <div class="cart-footer">
+      <button class="btn-primary" id="cart-checkout-btn" onclick="goToCheckout()"><span>Checkout</span><span id="cart-checkout-total">$0.00</span></button>
     </div>
   </div>
 
@@ -1869,9 +1954,9 @@ var MENU_ITEMS = {
     {id:'kids-tacos', name:'Kids Tacos', desc:'Two soft tacos, side & a drink.', price:6.25, img:'Menu/Taco.png', icon:'🧒'}
   ],
   chips: [
-    {id:'chips', name:'Chips', desc:'Freshly fried, salted corn tortilla chips.', price:2.95, img:IMG+'chips%20n%20dips/chips.png'},
-    {id:'chips-guac', name:'Chips & Guacamole', desc:'Chips served with a fresh side of guacamole.', price:4.55, img:IMG+'chips%20n%20dips/order%20(1).png', bestSeller:true},
-    {id:'chips-queso', name:'Chips & Queso Blanco', desc:'Chips served with a warm side of queso blanco.', price:4.35, img:IMG+'chips%20n%20dips/order%20(8).png'}
+    {id:'chips', name:'Chips', desc:'Freshly fried, salted corn tortilla chips.', price:2.95, cal:540, img:IMG+'chips%20n%20dips/chips.png'},
+    {id:'chips-guac', name:'Chips & Guacamole', desc:'Chips served with a fresh side of guacamole.', price:4.55, cal:770, img:IMG+'chips%20n%20dips/order%20(1).png', bestSeller:true},
+    {id:'chips-queso', name:'Chips & Queso Blanco', desc:'Chips served with a warm side of queso blanco.', price:4.35, cal:780, img:IMG+'chips%20n%20dips/order%20(8).png'}
   ]
 };
 
@@ -2140,19 +2225,47 @@ function openSidebar(){
 function closeSidebar(){ show(sidebarPreviousScreen); }
 
 var pendingCartItem = null;
+/* The name sheet has three uses: naming a new item ('add'), the last step of editing a cart item ('edit',
+   prefilled, so an item can move to someone else), and renaming a whole name group from the cart ('rename'). */
+var mealNameMode = 'add', mealNameFrom = null, renameGroupKey = null;
+function setMealNameSheet(mode, value){
+  mealNameMode = mode;
+  document.getElementById('meal-name-title').textContent = mode==='rename' ? 'Edit meal name' : "Who's this meal for?";
+  document.getElementById('meal-name-add').textContent = mode==='add' ? 'Add to Cart' : mode==='edit' ? 'Update' : 'Save';
+  document.getElementById('meal-name-input').value = value || '';
+  updateMealNameCount();
+}
 function openMealNameSheet(item){
   pendingCartItem = item;
-  document.getElementById('meal-name-input').value = '';
-  updateMealNameCount();
+  mealNameFrom = currentScreenId;
+  var editing = editingCartId!==null && cartItems.filter(function(c){return c.id===editingCartId;})[0];
+  setMealNameSheet(editing ? 'edit' : 'add', editing ? editing.customName : '');
   // Sit over the screen it was opened from (e.g. the detail pop-up, with the menu under that).
   var from = document.getElementById(currentScreenId);
   show('screen-mealname');
   if(from && from.id!=='screen-mealname'){
     from.classList.remove('hidden');
-    if(from.classList.contains('detail-screen')) document.getElementById('screen-menu').classList.remove('hidden');
+    if(from.classList.contains('detail-screen')) document.getElementById(editingCartId!==null ? 'screen-cart' : 'screen-menu').classList.remove('hidden');
   }
 }
 function skipMealName(){ finalizeCartAdd(''); }
+// ✕: a new item is still added without a name (as before); editing goes back to the pop-up; renaming changes nothing.
+function closeMealNameSheet(){
+  if(mealNameMode==='add'){ skipMealName(); return; }
+  if(mealNameMode==='rename'){ show('screen-cart'); return; }
+  show(mealNameFrom);
+  document.getElementById('screen-cart').classList.remove('hidden');
+}
+var cartGroupsShown = [];
+function openRenameGroup(gi){
+  var key = cartGroupsShown[gi] && cartGroupsShown[gi].key;
+  var it = cartItems.filter(function(c){ return cartGroupKey(c)===key; })[0];
+  if(!it) return;
+  renameGroupKey = key;
+  setMealNameSheet('rename', it.customName.trim());
+  show('screen-mealname');
+  document.getElementById('screen-cart').classList.remove('hidden');
+}
 var MEAL_NAME_MAX = 20;
 function updateMealNameCount(){
   var input = document.getElementById('meal-name-input');
@@ -2166,6 +2279,15 @@ function updateMealNameCount(){
 function confirmMealName(){
   if(document.getElementById('meal-name-input').value.length > MEAL_NAME_MAX) return;
   var custom = document.getElementById('meal-name-input').value.trim();
+  if(mealNameMode==='edit'){ pendingCartItem.customName = custom; saveCartEdit(pendingCartItem); return; }
+  if(mealNameMode==='rename'){
+    cartItems.forEach(function(c){ if(cartGroupKey(c)===renameGroupKey) c.customName = custom; });
+    renameGroupKey = null;
+    renderCartOrder();
+    show('screen-cart');
+    showToast(custom ? 'Name changed to '+custom : 'Name removed');
+    return;
+  }
   finalizeCartAdd(custom);
 }
 function finalizeCartAdd(customName){
@@ -2516,7 +2638,7 @@ function changeQdQty(delta){
   updateQdFooter();
 }
 function updateQdFooter(){
-  document.getElementById('qd-add-label').textContent = 'Add ('+qd.qty+')';
+  document.getElementById('qd-add-label').textContent = addLabel()+' ('+qd.qty+')';
   document.getElementById('qd-add-price').textContent = '$'+(qd.item.price*qd.qty).toFixed(2);
 }
 function addQdToCart(){
@@ -2526,7 +2648,8 @@ function addQdToCart(){
     thumbEmoji: qd.item.icon || '🌯',
     lines: [],
     qty: qd.qty,
-    unitPrice: qd.item.price
+    unitPrice: qd.item.price,
+    source: {type:'qd', id:qd.item.id}
   });
 }
 
@@ -2561,13 +2684,15 @@ function openBuilder(item){
 /* Detail pop-ups sit over the menu: keep the menu rendered underneath, and slide down on close. */
 function openDetail(id){
   show(id);
-  document.getElementById('screen-menu').classList.remove('hidden');
+  document.getElementById(editingCartId!==null ? 'screen-cart' : 'screen-menu').classList.remove('hidden');
 }
 function closeDetail(id){
   var el = document.getElementById(id);
   if(el.classList.contains('hidden')) return;
   el.classList.add('closing');
-  setTimeout(function(){ el.classList.remove('closing'); show('screen-menu'); }, 230);
+  var back = editingCartId!==null ? 'screen-cart' : 'screen-menu';
+  editingCartId = null;
+  setTimeout(function(){ el.classList.remove('closing'); show(back); }, 230);
 }
 function closeBuilder(){ closePortionSheet(); closeDetail('screen-builder'); }
 function changeByoQty(delta){
@@ -2865,33 +2990,61 @@ function openModSheet(secId, idx){
   var opt = sec.options[idx];
   if(!opt.modifiers){ byoSelections[secId] = [modSel(opt, null)]; renderByoSections(); renderProgressStrip(); updateByoFooter(); return; }
   var cur = byoSelections[secId].filter(function(x){ return x.name===opt.name; })[0];
-  pv = {kind:'mod', secId:secId, idx:idx, opt:opt, level:1, choice: cur ? (cur.mod||'Normal') : null, emptyError:false,
+  var startChoice = cur ? (cur.mod||'Normal') : null;
+  if(startChoice==='Normal') startChoice = null;
+  pv = {kind:'mod', secId:secId, idx:idx, opt:opt, level:1, choice: startChoice, emptyError:false,
         canRemove: !!cur && sec.type==='multi'};
   document.getElementById('pv-overlay').classList.remove('hidden');
   renderPortionSheet();
 }
+// Rice & beans pick one: tapping chooses it at Normal; the portion is changed only via Customise (like protein).
+function isPickOneMod(secId){ return sectionById(secId).type!=='multi'; }
+// Toppings (pick several): tapping adds it at Normal, tapping a ticked one removes it; Customise changes the portion.
+function toggleModOption(secId, idx){
+  var opt = sectionById(secId).options[idx];
+  if(byoSelections[secId].some(function(x){ return x.name===opt.name; })){ removeModOption(secId, opt.name); return; }
+  byoSelections[secId] = withModSel(secId, opt, opt.modifiers ? 'Normal' : null);
+  renderByoSections(); renderProgressStrip(); updateByoFooter();
+}
+function selectModOption(secId, idx){
+  var opt = sectionById(secId).options[idx];
+  var cur = byoSelections[secId][0];
+  if(cur && cur.name===opt.name) return;
+  byoSelections[secId] = [modSel(opt, opt.modifiers ? 'Normal' : null)];
+  renderByoSections(); renderProgressStrip(); updateByoFooter();
+}
+// Panel under a chosen rice / bean / topping: its portion, and the way into Customise.
 function renderModSelection(secId, idx){
   var opt = sectionById(secId).options[idx];
   var cur = byoSelections[secId].filter(function(x){ return x.name===opt.name; })[0];
   return '<div class="pv-selection" onclick="openModSheet(\''+secId+'\','+idx+')">'+
-    '<div class="pv-sel-text"><div class="pv-sel-label">Selection</div><div class="pv-sel-value">'+modSheetLabel(cur.mod||'Normal')+'</div></div>'+
-    '<div class="pv-sel-right">'+(opt.price ? '+$'+opt.price.toFixed(2) : 'Included')+'</div>'+PV_CHEVRON_LG+
+    '<div class="pv-sel-text"><div class="pv-sel-label">Portion size</div><div class="pv-sel-value">'+modSheetLabel(cur.mod||'Normal')+'</div></div>'+
+    '<div class="pv-sel-right pv-sel-action">Customise</div>'+PV_CHEVRON_LG+
   '</div>';
+}
+function resetModPortion(){
+  var secId = pv.secId;
+  byoSelections[secId] = withModSel(secId, pv.opt, 'Normal');
+  closePortionSheet();
+  renderByoSections(); renderProgressStrip(); updateByoFooter();
 }
 function renderModSheet(){
   document.querySelector('.pv-foot').style.display = '';
   var opt = pv.opt, html = '';
   html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+opt.name+'</div><span class="pv-req">Required</span></div>';
+  // Normal is the default from tapping the card, so Customise offers only the alternatives.
+  var cur = byoSelections[pv.secId].filter(function(x){ return x.name===opt.name; })[0];
   html += pv.emptyError
     ? '<div class="pv-hint is-error">*Choose a portion to continue</div>'
-    : '<div class="pv-hint">Choose your portion.<span class="pv-limit">Choose 1</span></div>';
-  opt.modifiers.forEach(function(m){
+    : '<div class="pv-hint">'+'Customise your portion.'+'<span class="pv-limit">Choose 1</span></div>';
+  opt.modifiers.filter(function(m){ return m!=='Normal'; }).forEach(function(m){
     // Only Normal has a second line (price · calories); Light / Extra / Side show the name alone.
     var meta = m==='Normal' ? (opt.price ? '<b>+$'+opt.price.toFixed(2)+'</b><span class="dot">·</span>' : '')+opt.cal+' cal' : '';
     html += '<div class="pv-card'+(pv.choice===m?' selected':'')+'" onclick="pickPortion(\''+m+'\')">'+
       '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+m+'</div>'+(meta?'<div class="pv-meta">'+meta+'</div>':'')+'</div><div class="pv-radio"></div></div>'+
     '</div>';
   });
+  if(cur && cur.mod && cur.mod!=='Normal') html += '<button class="pv-reset" onclick="resetModPortion()">Back to Normal</button>';
   document.getElementById('pv-body').innerHTML = html;
   document.getElementById('pv-back').style.visibility = 'hidden';
   document.getElementById('pv-price').textContent = '$'+priceWithSection(pv.secId, withModSel(pv.secId, opt, pv.choice||'Normal')).toFixed(2);
@@ -3208,7 +3361,10 @@ function renderByoSections(){
       }
       var veggieBlocked = (splitActive && opt.name==='Veggie' && !isSelected) ||
         (v2 && !isSelected && totalSelected>=2);
-      var tap = sheetProt ? 'selectProtein('+idx+')' : sheetMod ? 'openModSheet(\''+sec.id+'\','+idx+')' : 'toggleOption(\''+sec.id+'\','+idx+')';
+      var tap = sheetProt ? 'selectProtein('+idx+')'
+        : sheetMod && isPickOneMod(sec.id) ? 'selectModOption(\''+sec.id+'\','+idx+')'
+        : sheetMod ? 'toggleModOption(\''+sec.id+'\','+idx+')'
+        : sheetMod ? 'openModSheet(\''+sec.id+'\','+idx+')' : 'toggleOption(\''+sec.id+'\','+idx+')';
       if(nu) html += '<div class="variant-card">';
       var info = nu
         ? '<div class="variant-name">'+opt.name+'</div>'+
@@ -3434,7 +3590,7 @@ function updateByoFooter(){
   } else {
     note.classList.remove('show');
   }
-  document.getElementById('byo-add-label').textContent = 'Add ('+byoQty+')';
+  document.getElementById('byo-add-label').textContent = addLabel()+' ('+byoQty+')';
   document.getElementById('byo-add-price').textContent = '$'+(byoUnitPrice()*byoQty).toFixed(2);
 }
 function addByoToCart(){
@@ -3444,12 +3600,12 @@ function addByoToCart(){
     if(needsHalfPartner('protein')){ halfPartnerError = true; renderByoSections(); }
     note.textContent = needsHalfPartner('protein') && missing.length===1
       ? 'Please choose another protein for the other half'
-      : 'Please make a selection for each item marked Required.';
+      : 'Please complete all required items.';
     note.classList.add('show');
     scrollToSection(missing[0].id);
     return;
   }
-  var lines = [];
+  var lines = [], linePrices = [];
   currentBuilderSections().forEach(function(sec){
     if(byoSelections[sec.id].length===0) return;
     var text = byoSelections[sec.id].map(function(s){
@@ -3471,13 +3627,20 @@ function addByoToCart(){
       text = 'Double ' + text;
     }
     lines.push(text);
+    linePrices.push(sec.id==='protein' ? proteinSectionCharge() : byoSelections[sec.id].reduce(function(t,s){
+      var portion = (sec.allowSplit && byoSelections[sec.id].length===2) ? 0.5 : 1;
+      return t + ((portion===1 && s.mod==='Double') ? (s.doublePrice||0) : (s.price||0))*portion;
+    }, 0) + ((sec.allowSplit && sec.splitDoublePrice && byoSplitDouble[sec.id]) ? sec.splitDoublePrice : 0));
   });
   openMealNameSheet({
     name: currentBuilderConfig().name,
     thumbSrc: currentBuilderConfig().img,
     lines: lines,
+    linePrices: linePrices,
     qty: byoQty,
-    unitPrice: byoUnitPrice()
+    unitPrice: byoUnitPrice(),
+    source: {type:'builder', id:currentBuilderId, sel:JSON.parse(JSON.stringify(byoSelections)),
+      splitOn:JSON.parse(JSON.stringify(byoSplitOn)), splitDouble:JSON.parse(JSON.stringify(byoSplitDouble))}
   });
 }
 
@@ -3574,7 +3737,7 @@ function updateKbFooter(){
   } else {
     note.textContent = "You're all set!";
   }
-  document.getElementById('kb-add-label').textContent = 'Add ('+kbQty+')';
+  document.getElementById('kb-add-label').textContent = addLabel()+' ('+kbQty+')';
   document.getElementById('kb-add-price').textContent = '$'+(kbUnitPrice()*kbQty).toFixed(2);
 }
 function changeKbQty(delta){
@@ -3587,17 +3750,18 @@ function addKbToCart(){
   var missing = kbMissingRequired();
   if(missing.length>0){
     var note = document.getElementById('kb-note');
-    note.textContent = 'Please make a selection for each item marked Required.';
+    note.textContent = 'Please complete all required items.';
     scrollToSection(missing[0].id.replace('k','k'));
     var el = document.getElementById('kb-sec-'+missing[0].id);
     if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
     return;
   }
-  var lines = [];
+  var lines = [], linePrices = [];
   KIDS_SECTIONS.forEach(function(sec){
     kidsSelections[sec.id].forEach(function(opt){
       if(opt.none) return;
       lines.push(opt.name);
+      linePrices.push(opt.price||0);
     });
   });
   openMealNameSheet({
@@ -3605,8 +3769,11 @@ function addKbToCart(){
     thumbSrc: kbItem.img || null,
     thumbEmoji: kbItem.icon || '🌯',
     lines: lines,
+    linePrices: linePrices,
     qty: kbQty,
-    unitPrice: kbUnitPrice()
+    unitPrice: kbUnitPrice(),
+    source: {type:'kids', id:kbItem.id, sel:KIDS_SECTIONS.reduce(function(o,sec){
+      o[sec.id] = kidsSelections[sec.id].map(function(opt){ return sec.options.indexOf(opt); }); return o; }, {})}
   });
 }
 
@@ -3622,15 +3789,91 @@ function addItemToCart(item){
     thumbSrc: item.thumbSrc,
     thumbEmoji: item.thumbEmoji || '🌯',
     lines: item.lines || [],
+    linePrices: item.linePrices || null,
     qty: item.qty,
-    unitPrice: item.unitPrice
+    unitPrice: item.unitPrice,
+    source: item.source || null
   });
   renderMenuCartBar();
+}
+/* Edit: reopen the item's pop-up over the cart with its choices and quantity; Update replaces it in place. */
+var editingCartId = null;
+function addLabel(){ return editingCartId!==null ? 'Update' : 'Add'; }
+function cartItemMenuItem(it){
+  if(it.source) return findMenuItem(it.source.id);
+  // Demo items added without a source: match the menu item, or the builder, by name.
+  for(var c in MENU_ITEMS){
+    var m = MENU_ITEMS[c].filter(function(i){ return i.name===it.name; })[0];
+    if(m) return m;
+  }
+  for(var id in BUILDER_CONFIGS){ if(BUILDER_CONFIGS[id].name===it.name) return findMenuItem(id); }
+  return null;
+}
+function editCartItem(id){
+  var it = cartItems.filter(function(c){return c.id===id;})[0];
+  var menuItem = it && cartItemMenuItem(it);
+  if(!menuItem) return;
+  editingCartId = id;
+  var src = it.source;
+  if(menuItem.builder){
+    openBuilder(menuItem);
+    if(src){
+      byoSelections = JSON.parse(JSON.stringify(src.sel));
+      byoSplitOn = JSON.parse(JSON.stringify(src.splitOn));
+      byoSplitDouble = JSON.parse(JSON.stringify(src.splitDouble));
+      renderByoSections(); renderProgressStrip();
+    } else {
+      // Demo items without a source: tick the options named in the item's lines.
+      it.lines.forEach(function(line){
+        currentBuilderSections().forEach(function(sec){
+          var idx = sec.options.map(function(o){ return o.name; }).indexOf(line);
+          if(idx<0) return;
+          if(sec.id==='protein') selectProtein(idx);
+          else if(isPickOneMod(sec.id)) selectModOption(sec.id, idx);
+          else toggleModOption(sec.id, idx);
+        });
+      });
+    }
+    byoQty = it.qty;
+    document.getElementById('byo-qty-value').textContent = byoQty;
+    document.getElementById('byo-qty-minus').disabled = byoQty<=1;
+    updateByoFooter();
+  } else if(menuItem.kidsBuilder){
+    openKidsBuilder(menuItem);
+    if(src) KIDS_SECTIONS.forEach(function(sec){
+      kidsSelections[sec.id] = (src.sel[sec.id]||[]).map(function(i){ return sec.options[i]; });
+    });
+    kbQty = it.qty;
+    document.getElementById('kb-qty-value').textContent = kbQty;
+    document.getElementById('kb-qty-minus').disabled = kbQty<=1;
+    renderKbSections(); updateKbFooter();
+  } else {
+    openQuickDetail(menuItem);
+    qd.qty = it.qty;
+    document.getElementById('qd-qty-value').textContent = qd.qty;
+    document.getElementById('qd-qty-minus').disabled = qd.qty<=1;
+    updateQdFooter();
+  }
+}
+function saveCartEdit(item){
+  var it = cartItems.filter(function(c){return c.id===editingCartId;})[0];
+  if(it){
+    ['name','customName','thumbSrc','lines','linePrices','qty','unitPrice','source'].forEach(function(k){ it[k] = item[k]; });
+    if(item.thumbEmoji) it.thumbEmoji = item.thumbEmoji;
+  }
+  renderCartOrder();
+  renderMenuCartBar();
+  showToast((it && it.customName || item.name)+' updated');
+  pendingCartItem = null;
+  // Drop the name sheet, then slide the pop-up down over the cart.
+  show(mealNameFrom);
+  document.getElementById('screen-cart').classList.remove('hidden');
+  closeDetail(mealNameFrom);
 }
 function changeCartItemQty(id, delta){
   var it = cartItems.filter(function(c){return c.id===id;})[0];
   if(!it) return;
-  it.qty += delta;
+  it.qty = Math.max(1, it.qty+delta);
   if(it.qty<=0){ cartItems = cartItems.filter(function(c){return c.id!==id;}); }
   renderCartOrder();
   renderMenuCartBar();
@@ -3659,7 +3902,7 @@ function renderCartOrder(){
   if(cartItems.length===0){
     listEl.innerHTML = '<div class="cart-empty"><div class="emoji">🌯</div>Your order is empty.<br>Head back to the menu to add something delicious.</div>';
   } else {
-    listEl.innerHTML = cartItems.map(renderOrderCardHTML).join('');
+    listEl.innerHTML = renderCartGroupsHTML();
   }
   var sub = cartSubtotal();
   var tax = sub*0.0825;
@@ -3667,27 +3910,97 @@ function renderCartOrder(){
   document.getElementById('cart-subtotal-value').textContent = '$'+sub.toFixed(2);
   document.getElementById('cart-tax-value').textContent = '$'+tax.toFixed(2);
   document.getElementById('cart-total-value').textContent = '$'+total.toFixed(2);
+  document.getElementById('cart-checkout-total').textContent = '$'+total.toFixed(2);
   document.getElementById('cart-checkout-btn').disabled = cartItems.length===0;
+  // Review • Pick up: "ASAP", or the chosen time, and the store.
+  document.getElementById('cart-pickup-time').textContent = scheduleMode==='asap' ? 'ASAP' : menuFilterLabel().replace(/^Pickup · /,'');
+  document.getElementById('cart-pickup-store').textContent = 'Pick up from Chipotle '+document.getElementById('menu-outlet-name').textContent;
 }
-function renderOrderCardHTML(item){
+/* Group the cart by meal name ("who it's for") once 2+ meals share a name or 2+ names are used, like the US site:
+   each name heads its items (in the order names were first used); unnamed items go last under "Other items".
+   With one name or none, the cart stays a plain list. */
+function cartGroupKey(item){ return (item.customName||'').trim().toLowerCase(); }
+// The cart's name groups (named first, in first-used order; unnamed last), or null for a plain list.
+// Grouping kicks in when 2+ meals share a name, or when 2+ different names are used.
+function cartNameGroups(){
+  var groups = [], byKey = {};
+  cartItems.forEach(function(it){
+    var k = cartGroupKey(it);
+    if(!byKey[k]){ byKey[k] = {key:k, label:(it.customName||'').trim(), items:[]}; groups.push(byKey[k]); }
+    byKey[k].items.push(it);
+  });
+  var named = groups.filter(function(g){ return g.key; });
+  var shared = named.some(function(g){ return g.items.length >= 2; });
+  if(named.length < 2 && !shared) return null;
+  return named.concat(groups.filter(function(g){ return !g.key; })).map(function(g){
+    g.title = g.key ? g.label : 'Other items';
+    g.count = g.items.reduce(function(t,it){ return t+it.qty; }, 0);
+    return g;
+  });
+}
+function renderCartGroupsHTML(){
+  var groups = cartNameGroups();
+  if(!groups) return cartItems.map(function(it){ return renderOrderCardHTML(it, false); }).join('');
+  cartGroupsShown = groups;
+  return groups.map(function(g, gi){
+    var n = g.count;
+    return '<div class="cart-group">'+
+      '<div class="cart-group-head"><span class="cart-group-name">'+escapeCommentHtml(g.title)+'</span>'+
+      (g.key ? '<button class="cart-group-rename" onclick="openRenameGroup('+gi+')" aria-label="Edit name">'+
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>' : '')+
+      '<span class="cart-group-count">'+n+' item'+(n>1?'s':'')+'</span></div>'+
+      g.items.map(function(it){ return renderOrderCardHTML(it, true); }).join('')+
+    '</div>';
+  }).join('');
+}
+// Price of an option by name, for demo items added without per-line prices.
+function optionPriceByName(name){
+  for(var id in BUILDER_CONFIGS){
+    var secs = BUILDER_CONFIGS[id].sections;
+    for(var i=0;i<secs.length;i++){
+      var o = secs[i].options.filter(function(x){ return x.name===name; })[0];
+      if(o) return o.price||0;
+    }
+  }
+  return 0;
+}
+function renderOrderCardHTML(item, grouped){
   var thumb = item.thumbSrc ? '<img src="'+item.thumbSrc+'" alt="'+item.name+'">' : '<span style="font-size:26px;">'+item.thumbEmoji+'</span>';
-  var lines = item.lines.length ? item.lines.join('<br>') : '';
+  // Each option with its price on the right, so any extra cost is clear.
+  var lines = item.lines.map(function(l, i){
+    var p = item.linePrices ? (item.linePrices[i]||0) : optionPriceByName(l);
+    return '<div class="cart-line"><span>'+l+'</span><span class="cart-line-price">$'+p.toFixed(2)+'</span></div>';
+  }).join('');
   return '<div class="cart-order-card">'+
     '<div class="cart-thumb">'+thumb+'</div>'+
     '<div style="flex:1; min-width:0;">'+
-      '<div class="cart-item-name">'+item.qty+' x '+item.name+'</div>'+
-      (item.customName?'<div class="cart-item-custom-name">"'+item.customName+'"</div>':'')+
+      // The item total sits on the name row.
+      '<div class="cart-item-head"><div class="cart-item-name">'+item.qty+' x '+item.name+'</div>'+
+        '<div class="cart-item-total">$'+(item.unitPrice*item.qty).toFixed(2)+'</div></div>'+
+      (item.customName && !grouped ?'<div class="cart-item-custom-name">"'+item.customName+'"</div>':'')+
       (lines?'<div class="cart-item-lines">'+lines+'</div>':'')+
       '<div class="cart-item-bottom">'+
         '<div class="cart-qty">'+
-          '<button class="qty-btn" onclick="changeCartItemQty('+item.id+',-1)">−</button>'+
+          // − stops at 1; the bin removes the item.
+          '<button class="qty-btn" onclick="changeCartItemQty('+item.id+',-1)"'+(item.qty<=1?' disabled':'')+' aria-label="Decrease quantity">−</button>'+
           '<span class="qty-value">'+item.qty+'</span>'+
-          '<button class="qty-btn" onclick="changeCartItemQty('+item.id+',1)">+</button>'+
+          '<button class="qty-btn" onclick="changeCartItemQty('+item.id+',1)" aria-label="Increase quantity">+</button>'+
+          '<button class="cart-item-remove" onclick="removeCartItem('+item.id+')" aria-label="Remove item">'+
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg>'+
+          '</button>'+
         '</div>'+
+        // Edit sits on the picker row, at the right edge.
+        '<button class="cart-item-edit" onclick="editCartItem('+item.id+')">Edit</button>'+
       '</div>'+
-      '<div class="cart-item-total">$'+(item.unitPrice*item.qty).toFixed(2)+'</div>'+
     '</div>'+
   '</div>';
+}
+function removeCartItem(id){
+  var it = cartItems.filter(function(c){return c.id===id;})[0];
+  cartItems = cartItems.filter(function(c){return c.id!==id;});
+  renderCartOrder();
+  renderMenuCartBar();
+  if(it) showToast(it.name+' removed');
 }
 function renderCartUpsell(){
   var wrap = document.getElementById('cart-upsell-scroll');
@@ -3697,6 +4010,7 @@ function renderCartUpsell(){
     return '<div class="cart-upsell-card" onclick="quickAddUpsellItem(\''+it.id+'\')">'+
       '<div class="cart-upsell-thumb">'+(it.bestSeller?'<span class="cart-upsell-badge">Best seller</span>':'')+thumb+'</div>'+
       '<div class="cart-upsell-name">'+it.name+'</div>'+
+      '<div class="cart-upsell-meta">Chips &amp; dips'+(it.cal!=null ? ' • '+it.cal+' cal' : '')+'</div>'+
       '<div class="cart-upsell-price">$'+it.price.toFixed(2)+'</div>'+
     '</div>';
   }).join('');
@@ -3729,9 +4043,14 @@ function selectPayRow(row){
   selectedPayMethod = row.getAttribute('data-method');
 }
 function goToCheckout(){
-  document.getElementById('checkout-order-summary').innerHTML = cartItems.map(function(it){
-    return '<div class="totals-row"><span>'+it.qty+'x '+it.name+'</span><span>$'+(it.unitPrice*it.qty).toFixed(2)+'</span></div>';
-  }).join('');
+  // Same name groups as the cart (2+ names), otherwise a plain list.
+  var summaryRow = function(it){ return '<div class="totals-row"><span>'+it.qty+'x '+it.name+'</span><span>$'+(it.unitPrice*it.qty).toFixed(2)+'</span></div>'; };
+  var groups = cartNameGroups();
+  document.getElementById('checkout-order-summary').innerHTML = !groups ? cartItems.map(summaryRow).join('')
+    : groups.map(function(g){
+        return '<div class="co-sum-group"><div class="co-sum-head"><span class="co-sum-name">'+escapeCommentHtml(g.title)+'</span>'+
+          '<span class="co-sum-count">'+g.count+' item'+(g.count>1?'s':'')+'</span></div>'+g.items.map(summaryRow).join('')+'</div>';
+      }).join('');
   renderCheckoutTotals();
   document.getElementById('checkout-outlet-value').textContent = 'Chipotle '+document.getElementById('menu-outlet-name').textContent;
   if(selectedOrderType==='pickup'){
@@ -3816,22 +4135,99 @@ function checkoutNextAvailableSlots(count){
   }
   return out;
 }
+/* Every 10-minute window left today (after the 30-min prep), with full windows flagged.
+   The 5 nearest open ones are the quick options; the rest sit behind "Later time". Today only. */
+var CHECKOUT_QUICK_COUNT = 5;
+var checkoutLaterOpen = false, checkoutLaterExpanded = {};
+function checkoutAllSlotsToday(){
+  var closeTotal = 22*60, now = new Date();
+  var nowTotal = now.getHours()*60+now.getMinutes();
+  var earliestTotal = Math.ceil((nowTotal+30)/10)*10;
+  var entrees = cartEntreeCount(), out = [];
+  for(var t=earliestTotal; t<closeTotal; t+=10){
+    var start = fmtTime(t), end = fmtTime(t+10);
+    out.push({totalMin:t, startTime:start.time, endTime:end.time, ampm:end.ampm,
+      period: t<12*60 ? 'morning' : (t<18*60 ? 'afternoon' : 'evening'),
+      full: simulatedEntreeLoad(t)+entrees>10});
+  }
+  return out;
+}
+// Indexes (into checkoutPickupSlots) of the quick options and of the later ones.
+function checkoutQuickIdx(){
+  var out = [];
+  checkoutPickupSlots.forEach(function(s,i){ if(!s.full && out.length<CHECKOUT_QUICK_COUNT) out.push(i); });
+  return out;
+}
+function checkoutLaterIdx(){
+  var q = checkoutQuickIdx(), last = q.length ? q[q.length-1] : -1;
+  return checkoutPickupSlots.map(function(s,i){ return i; }).filter(function(i){ return i>last; });
+}
+function slotLabel(s){ return s.startTime+' - '+s.endTime+' '+s.ampm; }
 function openCheckoutPickupSheet(){
-  checkoutPickupSlots = checkoutNextAvailableSlots(5);
-  checkoutPickupSelectedIdx = checkoutPickupSlots.length ? 0 : null;
+  checkoutPickupSlots = checkoutAllSlotsToday();
+  var q = checkoutQuickIdx();
+  checkoutPickupSelectedIdx = q.length ? q[0] : null;
+  checkoutLaterOpen = false;
+  checkoutLaterExpanded = {};
   renderCheckoutPickupOptions();
   document.getElementById('checkout-pickup-confirm-btn').disabled = (checkoutPickupSelectedIdx===null);
   document.getElementById('screen-checkout-pickup').classList.remove('hidden');
 }
+function checkoutSlotTile(idx){
+  var s = checkoutPickupSlots[idx], sel = checkoutPickupSelectedIdx===idx;
+  var label = s.startTime+' - '+s.endTime+'<br>'+s.ampm;
+  // Full windows stay visible but greyed, so it's clear why a time can't be picked.
+  if(s.full) return '<div class="time-slot is-full" aria-disabled="true">'+label+'<span class="time-slot-full">Full</span></div>';
+  return '<div class="time-slot '+(sel?'selected':'')+'" onclick="selectCheckoutPickupSlot('+idx+')">'+TIME_SLOT_CHECK+label+'</div>';
+}
 function renderCheckoutPickupOptions(){
-  var html = checkoutPickupSlots.map(function(s, idx){
-    var sel = checkoutPickupSelectedIdx===idx;
-    var label = s.startTime+' - '+s.endTime+'<br>'+s.ampm;
-    return '<div class="time-slot '+(sel?'selected':'')+'" onclick="selectCheckoutPickupSlot('+idx+')">'+TIME_SLOT_CHECK+label+'</div>';
-  }).join('');
-  document.getElementById('checkout-pickup-options').innerHTML = html ? ('<div class="time-grid">'+html+'</div>') : '<div class="schedule-hint">No pickup times available right now — please check back shortly.</div>';
+  var quick = checkoutQuickIdx(), later = checkoutLaterIdx();
+  if(!quick.length){
+    document.getElementById('checkout-pickup-options').innerHTML = '<div class="schedule-hint">No pickup times available right now — please check back shortly.</div>';
+    return;
+  }
+  var html = '<div class="time-grid">'+quick.map(checkoutSlotTile).join('')+'</div>';
+  if(later.length){
+    var selLater = later.indexOf(checkoutPickupSelectedIdx)>-1;
+    var lastSlot = checkoutPickupSlots[checkoutPickupSlots.length-1];
+    var sub = selLater ? slotLabel(checkoutPickupSlots[checkoutPickupSelectedIdx]) : 'Up to '+lastSlot.startTime+' '+lastSlot.ampm;
+    html += '<button type="button" class="later-time-row'+(selLater?' is-selected':'')+'" onclick="toggleCheckoutLater()" aria-expanded="'+checkoutLaterOpen+'">'+
+      '<span class="later-time-text"><span class="later-time-title">Later time</span><span class="later-time-sub">'+sub+'</span></span>'+
+      '<svg class="later-time-chev'+(checkoutLaterOpen?' is-open':'')+'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>'+
+    '</button>';
+    if(checkoutLaterOpen){
+      html += '<div class="later-time-list">'+TIME_PERIOD_ORDER.map(function(period){
+        var items = later.filter(function(i){ return checkoutPickupSlots[i].period===period; });
+        if(!items.length) return '';
+        var expanded = !!checkoutLaterExpanded[period];
+        return '<div class="time-period">'+
+          '<button type="button" class="time-period-header" onclick="toggleCheckoutLaterPeriod(\''+period+'\')">'+
+            '<span class="time-period-label">'+TIME_PERIOD_LABEL[period]+'</span>'+
+            '<svg class="time-period-chevron'+(expanded?' time-period-chevron-open':'')+'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'+
+          '</button>'+
+          '<div class="time-grid" style="display:'+(expanded?'grid':'none')+'">'+items.map(checkoutSlotTile).join('')+'</div>'+
+        '</div>';
+      }).join('')+'</div>';
+    }
+  }
+  document.getElementById('checkout-pickup-options').innerHTML = html;
+}
+function toggleCheckoutLater(){
+  checkoutLaterOpen = !checkoutLaterOpen;
+  // Open the group of the chosen later time, or of the first later time.
+  if(checkoutLaterOpen && !Object.keys(checkoutLaterExpanded).length){
+    var later = checkoutLaterIdx();
+    var target = later.indexOf(checkoutPickupSelectedIdx)>-1 ? checkoutPickupSelectedIdx : later[0];
+    if(target!=null) checkoutLaterExpanded[checkoutPickupSlots[target].period] = true;
+  }
+  renderCheckoutPickupOptions();
+}
+function toggleCheckoutLaterPeriod(period){
+  checkoutLaterExpanded[period] = !checkoutLaterExpanded[period];
+  renderCheckoutPickupOptions();
 }
 function selectCheckoutPickupSlot(idx){
+  if(checkoutPickupSlots[idx].full) return;
   checkoutPickupSelectedIdx = idx;
   renderCheckoutPickupOptions();
   document.getElementById('checkout-pickup-confirm-btn').disabled = false;
@@ -4528,7 +4924,18 @@ var ROUTES = {
   'builder-v2':    function(arg){ goToMenu(); builderVersion = 'v2'; openBuilder(findMenuItem(arg || 'byo-burrito')); },
   'kidsbuilder':   function(){ goToMenu(); openKidsBuilder(findMenuItem('kids-tortillas')); },
   'mealname':      function(){ goToMenu(); var b = findMenuItem('byo-bowl'); openMealNameSheet({name:b.name, thumbSrc:b.img, lines:[], qty:1, unitPrice:b.price}); },
-  'cart':          function(arg){ goToMenu(); if(arg!=='empty') seedDemoCart(); goToCart(); },
+  'cart':          function(arg){
+    goToMenu();
+    if(arg==='grouped' && !cartItems.length){
+      var bowl = findMenuItem('byo-bowl'), bur = findMenuItem('byo-burrito'), chips = findMenuItem('chips');
+      addItemToCart({name:bowl.name, customName:'Mel', thumbSrc:bowl.img, lines:['Chicken','White Rice','Black Beans'], qty:1, unitPrice:bowl.price});
+      addItemToCart({name:bur.name, customName:'Ivan', thumbSrc:bur.img, lines:['Steak','Brown Rice','Pinto Beans'], qty:1, unitPrice:11.50});
+      addItemToCart({name:chips.name, customName:'Mel', thumbSrc:chips.img, lines:[], qty:1, unitPrice:chips.price});
+      addItemToCart({name:chips.name, thumbSrc:chips.img, lines:[], qty:1, unitPrice:chips.price});
+    }
+    if(arg!=='empty') seedDemoCart();
+    goToCart();
+  },
   'checkout':      function(arg){ selectOrderType(arg==='dinein' ? 'dinein' : 'pickup'); goToMenu();
     if(arg==='member'){ // 2 bowls, so B$12.40 covers part of it; open scrolled to Savings
       setDemoMember(true); seedDemoCart(); cartItems[0].qty = 2; seedCheckoutConfirmed();
