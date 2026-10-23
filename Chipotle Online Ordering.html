@@ -1709,7 +1709,8 @@ html.is-desktop .detail-pop .scroll.desk-split{display:grid; grid-template-colum
 .desk-split > .desk-aside .builder-hero{height:300px;}
 .desk-split > .desk-main{min-width:0; padding-bottom:16px;}
 html.is-desktop .detail-pop .builder-footer{padding:16px 24px;}
-html.is-desktop .detail-pop .footer-actions .btn-add{flex:0 1 420px; margin-left:auto;}
+html.is-desktop .detail-pop .footer-actions .btn-add{flex:0 1 420px;}
+html.is-desktop .detail-pop .footer-actions .qty-stepper{margin-left:auto;} /* qty sits right next to Add */
 html.is-desktop .detail-pop .builder-footer-note{text-align:right;}
 html.is-desktop .detail-pop .qd-hero-wrap{max-height:360px; overflow:hidden;}
 /* The portion sheet (level 2 / 3) inside the builder */
@@ -4122,7 +4123,7 @@ function signupCreate(){
   setDemoMember(true, profile);
   renderCheckoutTotals();
   if(loginPrev==='screen-checkout') show('screen-checkout'); else goToMenu();
-  showToast('Account created, '+profile.first+' — start earning points!');
+  showToast('Account created, '+profile.first+'. Start earning points!');
 }
 function startResendTimer(){
   stopResendTimer();
@@ -4178,7 +4179,7 @@ function loyaltyLoggedIn(profile, existing){
     showToast(existing ? 'Welcome back, '+profile.first+'!' : 'Welcome, '+profile.first+'! You\'re all set to earn Happy Points.');
     return;
   }
-  showToast(existing ? 'Welcome back, '+profile.first+'! Your Happy Points and saved card are ready.' : 'Account created, '+profile.first+' — start earning points!');
+  showToast(existing ? 'Welcome back, '+profile.first+'! Your Happy Points and saved card are ready.' : 'Account created, '+profile.first+'. Start earning points!');
 }
 function dismissAccountCard(){
   document.getElementById('menu-account-card').classList.add('dismissed');
@@ -6267,8 +6268,7 @@ function deskSyncHeader(){
   document.getElementById('dh-cart-count').textContent = cartItems.reduce(function(t, c){ return t+(c.qty||1); }, 0);
   var open = asapAvailable();
   document.getElementById('desk-hero-sub').innerHTML =
-    (open ? '<span class="is-open">Open now</span>' : '<span class="is-closed">Closed now</span><span>Opens 7:00 am</span>')+
-    '<span class="dot"></span><span>Ready in ~30 mins</span><span class="dot"></span><span>Pick up only</span>';
+    (open ? '<span class="is-open">Open now</span>' : '<span class="is-closed">Closed now</span><span>Opens 7:00 am</span>');
 }
 // Fit the 1800px desktop design to the window (80% on a 1440px laptop, 100% from 1800px up).
 function deskFit(){

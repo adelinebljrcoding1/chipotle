@@ -279,30 +279,30 @@
       {label:'Design System', href:'design-system.html', desktop:true}
     ]},
     {title:'Research', items:[
-      {label:'User Journey', href:'user-journey.html', desktop:true}
+      {label:'User Journey', href:'user-journey.html', mobileOnly:true}
     ]},
     {title:'Menu (landing page)', items:[
-      {label:'Menu — guest', route:'menu'},
-      {label:'Menu — logged in', route:'menu:member'},
+      {label:'Menu - Guest', route:'menu'},
+      {label:'Menu - Logged in', route:'menu:member'},
       {label:'Loyalty Detail Page', route:'rewards'},
-      {label:'Happy Points — QR code', route:'rewards:qr'}
+      {label:'Happy Points - QR code', route:'rewards:qr'}
     ]},
     {title:'Navigation', items:[
-      {label:'Sidebar — guest', route:'sidebar'},
-      {label:'Sidebar — member', route:'sidebar:member'}
+      {label:'Sidebar - Guest', route:'sidebar'},
+      {label:'Sidebar - Member', route:'sidebar:member'}
     ]},
     {title:'Sign in', items:[
-      {label:'Sign in — mobile number', route:'login'},
-      {label:'Sign up — complete your profile', route:'signup'}
+      {label:'Sign in - Mobile number', route:'login'},
+      {label:'Sign up - Complete your profile', route:'signup'}
     ]},
     {title:'Order Setup', items:[
-      {label:'Pickup Time Sheet — ASAP (from menu pill)', route:'ordertype'},
-      {label:'Pickup Time Sheet — schedule a time', route:'schedule'}
+      {label:'Pickup Time Sheet - ASAP (from menu pill)', route:'ordertype'},
+      {label:'Pickup Time Sheet - Schedule a time', route:'schedule'}
     ]},
     {title:'Cart', items:[
-      {label:'Your Order — cart & upsell', route:'cart'},
-      {label:'Your Order — empty cart', route:'cart:empty'},
-      {label:'Your Order — grouped by name (Mel, Ivan)', route:'cart:grouped'}
+      {label:'Your Order - Cart & upsell', route:'cart'},
+      {label:'Your Order - Empty cart', route:'cart:empty'},
+      {label:'Your Order - Grouped by name (Mel, Ivan)', route:'cart:grouped'}
     ]},
     {title:'Check Out', items:[
       {label:'Guest who joins at checkout (new member)', route:'checkout:flow-join'},
@@ -311,10 +311,10 @@
     ]},
     {title:'Post-order', items:[
       {label:'Processing your order (payment)', route:'payment'},
-      {label:'Order Confirmed — guest', route:'order-success'},
-      {label:'Order Confirmed — logged in', route:'order-success:member'},
+      {label:'Order Confirmed - Guest', route:'order-success'},
+      {label:'Order Confirmed - Logged in', route:'order-success:member'},
       {label:'Order Status', route:'order-status'},
-      {label:'Order Details (receipt)', route:'order-details'}
+      {label:'Order Details (Receipt)', route:'order-details'}
     ]}
   ];
 
@@ -336,7 +336,7 @@
         '<div class="flow-col"><div class="col-label"><span class="col-icon">📱</span> Mobile</div>' +
           f.items.map(function(it){ return itemHTML(it, 'mobile'); }).join('') + '</div>' +
         '<div class="flow-col"><div class="col-label"><span class="col-icon">🖥</span> Desktop</div>' +
-          f.items.map(function(it){ return itemHTML(it, 'desktop'); }).join('') + '</div>' +
+          f.items.filter(function(it){ return !it.mobileOnly; }).map(function(it){ return itemHTML(it, 'desktop'); }).join('') + '</div>' +
       '</div></div>';
   }).join('');
 
