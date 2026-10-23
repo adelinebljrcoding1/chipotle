@@ -230,6 +230,25 @@
   .spec-table td.mono{font-family:var(--mono);font-size:12px;}
   .frame-rules{margin:12px 0 0;padding-left:20px;font-size:13.5px;line-height:1.6;}
   @media (max-width:720px){.frame-grid{grid-template-columns:minmax(0,1fr);}}
+  /* Desktop layout: mini wireframes of the four page templates */
+  .desk-figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px;}
+  .desk-fig{padding:14px;}
+  .desk-fig .cap{font-size:12.5px;font-weight:700;color:var(--ink);margin-top:10px;}
+  .desk-fig .cap small{display:block;font-weight:500;color:var(--muted);margin-top:2px;line-height:1.4;}
+  .mini-desk{position:relative;aspect-ratio:16/10;background:#FAF7F2;border:1px solid var(--line);border-radius:3px;overflow:hidden;font-size:9px;font-weight:700;color:var(--brown);}
+  .mini-desk .hd{position:absolute;left:0;right:0;top:0;height:11%;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:4%;padding:0 4%;}
+  .mini-desk .hd i{display:block;height:44%;border-radius:2px;background:#e6d8bd;}
+  .mini-desk .hd i.logo{width:12%;background:#A63A2B;}
+  .mini-desk .hd i.pill{width:18%;}
+  .mini-desk .hd i.sp{flex:1;background:none;}
+  .mini-desk .hd i.btn{width:8%;background:var(--brown);}
+  .mini-desk .bar{position:absolute;left:0;right:0;top:11%;height:9%;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;}
+  .mini-desk .blk{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;border-radius:2px;}
+  .mini-desk .blk.card{background:#fff;box-shadow:0 1px 3px rgba(69,20,0,.12);}
+  .mini-desk .blk.tint{background:#efe2c9;}
+  .mini-desk .blk.dim{inset:0;background:rgba(0,0,0,.45);border-radius:0;}
+  .mini-desk .blk.pop{background:#fff;border-radius:3px;box-shadow:0 4px 12px rgba(0,0,0,.3);}
+  @media (max-width:900px){.desk-figs{grid-template-columns:repeat(2,minmax(0,1fr));}}
 
   /* ---- Typography in use (menu + menu detail) ---- */
   @font-face{font-family:'Trade Gothic LT Com';src:url('assets/fonts/TradeGothicLTCom-Bold.ttf') format('truetype');font-weight:700;font-style:normal}
@@ -288,6 +307,7 @@
       <li><a href="#spacing">Spacing &middot; detail pages</a></li>
       <li><a href="#option-card">Option card</a></li>
       <li><a href="#phone-frame">Phone frame &middot; mobile mock-up</a></li>
+      <li><a href="#desktop">Desktop layout</a></li>
       <li><a href="#usage">Using it in the prototype</a></li>
     </ol>
   </nav>
@@ -309,13 +329,13 @@
         <tbody>
           <tr><td><b>Product title</b></td><td><span class="tg" style="font-size:24px;line-height:28px">Build your own burrito</span></td><td class="spec">TG 700 · 24/28 · #451500</td><td class="where">Title under the hero on detail pages (<code>.qd-name</code>)</td></tr>
           <tr><td><b>Section title</b></td><td><span class="tg" style="font-size:20px;line-height:24px">Build your own</span></td><td class="spec">TG 700 · 20/24 · #451500</td><td class="where">Menu category headings, menu item names, portion-sheet titles; cart headings (Review • Pick up, Order, You might also like)</td></tr>
-          <tr><td><b>Card title</b></td><td><span class="tg" style="font-size:18px;line-height:22px">Chicken</span></td><td class="spec">TG 700 · 18/22 · #451500</td><td class="where">Builder section titles (Protein or Veggie, Rice, Beans…), option names, portion options, Join Happy Points, sticky pop-up header</td></tr>
-          <tr><td><b>Cart item name</b></td><td><span class="gb" style="font-size:16px;line-height:22px;font-weight:500;color:#451500">1 x Burrito Bowl</span></td><td class="spec">Gotham 500 · 16/22 · #451500 · sentence case</td><td class="where">Item names on cart cards and upsell cards. The item total sits on the same row, right-aligned.</td></tr>
+          <tr><td><b>Card title</b></td><td><span class="tg" style="font-size:18px;line-height:22px">Chicken</span></td><td class="spec">TG 700 · 18/22 · #451500</td><td class="where">Builder section titles (Protein or Veggie, Rice, Beans…), option names, Join Happy Points, sticky pop-up header</td></tr>
+          <tr><td><b>Cart item name</b></td><td><span class="gb" style="font-size:16px;line-height:22px;font-weight:500;color:#451500">1 x Burrito Bowl</span></td><td class="spec">Gotham 500 · 16/22 · #451500 · sentence case</td><td class="where">Item names on cart cards (the item total sits on the same row, right-aligned), and portion-sheet options ("Half Pollo Asado", "Light", "Half portion"). Upsell card names use 14/20.</td></tr>
           <tr><td><b>Pickup time</b></td><td><span class="gb" style="font-size:16px;line-height:22px;font-weight:500;color:#451500">ASAP</span></td><td class="spec">Gotham 500 · 16/22 · #451500</td><td class="where">First line of the cart's Review • Pick up card ("ASAP", or the chosen time)</td></tr>
           <tr><td><b>Description</b></td><td><span class="gb" style="font-size:14px;line-height:20px;color:#806C62">Choose your protein, rice, beans &amp; toppings.</span></td><td class="spec">Gotham 400 · 14/20 · #806C62</td><td class="where">Item and option descriptions, section hints, Selection value, "Choose 1", character counter. Product description uses 14/22. In the cart: ingredient lines and their prices ($0.00, $2.00), "Pick up from Chipotle Downtown", upsell "Chips &amp; dips • 540 cal", Subtotal and Tax.</td></tr>
           <tr><td><b>Meta</b></td><td><span class="gb" style="font-size:14px;line-height:20px;color:#451500">180 cal</span></td><td class="spec">Gotham 400 · 14/20 · #451500</td><td class="where">Calorie line on option cards, sheet hint ("Customise your portion.")</td></tr>
-          <tr><td><b>Price / emphasis</b></td><td><span class="gb" style="font-size:14px;line-height:20px;font-weight:500;color:#451500">+$0.60</span> &nbsp; <span class="gb" style="font-size:14px;line-height:20px;font-weight:500;color:#451500">From $9.50</span></td><td class="spec">Gotham 500 · 14/20 · #451500</td><td class="where">Option surcharges, menu "From $9.50", "Portion size" label, cart item totals and upsell prices</td></tr>
-          <tr><td><b>Control</b></td><td><span class="pill-sample">Build your own</span> &nbsp; <span class="gb" style="font-size:14px;font-weight:500;color:#451500">ASAP (~30 min)</span></td><td class="spec">Gotham 500 · 14 · sentence case</td><td class="where">Category pills, Pick up / ASAP pills, "Customise", cart "Edit" (right end of the picker row) and "+ Add more" button (#3C1400)</td></tr>
+          <tr><td><b>Price / emphasis</b></td><td><span class="gb" style="font-size:14px;line-height:20px;font-weight:500;color:#451500">+$0.60</span> &nbsp; <span class="gb" style="font-size:14px;line-height:20px;font-weight:500;color:#451500">From $9.50</span></td><td class="spec">Gotham 500 · 14/20 · #451500</td><td class="where">Option surcharges, menu "From $9.50", the Size panel's "Size" label and its extra cost ("+$3.90"), cart item totals and upsell prices</td></tr>
+          <tr><td><b>Control</b></td><td><span class="pill-sample">Build your own</span> &nbsp; <span class="gb" style="font-size:14px;font-weight:500;color:#451500">ASAP (~30 min)</span></td><td class="spec">Gotham 500 · 14 · sentence case</td><td class="where">Category pills, Pick up / ASAP pills, "Customise ›", cart "Edit" (right end of the picker row) and the "+ Add more" text link (#3C1400)</td></tr>
           <tr><td><b>Header</b></td><td><span class="gb" style="font-size:14px;color:#451500">Downtown</span> &nbsp; <span class="gb" style="font-size:14px;color:#451500"><b style="font-weight:700">0</b> Points</span></td><td class="spec">Gotham 400 · 14 (number 700)</td><td class="where">Store name and points in the menu header</td></tr>
           <tr><td><b>Tag</b></td><td><span class="chip-sample">Required</span></td><td class="spec">Gotham 400 · 14 · #AC2424 on #FBEAE7</td><td class="where">Required on sections and sheets. Optional sections have no tag.</td></tr>
           <tr><td><b>Quantity</b></td><td><span class="gb" style="font-size:16px;font-weight:500;color:#451500">1</span></td><td class="spec">Gotham 500 · 16</td><td class="where">Number in the − 1 + picker</td></tr>
@@ -324,9 +344,13 @@
       </table>
     </div>
 
-    <div class="panel" style="margin-top:12px"><b>Cart controls.</b> The − / + buttons and <b>+ Add more</b> share one outlined style: white fill, 1.5px <code>#E6D8BD</code> border (the ASAP pill's outline), 8px corners, 40px tall; − is greyed out at 1. The bin next to the picker is a 22px <code>#AC2424</code> line icon and removes the item. <b>Edit</b> sits on the same row as the picker and bin, right-aligned to the card edge (10px tap padding above and below). A thin <code>--tan-line</code> divider separates the items, the upsell section and the totals, and another sits between Tax and Total.</div>
+    <div class="panel" style="margin-top:12px"><b>Size panel (builder).</b> The grey panel (<code>#F4F2EF</code>, 4px corners, 16px padding) under a chosen protein, rice, bean or topping has three lines: <b>Size</b> with any extra cost right-aligned ("+$3.90", same style as the label); the choice in Description style; then <b>Customise ›</b> (14px, 500) underneath. The whole panel is tappable. Choice wording: "1 portion", "1 Half Portion ∙ Half Pollo Asado", "1 Extra Portion ∙ Extra Steak", "1 Extra Portion ∙ Extra Chicken" (double of the same protein); proteins use their full menu name, e.g. "Sofritas (Plant-Based Protein)". Rice and beans show "Normal", "Light", "Extra", "On the side", or "1 Half Portion ∙ Half Brown Rice".</div>
 
-    <div class="panel" style="margin-top:12px"><b>Cart containers.</b> The Review • Pick up card, item cards and upsell cards use the menu card style (as on Join Happy Points): white <code>#fff</code>, no border, 2px corners (<code>--radius-lg</code>), <code>--shadow-card</code> (<code>0 2px 10px rgba(69,20,0,.08)</code>). Item cards have 16px padding and 16px between them. Name groups sit 20px below "Order", and each following name group starts 32px below the card above it.</div>
+    <div class="panel" style="margin-top:12px"><b>Customise sheet.</b> Option names are Gotham 500 16/22, sentence case. Protein: Half portion and Extra portion (chevrons → pick the other protein). Rice: Light, Extra, Side and Half portion, all radios; with only one other rice, Half picks it automatically (half White / half Brown). Normal / Light / Extra / Side are single-rice choices. There is no "Back to …" reset link. Product titles on detail pop-ups sit 32px below the hero; section hints sit 8px below the section title.</div>
+
+    <div class="panel" style="margin-top:12px"><b>Cart controls.</b> The − / + buttons are outlined: white fill, 1.5px <code>#E6D8BD</code> border (the ASAP pill's outline), 8px corners, 40px tall; − is greyed out at 1. <b>+ Add more</b> is a plain text link (no fill, no outline, 40px tap height), right-aligned with the cards. The bin next to the picker is a 22px <code>#AC2424</code> line icon and removes the item. <b>Edit</b> sits on the same row as the picker and bin, right-aligned to the card edge (10px tap padding above and below). A thin <code>--tan-line</code> divider separates the items, the upsell section and the totals, and another sits between Tax and Total.</div>
+
+    <div class="panel" style="margin-top:12px"><b>Cart containers.</b> Item cards and upsell cards use the menu card style (as on Join Happy Points): white <code>#fff</code>, no border, 2px corners (<code>--radius-lg</code>), <code>--shadow-card</code> (<code>0 2px 10px rgba(69,20,0,.08)</code>). The Review • Pick up card is outline only: no fill, no shadow, 1.5px <code>#E6D8BD</code> border, 2px corners. Item cards have 16px padding and 16px between them. Name groups sit 20px below "Order", and each following name group starts 32px below the card above it.</div>
 
     <div class="panel" style="margin-top:12px"><b>Checkout bar.</b> Same specs and position as the menu's cart bar: <code>#451500</code> fill, 370 × 52, 16px from the sides and 14px from the bottom, 14 / 18px padding, 2px corners, <code>0 4px 14px rgba(69,21,0,.3)</code> shadow, with a cream fade behind it instead of a divider. "CHECKOUT" is Trade Gothic LT Com 20/24 uppercase (like "1 ITEM"); the total on the right is Nunito 800 14px (like "View cart · $10.10").</div>
 
@@ -523,10 +547,163 @@
           <li>Don't resize or restyle the column, status bar or browser bar. They're device chrome, and they don't use the type tokens.</li>
           <li>Screen content uses 20px side padding, a sticky top bar (<code>.checkout-top-bar</code>: back arrow, centred <code>t-title-3</code> title) and, when there's a main action, a sticky footer with one <code>t-button</code>.</li>
           <li>Leave <code>--space-footer</code> (100px) at the bottom of scrolling content so the footer doesn't cover it.</li>
-          <li><b>Desktop</b> (<code>?view=desktop</code>) sets <code>html.is-desktop</code> today, which grows the title tiers; no screen has a desktop layout yet. When one lands it drops the column and the two bars and fills the window.</li>
+          <li><b>Desktop</b> (<code>?view=desktop</code>) drops the column and the two bars and fills the window. Every screen has a desktop layout; see <a href="#desktop">Desktop layout</a> below.</li>
         </ul>
       </div>
     </div>
+  </div>
+
+  <!-- Desktop layout -->
+  <div class="section" id="desktop">
+    <div class="section-head"><h2>Desktop layout &middot; web</h2><span class="section-count">?view=desktop &middot; every screen &middot; 23 Oct</span></div>
+    <p class="lede">Modelled on Bopple's desktop ordering. A white header runs across the top; the menu fills a wide column with the cart fixed on the right; checkout, confirmation, order status and Happy Points are <b>two columns</b>; item details, sheets and sign-in open as <b>centred pop-ups</b> over the page you came from. All of it lives in the prototype under <code>html.is-desktop</code> (the <b>DESKTOP WEB</b> block), so mobile is untouched. Values below are read from that block; px are at the 1800px design canvas.</p>
+
+    <div class="sub-head">Canvas &amp; scaling</div>
+    <div class="panel table-wrap">
+      <table class="spec-table" style="min-width:0">
+        <thead><tr><th>Part</th><th>Value</th><th>How</th></tr></thead>
+        <tbody>
+          <tr><td>Design canvas</td><td>1800px wide</td><td>What a 13" MacBook (1440 × 900) shows in Chrome at 80%. Design desktop screens at this width.</td></tr>
+          <tr><td>Fit to window</td><td>zoom = window ÷ 1800, between 0.75 and 1</td><td class="mono">deskFit() → --desk-zoom; .phone{zoom:var(--desk-zoom)}</td></tr>
+          <tr><td>Examples</td><td>1440 → 80% · 1920 → 100% · 1100 → 75%</td><td>Recalculated on resize. Keep Chrome itself at 100%, or the two zooms multiply.</td></tr>
+          <tr><td>Window size in page units</td><td><code>--desk-vw</code> · <code>--desk-vh</code></td><td>Inside the zoomed page <code>100vw</code> / <code>100vh</code> come out zoomed too. Use these for anything sized to the window (pop-up heights, max widths).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">Layout tokens</div>
+    <div class="panel table-wrap">
+      <table class="spec-table" style="min-width:0">
+        <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">--desk-head</td><td>64px</td><td>Header height. Every page starts below it.</td></tr>
+          <tr><td class="mono">--desk-cart</td><td>460px</td><td>Cart column on the right of the menu; content padding 20px top/bottom, 24px sides (title, body and Checkout share the 24px edge).</td></tr>
+          <tr><td class="mono">--desk-max</td><td>1040px</td><td>Max content width of the menu and the centred pages.</td></tr>
+          <tr><td class="mono">--desk-pad</td><td>max(32px, centring gutter)</td><td>Side padding of the menu, category tabs and title bars; keeps content on the 1040px column.</td></tr>
+          <tr><td>Two-column gap</td><td>48px</td><td>Between the main and side columns on every two-column page.</td></tr>
+          <tr><td>Page padding</td><td>32px top · 56px bottom</td><td>Below the title bar, and at the end of each scrolling page.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">Page templates</div>
+    <div class="desk-figs">
+      <div class="panel desk-fig">
+        <div class="mini-desk" aria-hidden="true">
+          <div class="hd"><i class="logo"></i><i class="pill"></i><i class="pill"></i><i class="sp"></i><i class="pill" style="width:12%"></i></div>
+          <div class="blk" style="left:0;right:24%;top:11%;height:8%;border-bottom:1px solid var(--line)">Tabs</div>
+          <div class="blk" style="left:6%;width:40%;top:23%;height:10%;justify-content:flex-start;font-size:10px">STORE NAME</div>
+          <div class="blk card" style="left:6%;width:20%;top:38%;height:18%">Card</div>
+          <div class="blk card" style="left:28%;width:20%;top:38%;height:18%">Card</div>
+          <div class="blk card" style="left:50%;width:20%;top:38%;height:18%">Card</div>
+          <div class="blk card" style="left:6%;width:20%;top:60%;height:18%">Card</div>
+          <div class="blk card" style="left:28%;width:20%;top:60%;height:18%">Card</div>
+          <div class="blk tint" style="right:0;width:24%;top:11%;bottom:0;border-radius:0">Cart<br>460</div>
+        </div>
+        <div class="cap">Menu + cart<small>Store heading, tabs, a grid of cards (min 300px, 16px gap). The cart is a fixed 460px column (20 / 24px padding) with Checkout pinned at its foot.</small></div>
+      </div>
+      <div class="panel desk-fig">
+        <div class="mini-desk" aria-hidden="true">
+          <div class="hd"><i class="logo"></i><i class="sp"></i><i class="btn" style="width:5%;background:#e6d8bd"></i></div>
+          <div class="bar">← &nbsp; TITLE</div>
+          <div class="blk card" style="left:12%;width:42%;top:26%;height:64%">Main<br>560–640</div>
+          <div class="blk card" style="left:60%;width:28%;top:26%;height:42%">Side<br>400–440</div>
+        </div>
+        <div class="cap">Two columns<small>Checkout (640 + 400), Pickup confirmed and Order status (560 + 440), Happy Points (640 + 400). Columns start on the same line.</small></div>
+      </div>
+      <div class="panel desk-fig">
+        <div class="mini-desk" aria-hidden="true">
+          <div class="hd"><i class="logo"></i><i class="pill"></i><i class="pill"></i><i class="sp"></i><i class="btn"></i></div>
+          <div class="bar">← &nbsp; TITLE</div>
+          <div class="blk card" style="left:32%;width:36%;top:26%;height:64%">Column<br>440–640</div>
+        </div>
+        <div class="cap">Centred column<small>QR code (440) and Order details (640): one column centred under the title bar.</small></div>
+      </div>
+      <div class="panel desk-fig">
+        <div class="mini-desk" aria-hidden="true">
+          <div class="hd"><i class="logo"></i><i class="pill"></i><i class="sp"></i><i class="btn"></i></div>
+          <div class="blk card" style="left:6%;width:20%;top:30%;height:18%"></div>
+          <div class="blk dim"></div>
+          <div class="blk pop" style="left:30%;width:40%;top:10%;height:80%">Pop-up<br>12px corners</div>
+        </div>
+        <div class="cap">Pop-up<small>Item details, sheets and sign-in, centred over the page they came from on a 60% black dim.</small></div>
+      </div>
+    </div>
+
+    <div class="sub-head">Header</div>
+    <div class="panel table-wrap">
+      <table class="spec-table" style="min-width:0">
+        <thead><tr><th>Part</th><th>Spec</th><th>Behaviour</th></tr></thead>
+        <tbody>
+          <tr><td>Bar</td><td>64px · white · <code>--shadow-card</code> · 32px side padding · 12px gap</td><td>On every page except pop-ups, which cover it.</td></tr>
+          <tr><td>Logo</td><td>36px tall</td><td>Back to the menu.</td></tr>
+          <tr><td>Pickup</td><td>44px · 1.5px <code>#E6D8BD</code> · 8px corners · Gotham 14 (store 500)</td><td>"📍 Chipotle Downtown | ASAP (~30 min) ⌄"; opens the pickup-time sheet.</td></tr>
+          <tr><td>Search</td><td>Not in the header: it sits at the right of the menu's category row, on the card margin (280px; 400px with a brown outline while searching)</td><td>Searching hides the store heading; ✕, Esc or leaving it empty closes.</td></tr>
+          <tr><td>Happy Points (member)</td><td>44px pill · <code>#F4F2EF</code> · 32px medallion · amount Gotham 500 16 <code>#6E7C1B</code> · tier taupe</td><td>Opens the loyalty page. Hover <code>#EFE7DA</code>.</td></tr>
+          <tr><td>Join Happy Points (guest)</td><td>Same pill · Gotham 500 14</td><td>Opens Sign in. Replaces the old Log in • Sign up button and the menu's Join card.</td></tr>
+          <tr><td>Account</td><td>Member: 40px brown circle, initials Gotham 500 14 · Guest: 44px outlined ☰</td><td>Opens the sidebar: from the right, the same 460px width and 24px side padding as the cart column.</td></tr>
+          <tr><td>Cart</td><td>44px · brown fill · TG 700 16 · white count badge</td><td>Hidden on the menu, where the cart is already on the right.</td></tr>
+          <tr><td><b>Slim header</b></td><td>Logo + ☰ only</td><td>Checkout, payment and Pickup confirmed: no pickup, search, points or cart, so nothing pulls the customer out of paying.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">Title bar (second row)</div>
+    <div class="panel table-wrap">
+      <table class="spec-table" style="min-width:0">
+        <thead><tr><th>Part</th><th>Spec</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Bar</td><td>63px · cream · 1px <code>--tan-line</code> under · 20px × <code>--desk-pad</code> padding</td><td>Same on checkout, Pickup confirmed, order status, Happy Points, QR and order details.</td></tr>
+          <tr><td>Title</td><td>TG 700 · 18/22 · uppercase · centred</td><td>"Checkout", "Pickup confirmed", "Order status"…</td></tr>
+          <tr><td>Button</td><td>40px · white · 1.5px <code>#E6D8BD</code> · 8px corners · 20px icon</td><td>Left: ← back. Checkout: "← Back to menu" (Gotham 500 14). Pickup confirmed: ✕ on the right.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">Pop-ups</div>
+    <div class="panel table-wrap">
+      <table class="spec-table" style="min-width:0">
+        <thead><tr><th>Pop-up</th><th>Size</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Item detail</td><td>640 wide · up to 860 tall</td><td>Picture on top, footer with quantity + Add.</td></tr>
+          <tr><td>Builders</td><td>1120 wide · up to 860 tall</td><td>Two columns: picture + description (440, sticky) on the left, choices on the right.</td></tr>
+          <tr><td>Portion sheet (level 2 / 3)</td><td>520 wide · up to 720 tall</td><td>Opens over the builder.</td></tr>
+          <tr><td>Pickup time · confirm time</td><td>560 wide · up to 760 tall</td><td></td></tr>
+          <tr><td>Dialogs</td><td>480 wide</td><td>Meal name, Happy Points log in, guest details, credit card, sign in, verify. Sign up is 560 × up to 820.</td></tr>
+          <tr><td>All pop-ups</td><td>12px corners on <b>all four</b> sides · <code>0 24px 64px rgba(0,0,0,.3)</code></td><td>60% black dim behind. In: 0.24s fade + rise (<code>deskPopIn</code>). Max height is the window minus 64–96px, using <code>--desk-vh</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">Desktop-only components</div>
+    <div class="panel table-wrap">
+      <table class="spec-table" style="min-width:0">
+        <thead><tr><th>Component</th><th>Spec</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Store heading</td><td>Eyebrow Gotham 500 14 <code>#6E7C1B</code> · title TG 700 44/48 · status line Gotham 16 (Open now green / Closed now red)</td><td>Top of the menu.</td></tr>
+          <tr><td>Category title</td><td>TG 700 28/32 · 48px above</td><td>Menu sections.</td></tr>
+          <tr><td>Side panel</td><td>White · 12px corners · <code>--shadow-card</code> · 20–24px padding</td><td>Checkout order summary + pay, How to earn, Pickup confirmed summary.</td></tr>
+          <tr><td>Secondary buttons</td><td>Two equal, side by side · 48px · white · 1.5px brown · 8px corners · TG 700 16</td><td>Pickup confirmed: See order status · Place a new order.</td></tr>
+          <tr><td>Tier carousel</td><td>Cards 434 × 244 (16:9), the same height as How to earn · other tiers at 45% and 94% scale · right edge fades out</td><td>Happy Points. Opens on the member's tier; clicking a dimmed card slides it in. Open QR code comes before Reward history.</td></tr>
+          <tr><td>Status illustration</td><td>128 × 128 · no card · right edge of the steps card</td><td>Order status. One per status (received, preparing, ready, picked up) from <code>Order status ill/</code>.</td></tr>
+          <tr><td>Status motion</td><td>Sway 1.5° 3.6s · float 4px 3s · breathe 3.5% 2.8s · drift 3–4px 3.2s · fade-in 0.4s on change</td><td>Off for anyone with "reduce motion" on.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">Hidden on desktop</div>
+    <div class="panel retired-row">The phone status bar and browser bar; the mobile menu header, Pick up / ASAP row and floating cart bar (the header and cart column replace them); the Happy Points / Join card beside the store name (the header pill replaces it); the burrito photo on Order status (the illustration replaces it); the cart's back arrow and "+ Add more". The Comment, Dev Mode and Index tools sit bottom-left, clear of the header and the Checkout button.</div>
+
+    <div class="sub-head">Rules for desktop screens</div>
+    <div class="rules">
+      <div class="panel rule"><span class="tag do">Do</span><b>Pick a template first</b>Menu + cart, two columns, centred column or pop-up. A new page should fit one of the four before it gets its own layout.</div>
+      <div class="panel rule"><span class="tag do">Do</span><b>Line columns up</b>In two columns, the first card on each side starts on the same line; a page title sits above the main column only. Equal heights where the content allows (Happy Points cards = How to earn).</div>
+      <div class="panel rule"><span class="tag do">Do</span><b>Fit the first screen</b>The key status and action should be visible without scrolling at 1366 × 768 (the smallest common laptop).</div>
+      <div class="panel rule"><span class="tag do">Do</span><b>Round every corner</b>Pop-ups use 12px on all four corners. Mobile sheets round only the top; never carry that over.</div>
+      <div class="panel rule"><span class="tag dont">Don't</span><b>Use 100vw / 100vh inside the page</b>They come out zoomed. Use <code>--desk-vw</code> / <code>--desk-vh</code>.</div>
+      <div class="panel rule"><span class="tag dont">Don't</span><b>Distract the paying customer</b>Checkout, payment and confirmation use the slim header. Don't add search, cart or promotions there.</div>
+    </div>
+    <div class="panel retired-row" style="margin-top:10px"><b>Not yet tokenised:</b> a few desktop sizes are set directly in the DESKTOP WEB block rather than through the type tokens: store heading 44/48, category title 28/32, greeting 28/36, confirmation title 24/30, title-bar title 18/22. Move them into <code>design-system.css</code> roles when the prototype adopts it.</div>
   </div>
 
   <!-- How to use -->

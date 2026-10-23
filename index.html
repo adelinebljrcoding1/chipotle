@@ -246,8 +246,7 @@
       <a class="cover-cta" href="Chipotle%20Online%20Ordering.html?view=mobile&from=index">Open mobile prototype
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
       </a>
-      <!-- Disabled for now: no desktop layout yet. Restore href="Chipotle%20Online%20Ordering.html?view=desktop&from=index" to re-enable. -->
-      <a class="cover-cta cover-cta-ghost is-disabled" role="link" aria-disabled="true" title="Coming soon">Open desktop prototype
+      <a class="cover-cta cover-cta-ghost" href="Chipotle%20Online%20Ordering.html?view=desktop&from=index">Open desktop prototype
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
       </a>
       <button type="button" class="frame-switch" id="frame-switch" role="switch" aria-checked="true" onclick="setFrame(this.getAttribute('aria-checked')!=='true')">
@@ -273,7 +272,7 @@
 
 <script>
   // Each item: [label, route]. Route is the prototype's deep-link hash (see DEEP LINKS in the prototype).
-  // Desktop entries stay pending until a desktop layout exists; flip `desktop` to true per item as screens land.
+  // Every screen has a desktop layout (?view=desktop). Set `desktop:false` on an item to mark it "Mobile layout for now".
   var PROTO = 'Chipotle%20Online%20Ordering.html';
   var FLOWS = [
     {title:'Foundations', items:[
@@ -283,14 +282,18 @@
       {label:'User Journey', href:'user-journey.html', desktop:true}
     ]},
     {title:'Menu (landing page)', items:[
-      {label:'Menu — guest', route:'menu'}
+      {label:'Menu — guest', route:'menu'},
+      {label:'Menu — logged in', route:'menu:member'},
+      {label:'Loyalty Detail Page', route:'rewards'},
+      {label:'Happy Points — QR code', route:'rewards:qr'}
     ]},
     {title:'Navigation', items:[
       {label:'Sidebar — guest', route:'sidebar'},
       {label:'Sidebar — member', route:'sidebar:member'}
     ]},
     {title:'Sign in', items:[
-      {label:'Sign in — mobile number', route:'login'}
+      {label:'Sign in — mobile number', route:'login'},
+      {label:'Sign up — complete your profile', route:'signup'}
     ]},
     {title:'Order Setup', items:[
       {label:'Pickup Time Sheet — ASAP (from menu pill)', route:'ordertype'},
@@ -298,18 +301,19 @@
     ]},
     {title:'Cart', items:[
       {label:'Your Order — cart & upsell', route:'cart'},
-      {label:'Your Order — empty cart', route:'cart:empty'}
+      {label:'Your Order — empty cart', route:'cart:empty'},
+      {label:'Your Order — grouped by name (Mel, Ivan)', route:'cart:grouped'}
     ]},
     {title:'Check Out', items:[
-      {label:'Checkout (guest) — mobile number', route:'checkout:join-phone'},
-      {label:'Checkout (guest) — sign up', route:'checkout:join-signup'},
-      {label:'Checkout (guest) — joined', route:'checkout:joined'},
-      {label:'Checkout (guest) — continue as guest', route:'checkout:guest-continue'},
-      {label:'Checkout (log in) — existing number', route:'checkout:login-phone'}
+      {label:'Guest who joins at checkout (new member)', route:'checkout:flow-join'},
+      {label:'Guest who logs in at checkout (existing member)', route:'checkout:flow-login'},
+      {label:'Already logged in', route:'checkout:flow-member'}
     ]},
     {title:'Post-order', items:[
+      {label:'Processing your order (payment)', route:'payment'},
       {label:'Order Confirmed — guest', route:'order-success'},
       {label:'Order Confirmed — logged in', route:'order-success:member'},
+      {label:'Order Status', route:'order-status'},
       {label:'Order Details (receipt)', route:'order-details'}
     ]}
   ];
@@ -318,7 +322,7 @@
   function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
   function itemHTML(it, view){
     var href = it.href ? it.href + '?view=' + view + '&from=index' : PROTO + '?view=' + view + '&from=index#' + it.route;
-    var pending = view === 'desktop' && !it.desktop;
+    var pending = view === 'desktop' && it.desktop === false;
     return '<a class="item' + (pending ? ' is-pending' : '') + '" href="' + href + '">' +
       '<span class="item-label"><span class="status-dot"></span>' + esc(it.label) + '</span>' +
       (pending ? '<span class="item-note">Mobile layout for now</span>' : '') + ARROW + '</a>';
