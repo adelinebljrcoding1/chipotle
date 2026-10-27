@@ -261,6 +261,7 @@ button{font-family:inherit;}
 #screen-checkout-pickup .later-time-chev{color:var(--brown);}
 #screen-checkout-pickup .time-period-label{font-family:'Gotham',sans-serif; font-weight:500; font-size:14px; line-height:20px; letter-spacing:0; text-transform:none; color:var(--taupe);}
 #screen-checkout-pickup .time-period-header{cursor:default;}
+#screen-checkout-pickup .checkout-asap-header{margin-top:0;} /* sits right under the hint */
 #screen-checkout-pickup .top-bar{box-shadow:none;} /* no shadow under the sheet's close row */
 #screen-checkout-pickup .schedule-sheet{min-height:0;} /* fits its content (up to 88% tall), no empty space below */
 #checkout-pickup-confirm-btn:disabled{background:#C9B8A6; opacity:1;}
@@ -736,6 +737,9 @@ button{font-family:inherit;}
 #screen-menu.refined .cat-tab:not(.selected){background:transparent; border-color:transparent;} /* unselected categories: text only, no fill or outline (border kept transparent so pills keep their size) */
 #screen-menu.refined .pf-type-pill{padding-top:1.5px;}
 #screen-menu.refined #menu-filter-label{position:relative; top:.75px;}
+#screen-menu .combined-filter-pill:disabled{background:#EFEDEA; color:#A9A3A0; cursor:default;}
+#screen-menu .pf-type-pill:disabled{cursor:default;} /* same disabled look as the Pick up pill */
+#screen-menu .combined-filter-pill:disabled .chevron{color:#A9A3A0;}
 #screen-menu.refined .meal-desc,
 #screen-menu.refined .mpc-hi,
 #screen-menu.refined .menu-account-sub{font-family:'Gotham','Nunito',sans-serif; font-weight:400; font-size:14px; line-height:20px; color:var(--taupe);}
@@ -1144,6 +1148,30 @@ html.capture .detail-pop, html.capture .detail-dim{animation:none!important;}
 .cart-upsell-badge{position:absolute; top:6px; left:6px; z-index:2; background:var(--brown); color:#fff; font-size:13px; font-weight:700; padding:3px 7px; border-radius:4px; letter-spacing:.2px; white-space:nowrap;}
 .cart-upsell-name{font-family:'Trade Gothic Condensed','Trade Gothic',Arial,sans-serif; font-weight:700; font-size:14px; text-transform:uppercase; line-height:1.25; margin-bottom:3px;}
 .cart-upsell-price{font-size:14px; color:var(--red); font-weight:800;}
+/* Entrance when "You might also like" first appears (Amicro-style spring + blur): the three cards in view
+   slide in from the left one after another; cards 4–5 sit off-screen in the scroller and don't move. */
+/* Adding to the cart: the new item settles into the order list with a soft glow, and the mobile cart bar gives a small bump. */
+.cart-order-card.is-new{animation:cartItemIn .45s cubic-bezier(.22,1,.36,1) both, cartItemGlow 1.2s ease-out both;}
+@keyframes cartItemIn{from{opacity:0; transform:translateY(-8px) scale(.98);} to{opacity:1; transform:none;}}
+@keyframes cartItemGlow{0%,30%{box-shadow:0 0 0 2px rgba(69,21,0,.18);} 100%{box-shadow:0 0 0 2px rgba(69,21,0,0);}}
+.menu-cart-bar.is-bumped{animation:cartBarBump .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes cartBarBump{0%{transform:scale(1);} 40%{transform:scale(1.03);} 100%{transform:scale(1);}}
+@media (prefers-reduced-motion: reduce){ .cart-order-card.is-new, .menu-cart-bar.is-bumped{animation:none;} }
+.cart-upsell.is-entering .cart-upsell-title{animation:upsellTitleIn .35s ease-out both;}
+.cart-upsell.is-entering .cart-upsell-card:nth-child(-n+3){animation:upsellCardIn .6s cubic-bezier(.34,1.56,.64,1) both;}
+.cart-upsell.is-entering .cart-upsell-card:nth-child(1){animation-delay:.08s;}
+.cart-upsell.is-entering .cart-upsell-card:nth-child(2){animation-delay:.18s;}
+.cart-upsell.is-entering .cart-upsell-card:nth-child(3){animation-delay:.28s;}
+@keyframes upsellCardIn{
+  from{opacity:0; transform:translateX(-40px) scale(.94); filter:blur(6px);}
+  60%{filter:blur(0);}
+  to{opacity:1; transform:none; filter:none;}
+}
+@keyframes upsellTitleIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;}}
+@media (prefers-reduced-motion: reduce){
+  .cart-upsell.is-entering .cart-upsell-title,
+  .cart-upsell.is-entering .cart-upsell-card{animation:none;}
+}
 .totals-row{display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px; color:#6b5c4f;}
 .co-sum-group{margin-bottom:12px;}
 .co-sum-head{display:flex; align-items:baseline; gap:8px; margin-bottom:6px;}
@@ -1619,8 +1647,8 @@ html.is-desktop .comment-resolved-toggle, html.is-desktop body.comment-on .comme
 /* ---- Header: logo · pickup · (search) … points / log in · account · cart ---- */
 html.is-desktop #desk-header{display:flex!important; position:absolute; top:0; left:0; right:0; z-index:40; height:var(--desk-head); align-items:center; gap:12px; padding:0 32px; background:#fff; box-shadow:var(--shadow-card); font-family:'Gotham',sans-serif; color:var(--brown);}
 .dh-logo{height:36px; width:auto; cursor:pointer; margin-right:12px;}
-.dh-pickup{display:flex; align-items:center; gap:10px; height:44px; padding:0 14px; border:1.5px solid #E6D8BD; border-radius:8px; background:#fff; color:var(--brown); font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; cursor:pointer; white-space:nowrap;}
-.dh-pickup:hover, .dh-icon-btn:hover{border-color:var(--brown);}
+.dh-pickup{display:flex; align-items:center; gap:10px; height:44px; padding:0 4px; color:var(--brown); font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; white-space:nowrap;} /* static label, no box or hover */
+.dh-icon-btn:hover{border-color:var(--brown);}
 .dh-pickup .dh-store{font-weight:500;}
 .dh-pickup .dh-sep{width:1px; height:20px; background:#E6D8BD;}
 .dh-pickup .pf-prefix{display:none;}
@@ -1696,6 +1724,10 @@ html.is-desktop #screen-menu .meal-card:hover{box-shadow:0 6px 20px rgba(69,21,0
 html.is-desktop #screen-cart{left:auto; width:var(--desk-cart); z-index:2; border-left:1px solid var(--tan-line); background:var(--cream);}
 html.is-desktop #screen-cart .checkout-top-bar{justify-content:flex-start; padding:20px 24px 0; border-bottom:none;}
 html.is-desktop #screen-cart > .scroll > div{padding:20px 24px!important;} /* beats the inline 16px 20px */
+/* Totals sit at the bottom of the cart, just above Checkout; a long order pushes them down and scrolls as usual. */
+html.is-desktop #screen-cart > .scroll > div{min-height:100%; box-sizing:border-box; display:flex; flex-direction:column;}
+html.is-desktop #screen-cart .cart-totals{margin-top:auto; padding-top:20px;}
+html.is-desktop #screen-cart .cart-upsell{margin-bottom:24px;}
 html.is-desktop #screen-cart .checkout-back-btn{display:none;}
 html.is-desktop #screen-cart .btn-add-item{display:none;}
 html.is-desktop #screen-cart .cart-footer{border-top:1px solid var(--tan-line); padding:20px 24px;}
@@ -1822,6 +1854,33 @@ html.is-desktop #screen-order-status .desk-ost .order-status-hero{height:200px; 
 html.is-desktop .desk-ost .order-status-body{padding:0;}
 html.is-desktop .desk-ost .order-status-body > :first-child{margin-top:0;}
 html.is-desktop .order-details-scroll{padding:8px max(32px, calc((100% - 640px) / 2)) 56px;}
+/* Order status, desktop: no title, illustration or photo. The left card is the status meter, the pickup time and the store;
+   the full order summary sits in the right column (so there's no "View order details" step). */
+html.is-desktop #screen-order-status .desk-ost{grid-template-columns:minmax(0,600px) 440px; grid-template-areas:"steps details";}
+html.is-desktop #screen-order-status :is(.desk-ost-head, .order-status-body){display:none;}
+html.is-desktop #screen-order-status .desk-ost .ostatus-time-card{padding:28px 24px 8px; margin-bottom:0;}
+html.is-desktop #screen-order-status .desk-ost .ostatus-time-card .osx-steps{margin-bottom:24px;}
+html.is-desktop #screen-order-status .ostatus-time-line{padding:16px 0;}
+.dos-store{display:flex; align-items:center; gap:12px; padding:16px 0; border-top:1px solid #F1EBE1;}
+.dos-store img{flex-shrink:0;}
+.dos-store-name{font-family:'Gotham',sans-serif; font-weight:500; font-size:16px; line-height:22px; color:var(--brown);}
+.dos-store-sub{font-family:'Gotham',sans-serif; font-size:14px; line-height:20px; color:var(--taupe);}
+.desk-ost-summary{grid-area:details; background:#fff; border-radius:var(--radius-lg); box-shadow:var(--shadow-card); padding:24px; font-family:'Gotham',sans-serif; color:var(--brown);}
+.dos-title{font-family:'Trade Gothic LT Com',Arial,sans-serif; font-weight:700; font-size:20px; line-height:24px; text-transform:uppercase; margin-bottom:8px;}
+.dos-meta{font-size:14px; line-height:20px; color:var(--taupe);}
+.dos-meta b{font-weight:500; color:var(--brown);}
+.dos-items{margin-top:16px; padding-top:16px; border-top:1px solid var(--tan-line);}
+.dos-item{margin-bottom:16px;}
+.dos-item-row, .dos-row{display:flex; justify-content:space-between; gap:12px;}
+.dos-item-row{font-weight:500; font-size:16px; line-height:22px;}
+.dos-item-row span:last-child{font-size:14px; flex-shrink:0;}
+.dos-item-sub{font-size:14px; line-height:20px; color:var(--taupe); margin-top:4px;}
+.dos-totals{padding-top:16px; border-top:1px solid var(--tan-line);}
+.dos-row{font-size:14px; line-height:20px; color:var(--taupe); margin-bottom:8px;}
+.dos-row.is-save{color:var(--avocado);}
+.dos-row.is-total{font-weight:500; font-size:16px; line-height:22px; color:var(--brown); border-top:1px solid var(--tan-line); padding-top:12px; margin:12px 0 0;}
+.dos-help{margin-top:24px; font-size:14px; line-height:20px; color:var(--taupe);}
+.dos-help span{font-weight:500; color:#3C1400; cursor:pointer;}
 </style>
 </head>
 <body>
@@ -1831,11 +1890,11 @@ html.is-desktop .order-details-scroll{padding:8px max(32px, calc((100% - 640px) 
   <!-- ===================== DESKTOP HEADER (?view=desktop only) ===================== -->
   <header class="desk-only" id="desk-header">
     <img class="dh-logo" src="assets/logo-horizontal.svg" alt="Chipotle Mexican Grill" onclick="deskGoMenu()">
-    <button class="dh-pickup" onclick="openOrderTypeSheet()" aria-label="Change pickup time">
+    <!-- Static label: the pickup time is confirmed at checkout (SPUT slots), not chosen up front. -->
+    <div class="dh-pickup">
       <img src="assets/MapPin.svg" width="18" height="18" alt=""><span class="dh-store">Chipotle Downtown</span><span class="dh-sep"></span>
       <span id="dh-pickup-label">Pickup · ASAP (~30 min)</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-    </button>
+    </div>
     <span class="dh-spacer"></span>
     <button class="dh-points" onclick="openRewards()" aria-label="Happy Points">
       <img src="assets/Loyalty%20icon/Rewards/Medallions/Large@3x.svg" alt="" aria-hidden="true">
@@ -1977,8 +2036,9 @@ html.is-desktop .order-details-scroll{padding:8px max(32px, calc((100% - 640px) 
     </div>
     <div class="menu-filters-row" id="menu-filters-row">
       <button class="icon-round-btn menu-filter-search-btn" onclick="openMenuSearch()" aria-label="Search menu"><img src="assets/Magnify.svg" alt="" width="18" height="18"></button>
-      <button class="pf-type-pill refined-only" onclick="openOrderTypeSheet()">Pick up</button>
-      <button class="filter-pill combined-filter-pill" id="menu-filter-pill" onclick="openOrderTypeSheet()">
+      <!-- Disabled: the pickup time is confirmed at checkout (SPUT slots), not chosen up front. -->
+      <button class="pf-type-pill refined-only" disabled>Pick up</button>
+      <button class="filter-pill combined-filter-pill" id="menu-filter-pill" disabled>
         <span id="menu-filter-label">Pickup · ASAP (~30 min)</span>
         <span class="chevron"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
       </button>
@@ -2987,12 +3047,12 @@ var TACO_1_PRICES = {'Pollo Asado':3.75, 'Chicken':3.50, 'Steak':4.60, 'Beef Bar
 var RICE_OPTIONS = [
   {name:'White Rice', cal:210, img:IMG+'rice/white%20rice.png', modifiers:['Normal','Light','Extra','Side']},
   {name:'Brown Rice', cal:210, img:IMG+'rice/brown%20rice.png', modifiers:['Normal','Light','Extra','Side']},
-  {name:'No Rice', cal:0, img:'Menu/no-selection-offset.svg'}
+  {name:'No Rice', cal:0, img:'Menu/no-selection-offset.svg', none:true}
 ];
 var BEANS_OPTIONS = [
   {name:'Black Beans', cal:130, img:IMG+'beans/black%20beans.png', modifiers:['Normal','Light','Extra','Side']},
   {name:'Pinto Beans', cal:130, img:IMG+'beans/pinto%20beans.png', modifiers:['Normal','Light','Extra','Side']},
-  {name:'No Beans', cal:0, img:'Menu/no-selection-offset.svg'}
+  {name:'No Beans', cal:0, img:'Menu/no-selection-offset.svg', none:true}
 ];
 var TOPPINGS_OPTIONS = [
   {name:'Cilantro Lime Sauce', sub:'Made Fresh Daily', cal:80, price:1.00, modifiers:['Normal','Light','Extra','Side'], img:IMG+'top%20things%20off/cilantro%20lime%20sauce%20(new%20).png'},
@@ -3038,10 +3098,10 @@ var TORTILLA_OPTIONS = [
 var BYO_SECTIONS = [
   { id:'protein', num:1, title:'Protein or Veggie', required:true, type:'single', allowSplit:true, splitLabel:'proteins', doubleNoun:'protein', splitDoublePrice:6.10,
     hint:'Choose 1 protein — or split it 50/50 between two.', options:PROTEIN_OPTIONS},
-  { id:'rice', num:2, title:'Rice', required:true, type:'single', allowSplit:true, splitLabel:'rice options', doubleNoun:'rice',
-    hint:'Pick one, split it 50/50, or go rice-free.', options:RICE_OPTIONS},
-  { id:'beans', num:3, title:'Beans', required:true, type:'single', allowSplit:true, splitLabel:'bean options', doubleNoun:'beans',
-    hint:'Pick one, split it 50/50, or skip the beans.', options:BEANS_OPTIONS},
+  { id:'rice', num:2, title:'Rice', required:true, type:'multi', max:2,
+    hint:'Choose up to 2', options:RICE_OPTIONS},
+  { id:'beans', num:3, title:'Beans', required:true, type:'multi', max:2,
+    hint:'Choose up to 2', options:BEANS_OPTIONS},
   { id:'toppings', num:4, title:'Top Things Off', required:false, type:'multi',
     hint:'Choose as many as you like.', options:TOPPINGS_OPTIONS},
   { id:'options', num:5, title:'Options', required:false, type:'multi',
@@ -3058,10 +3118,10 @@ var BYO_SECTIONS = [
 var BOWL_SECTIONS = [
   { id:'protein', num:1, title:'Protein or Veggie', required:true, type:'single', allowSplit:true, splitLabel:'proteins', doubleNoun:'protein', splitDoublePrice:6.10,
     hint:'Choose 1 protein — or split it 50/50 between two.', options:PROTEIN_OPTIONS},
-  { id:'rice', num:2, title:'Rice', required:true, type:'single', allowSplit:true, splitLabel:'rice options', doubleNoun:'rice',
-    hint:'Pick one, split it 50/50, or go rice-free.', options:RICE_OPTIONS},
-  { id:'beans', num:3, title:'Beans', required:true, type:'single', allowSplit:true, splitLabel:'bean options', doubleNoun:'beans',
-    hint:'Pick one, split it 50/50, or skip the beans.', options:BEANS_OPTIONS},
+  { id:'rice', num:2, title:'Rice', required:true, type:'multi', max:2,
+    hint:'Choose up to 2', options:RICE_OPTIONS},
+  { id:'beans', num:3, title:'Beans', required:true, type:'multi', max:2,
+    hint:'Choose up to 2', options:BEANS_OPTIONS},
   { id:'toppings', num:4, title:'Top Things Off', required:false, type:'multi',
     hint:'Choose as many as you like.', options:TOPPINGS_OPTIONS},
   { id:'chipsdips', num:5, title:'Chips & Dips', required:false, type:'single', optionalSingle:true,
@@ -4234,6 +4294,21 @@ function withModSel(secId, opt, mod){
   if(!found) out.push(ns);
   return out;
 }
+/* Rice & beans: up to `max` ticked. "No Rice" / "No Beans" (none:true) clears the others,
+   and ticking anything else clears it. Returns the new selections, or null if the limit is reached. */
+function withMultiPick(sec, opt, sel){
+  var cur = byoSelections[sec.id];
+  if(opt.none) return [sel];
+  cur = cur.filter(function(x){ return !optionByName(sec, x.name).none; });
+  if(sec.max && cur.length>=sec.max) return null;
+  return cur.concat([sel]);
+}
+function optionByName(sec, name){ return sec.options.filter(function(o){ return o.name===name; })[0] || {}; }
+// Greyed out: the limit is reached and this option isn't ticked ("No …" stays tappable, it clears the rest).
+function isOverMax(sec, opt){
+  if(!sec.max || opt.none || isOptionSelected(sec.id, opt.name)) return false;
+  return byoSelections[sec.id].filter(function(x){ return !optionByName(sec, x.name).none; }).length>=sec.max;
+}
 function removeModOption(secId, name){
   byoSelections[secId] = byoSelections[secId].filter(function(x){ return x.name!==name; });
   renderByoSections(); renderProgressStrip(); updateByoFooter();
@@ -4244,19 +4319,8 @@ function portionSheetRemove(){
   removeModOption(secId, name);
 }
 function modSheetLabel(mod){ return mod==='Side' ? 'On the side' : mod; }
-/* Rice can also be half & half (e.g. half White, half Brown), like protein's Half.
-   Normal / Light / Extra / Side stay single-rice choices. */
-function modCanHalf(secId){ return secId==='rice'; }
-function modHalfPartners(secId, opt){
-  return sectionById(secId).options.filter(function(o){ return o.name!==opt.name && o.modifiers; });
-}
-function isModHalfPair(sels){ return sels.length===2 && sels[0].mod==='Half'; }
-// Size panel text: "Normal", "Light", "On the side", or "1 Half Portion ∙ Half Brown Rice".
-function modSelectionText(secId, cur){
-  var sels = byoSelections[secId];
-  if(isModHalfPair(sels)) return '1 Half Portion ∙ Half '+sels[1].name;
-  return modSheetLabel(cur.mod||'Normal');
-}
+// Size panel text: "Normal", "Light", "Extra" or "On the side".
+function modSelectionText(secId, cur){ return modSheetLabel(cur.mod||'Normal'); }
 function priceWithSection(secId, sels){
   var keep = byoSelections[secId];
   byoSelections[secId] = sels;
@@ -4270,11 +4334,7 @@ function openModSheet(secId, idx){
   var opt = sec.options[idx];
   if(!opt.modifiers){ byoSelections[secId] = [modSel(opt, null)]; renderByoSections(); renderProgressStrip(); updateByoFooter(); return; }
   var cur = byoSelections[secId].filter(function(x){ return x.name===opt.name; })[0];
-  var startChoice = cur ? (cur.mod||'Normal') : null;
-  if(startChoice==='Normal') startChoice = null;
-  var pair = isModHalfPair(byoSelections[secId]) && byoSelections[secId][0].name===opt.name;
-  pv = {kind:'mod', secId:secId, idx:idx, opt:opt, level:1, choice: startChoice, emptyError:false,
-        partner: pair ? byoSelections[secId][1].name : null, l2Error:false,
+  pv = {kind:'mod', secId:secId, idx:idx, opt:opt, level:1, choice: cur ? (cur.mod||'Normal') : 'Normal', emptyError:false,
         canRemove: !!cur && sec.type==='multi'};
   document.getElementById('pv-overlay').classList.remove('hidden');
   renderPortionSheet();
@@ -4285,7 +4345,9 @@ function isPickOneMod(secId){ return sectionById(secId).type!=='multi'; }
 function toggleModOption(secId, idx){
   var opt = sectionById(secId).options[idx];
   if(byoSelections[secId].some(function(x){ return x.name===opt.name; })){ removeModOption(secId, opt.name); return; }
-  byoSelections[secId] = withModSel(secId, opt, opt.modifiers ? 'Normal' : null);
+  var next = withMultiPick(sectionById(secId), opt, modSel(opt, opt.modifiers ? 'Normal' : null));
+  if(!next) return;
+  byoSelections[secId] = next;
   renderByoSections(); renderProgressStrip(); updateByoFooter();
 }
 function selectModOption(secId, idx){
@@ -4315,33 +4377,17 @@ function resetModPortion(){
 function renderModSheet(anim){
   document.querySelector('.pv-foot').style.display = '';
   var opt = pv.opt, html = '';
-  if(pv.level===2){ renderModHalfSheet(anim); return; }
   html += '<div class="pv-head"><div class="pv-title" id="pv-title">'+opt.name+'</div><span class="pv-req">Required</span></div>';
-  // Normal is the default from tapping the card, so Customise offers only the alternatives.
-  var cur = byoSelections[pv.secId].filter(function(x){ return x.name===opt.name; })[0];
   html += pv.emptyError
     ? '<div class="pv-hint is-error">*Choose a portion to continue</div>'
     : '<div class="pv-hint">'+'Customise your portion.'+'<span class="pv-limit">Choose 1</span></div>';
-  opt.modifiers.filter(function(m){ return m!=='Normal'; }).forEach(function(m){
-    // Only Normal has a second line (price · calories); Light / Extra / Side show the name alone.
+  // Normal / Light / Extra / On the side. Only Normal has a second line (price · calories).
+  opt.modifiers.forEach(function(m){
     var meta = m==='Normal' ? (opt.price ? '<b>+$'+opt.price.toFixed(2)+'</b><span class="dot">·</span>' : '')+opt.cal+' cal' : '';
     html += '<div class="pv-card'+(pv.choice===m?' selected':'')+'" onclick="pickPortion(\''+m+'\')">'+
-      '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+m+'</div>'+(meta?'<div class="pv-meta">'+meta+'</div>':'')+'</div><div class="pv-radio"></div></div>'+
+      '<div class="pv-row"><div class="pv-info"><div class="pv-name">'+modSheetLabel(m)+'</div>'+(meta?'<div class="pv-meta">'+meta+'</div>':'')+'</div><div class="pv-radio"></div></div>'+
     '</div>';
   });
-  // Half portion: half this rice + half another → level 2 to pick the other half.
-  var partners = modCanHalf(pv.secId) ? modHalfPartners(pv.secId, opt) : [];
-  if(partners.length){
-    var halfOn = pv.choice==='Half';
-    // Only one other rice, so the other half is obvious: a plain radio, no second step.
-    var single = partners.length===1;
-    var halfMeta = single ? '<span class="pv-muted">1 Half Portion ∙ Half '+partners[0].name+'</span>'
-      : halfOn && pv.partner ? '<span class="pv-muted">1 Half Portion ∙ Half '+pv.partner+'</span>'
-      : Math.round(opt.cal/2)+' cal<span class="dot">·</span><span class="pv-muted">Half '+opt.name+' + Half another rice</span>';
-    html += '<div class="pv-card'+(halfOn?' selected':'')+'" onclick="pickPortion(\'Half\')">'+
-      '<div class="pv-row"><div class="pv-info"><div class="pv-name">Half portion</div><div class="pv-meta">'+halfMeta+'</div></div>'+(single?'<div class="pv-radio"></div>':PV_CHEVRON_LG)+'</div>'+
-    '</div>';
-  }
   var body = document.getElementById('pv-body');
   body.innerHTML = html;
   body.classList.remove('slide-in','slide-back');
@@ -4351,32 +4397,8 @@ function renderModSheet(anim){
   document.getElementById('pv-remove').classList.toggle('hidden', !pv.canRemove);
 }
 
-// What the sheet would save: Half + partner, or this option at the chosen portion.
-function modSheetSels(){
-  if(pv.choice==='Half') return pv.partner ? [modSel(pv.opt,'Half'), modSel(sectionById(pv.secId).options.filter(function(o){ return o.name===pv.partner; })[0],'Half')]
-    : [modSel(pv.opt,'Normal')];
-  return withModSel(pv.secId, pv.opt, pv.choice||'Normal');
-}
-function renderModHalfSheet(anim){
-  var opt = pv.opt, html = '';
-  html += '<div class="pv-head"><div class="pv-title" id="pv-title">Half portion</div><span class="pv-req">Required</span></div>';
-  html += pv.l2Error
-    ? '<div class="pv-hint is-error">*Choose a rice to continue</div>'
-    : '<div class="pv-hint">Half '+opt.name+' and half of…</div>';
-  modHalfPartners(pv.secId, opt).forEach(function(p){
-    html += '<div class="pv-card'+(pv.partner===p.name?' selected':'')+'" onclick="pickPartner(\''+p.name.replace(/'/g,"\\'")+'\')">'+
-      '<div class="pv-row"><div class="pv-info"><div class="pv-name">Half '+p.name+'</div><div class="pv-meta">'+Math.round(p.cal/2)+' cal</div></div><div class="pv-radio"></div></div>'+
-    '</div>';
-  });
-  var body = document.getElementById('pv-body');
-  body.innerHTML = html;
-  body.classList.remove('slide-in','slide-back');
-  if(anim){ void body.offsetWidth; body.classList.add(anim); body.scrollTop = 0; }
-  document.getElementById('pv-back').style.visibility = 'visible';
-  document.getElementById('pv-remove').classList.add('hidden');
-  document.getElementById('pv-price').textContent = '$'+priceWithSection(pv.secId, modSheetSels()).toFixed(2);
-}
-
+// What the sheet would save: this option at the chosen portion.
+function modSheetSels(){ return withModSel(pv.secId, pv.opt, pv.choice||'Normal'); }
 /* ---- V1 protein portion sheet ----
    Tap a protein → level 1: Normal / Half / Double portion / Two full proteins.
    Half or Two full proteins → level 2: pick the other protein.
@@ -4527,27 +4549,16 @@ function renderPortionSheet(anim){
   document.getElementById('pv-back').style.visibility = pv.level===2 ? 'visible' : 'hidden';
 }
 function pickPortion(mod){
-  if(pv.kind==='mod'){
-    pv.emptyError = false;
-    if(mod==='Half'){
-      var partners = modHalfPartners(pv.secId, pv.opt);
-      pv.choice = 'Half';
-      if(partners.length===1){ pv.partner = partners[0].name; renderModSheet(); return; }
-      pv.level = 2; pv.l2Error = false; renderModSheet('slide-in'); return;
-    }
-    pv.choice = mod; pv.partner = null; renderModSheet(); return;
-  }
+  if(pv.kind==='mod'){ pv.emptyError = false; pv.choice = mod; renderModSheet(); return; }
   // Keep the second protein only if it's valid for the new mode.
   var list = mod==='Half' ? halfPartners(pv.opt.name) : extraPartners(pv.opt);
   if(pv.mode!==mod || !list.some(function(p){ return p.name===pv.partner; })) pv.partner = null;
   pv.mode = mod; pv.level = 2; pv.l2Error = false;
   renderPortionSheet('slide-in');
 }
-function pickPartner(name){ pv.partner = name; pv.l2Error = false; if(pv.kind==='mod'){ renderModSheet(); return; } renderPortionSheet(); }
+function pickPartner(name){ pv.partner = name; pv.l2Error = false; renderPortionSheet(); }
 function portionSheetBack(){
   pv.level = 1;
-  // Leaving the rice half list without a partner drops the Half choice.
-  if(pv.kind==='mod'){ if(!pv.partner) pv.choice = null; renderModSheet('slide-back'); return; }
   renderPortionSheet('slide-back');
 }
 function resetPortion(){
@@ -4558,7 +4569,6 @@ function resetPortion(){
 function portionSheetSelect(){
   if(pv.kind==='mod'){
     if(!pv.choice){ pv.emptyError = true; renderModSheet(); return; }
-    if(pv.choice==='Half' && !pv.partner){ pv.l2Error = true; renderModSheet(); return; }
     byoSelections[pv.secId] = modSheetSels();
     closePortionSheet();
     renderByoSections(); renderProgressStrip(); updateByoFooter();
@@ -4697,7 +4707,7 @@ function renderByoSections(){
       var mod = getSelectionModifier(sec.id, idx);
       var thumb = opt.img ? '<div class="variant-thumb"><img src="'+opt.img+'" alt="'+opt.name+'"></div>' : '';
       var control = sec.type==='multi' || splitActive || (v2 && rules.split)
-        ? '<div class="variant-check"'+(nu && isSelected && sec.id==='toppings' ? ' onclick="event.stopPropagation(); removeModOption(\'toppings\',\''+opt.name.replace(/'/g,"\\'")+'\')"' : '')+'></div>'
+        ? '<div class="variant-check"'+(nu && isSelected && sec.type==='multi' ? ' onclick="event.stopPropagation(); removeModOption(\''+sec.id+'\',\''+opt.name.replace(/'/g,"\\'")+'\')"' : '')+'></div>'
         : '<div class="variant-radio"></div>';
       var sheetMod = isSheetModSection(sec);
       var showModifiers = opt.modifiers && isSelected && !splitActive && !v2 && !sheetProt && !sheetMod && (!isProt || proteinCanDouble(opt.name));
@@ -4708,7 +4718,7 @@ function renderByoSections(){
         if(v2 && isSelected && proteinHasPortions(opt)) priceTag = 0; // the portion buttons carry the price
       }
       var veggieBlocked = (splitActive && opt.name==='Veggie' && !isSelected) ||
-        (v2 && !isSelected && totalSelected>=2);
+        (v2 && !isSelected && totalSelected>=2) || isOverMax(sec, opt);
       var tap = sheetProt ? 'selectProtein('+idx+')'
         : sheetMod && isPickOneMod(sec.id) ? 'selectModOption(\''+sec.id+'\','+idx+')'
         : sheetMod ? 'toggleModOption(\''+sec.id+'\','+idx+')'
@@ -4777,7 +4787,7 @@ function renderModRow(secId, idx, modifiers){
   var current = getSelectionModifier(secId, idx);
   var pills = modifiers.map(function(m){
     var sel = (current===m) || (!current && m==='Normal');
-    return '<div class="mod-pill'+(sel?' selected':'')+'" onclick="event.stopPropagation(); setModifier(\''+secId+'\','+idx+',\''+m+'\')">'+m+'</div>';
+    return '<div class="mod-pill'+(sel?' selected':'')+'" onclick="event.stopPropagation(); setModifier(\''+secId+'\','+idx+',\''+m+'\')">'+modSheetLabel(m)+'</div>';
   }).join('');
   return '<div class="mod-row">'+pills+'</div>';
 }
@@ -4865,9 +4875,16 @@ function toggleOption(secId, idx){
       byoSelections[secId] = byoSelections[secId].filter(function(s){return s.name!==opt.name;});
       if(byoSelections[secId].length===0) byoSplitDouble[secId] = false;
     } else {
-      var max = sec.allowSplit ? 2 : Infinity;
-      if(byoSelections[secId].length>=max) return;
-      byoSelections[secId].push({name:opt.name, mod:opt.modifiers?'Normal':null, price:opt.price||0, doublePrice:opt.doublePrice||0, cal:opt.cal});
+      var newPick = {name:opt.name, mod:opt.modifiers?'Normal':null, price:opt.price||0, doublePrice:opt.doublePrice||0, cal:opt.cal};
+      if(sec.max){
+        var next = withMultiPick(sec, opt, newPick);
+        if(!next) return;
+        byoSelections[secId] = next;
+      } else {
+        var max = sec.allowSplit ? 2 : Infinity;
+        if(byoSelections[secId].length>=max) return;
+        byoSelections[secId].push(newPick);
+      }
     }
   } else {
     if(already && sec.optionalSingle){
@@ -4957,7 +4974,7 @@ function addByoToCart(){
   currentBuilderSections().forEach(function(sec){
     if(byoSelections[sec.id].length===0) return;
     var text = byoSelections[sec.id].map(function(s){
-      var modTxt = (s.mod && s.mod!=='Normal') ? ' ('+s.mod+')' : '';
+      var modTxt = (s.mod && s.mod!=='Normal') ? ' ('+modSheetLabel(s.mod)+')' : '';
       return s.name+modTxt;
     }).join(', ');
     if(isSheetProtein(sec)){
@@ -4968,8 +4985,6 @@ function addByoToCart(){
     } else if(isV2Protein(sec)){
       // e.g. "Chicken (Half), Steak (Half)" or, for full + full, "Chicken (Full), Steak (Full)".
       if(byoSelections[sec.id].length===2 && byoSelections[sec.id][0].mod==='Normal') text = byoSelections[sec.id].map(function(x){ return x.name+' (Full)'; }).join(', ');
-    } else if(isModHalfPair(byoSelections[sec.id])){
-      text = 'Half '+byoSelections[sec.id][0].name+' / Half '+byoSelections[sec.id][1].name;
     } else if(sec.allowSplit && byoSelections[sec.id].length===2){
       var portionLabel = byoSplitDouble[sec.id] ? 'Full ' : 'Half ';
       text = portionLabel + text.replace(', ', ' / '+portionLabel);
@@ -5142,9 +5157,13 @@ function addItemToCart(item){
     linePrices: item.linePrices || null,
     qty: item.qty,
     unitPrice: item.unitPrice,
-    source: item.source || null
+    source: item.source || null,
+    addedAt: openingRoute ? null : Date.now()  // drives the "just added" animation (see .is-new)
   });
   renderMenuCartBar();
+  if(openingRoute) return;  // deep links seed the cart quietly, so screen exports never catch an animation
+  var bar = document.querySelector('.menu-cart-bar');
+  bar.classList.remove('is-bumped'); void bar.offsetWidth; bar.classList.add('is-bumped');
 }
 /* Edit: reopen the item's pop-up over the cart with its choices and quantity; Update replaces it in place. */
 var editingCartId = null;
@@ -5247,6 +5266,7 @@ function renderMenuCartBar(){
   document.getElementById('menu-cart-bar-count').textContent = count+' item'+(count>1?'s':'');
   document.getElementById('menu-cart-bar-total').textContent = 'View cart · $'+cartSubtotal().toFixed(2);
 }
+var upsellRevealTimer = null;
 function renderCartOrder(){
   var listEl = document.getElementById('cart-order-list');
   if(cartItems.length===0){
@@ -5262,6 +5282,22 @@ function renderCartOrder(){
   document.getElementById('cart-total-value').textContent = '$'+total.toFixed(2);
   document.getElementById('cart-checkout-total').textContent = '$'+total.toFixed(2);
   document.getElementById('cart-checkout-btn').disabled = cartItems.length===0;
+  // "You might also like" only appears once something is in the cart, so suggestions read as a response to the order.
+  // On desktop, where the cart sits beside the menu, it waits 2s after the first item before appearing
+  // (deep links show it straight away). On mobile the cart is its own screen, so it's simply there when opened.
+  var upsell = document.getElementById('cart-upsell');
+  if(!cartItems.length){
+    clearTimeout(upsellRevealTimer); upsellRevealTimer = null;
+    upsell.style.display = 'none';
+  } else if(upsell.style.display==='none' && !upsellRevealTimer){
+    if(openingRoute || !IS_DESKTOP) upsell.style.display = '';
+    else upsellRevealTimer = setTimeout(function(){
+      upsellRevealTimer = null;
+      if(!cartItems.length) return;
+      upsell.style.display = '';
+      playUpsellEntrance();
+    }, 2000);
+  }
   // Review • Pick up: "ASAP", or the chosen time, and the store.
   document.getElementById('cart-pickup-time').textContent = scheduleMode==='asap' ? 'ASAP' : menuFilterLabel().replace(/^Pickup · /,'');
   document.getElementById('cart-pickup-store').textContent = 'Pick up from Chipotle '+document.getElementById('menu-outlet-name').textContent;
@@ -5321,7 +5357,10 @@ function renderOrderCardHTML(item, grouped){
     var p = item.linePrices ? (item.linePrices[i]||0) : optionPriceByName(l);
     return '<div class="cart-line"><span>'+l+'</span><span class="cart-line-price">$'+p.toFixed(2)+'</span></div>';
   }).join('');
-  return '<div class="cart-order-card">'+
+  // Just added: play the entrance, picking up where it left off if the cart re-renders mid-animation.
+  var age = item.addedAt ? Date.now()-item.addedAt : Infinity;
+  var isNew = age < 1200;
+  return '<div class="cart-order-card'+(isNew ? ' is-new" style="animation-delay:-'+age+'ms' : '')+'">'+
     '<div class="cart-thumb">'+thumb+'</div>'+
     '<div style="flex:1; min-width:0;">'+
       // The item total sits on the name row.
@@ -5352,21 +5391,26 @@ function removeCartItem(id){
   renderMenuCartBar();
   if(it) showToast(it.name+' removed');
 }
+// Five suggestions: the three chips & dips, then a side of guac and a drink.
+var CART_UPSELL_EXTRAS = [
+  {id:'upsell-side-guac', name:'Side of Guacamole', category:'Sides', price:2.55, cal:230, img:IMG+'single%20sides/1%20side%20of%20guacamole.png'},
+  {id:'upsell-fountain', name:'Fountain Drink', category:'Drinks', price:3.25, cal:220, img:'Menu/Drinks/fountain%20drink.png', icon:'🥤'}
+];
+function cartUpsellItems(){ return MENU_ITEMS.chips.concat(CART_UPSELL_EXTRAS).slice(0,5); }
 function renderCartUpsell(){
   var wrap = document.getElementById('cart-upsell-scroll');
-  var items = MENU_ITEMS.chips.slice(0,5);
-  wrap.innerHTML = items.map(function(it){
+  wrap.innerHTML = cartUpsellItems().map(function(it){
     var thumb = it.img ? '<img src="'+it.img+'" alt="'+it.name+'">' : (it.icon||'🥤');
     return '<div class="cart-upsell-card" onclick="quickAddUpsellItem(\''+it.id+'\')">'+
       '<div class="cart-upsell-thumb">'+(it.bestSeller?'<span class="cart-upsell-badge">Best seller</span>':'')+thumb+'</div>'+
       '<div class="cart-upsell-name">'+it.name+'</div>'+
-      '<div class="cart-upsell-meta">Chips &amp; dips'+(it.cal!=null ? ' • '+it.cal+' cal' : '')+'</div>'+
+      '<div class="cart-upsell-meta">'+(it.category||'Chips &amp; dips')+(it.cal!=null ? ' • '+it.cal+' cal' : '')+'</div>'+
       '<div class="cart-upsell-price">$'+it.price.toFixed(2)+'</div>'+
     '</div>';
   }).join('');
 }
 function quickAddUpsellItem(itemId){
-  var item = MENU_ITEMS.chips.filter(function(i){return i.id===itemId;})[0];
+  var item = cartUpsellItems().filter(function(i){return i.id===itemId;})[0];
   if(!item) return;
   addItemToCart({
     name: item.name,
@@ -5379,7 +5423,19 @@ function quickAddUpsellItem(itemId){
   showToast('Added to your order');
   renderCartOrder();
 }
-function goToCart(){ renderCartOrder(); renderCartUpsell(); show('screen-cart'); }
+// Replays the suggestions' entrance: cards slide in from the left, one after another (see .is-entering).
+function playUpsellEntrance(){
+  var upsell = document.getElementById('cart-upsell');
+  if(!upsell || upsell.style.display==='none') return;
+  document.getElementById('cart-upsell-scroll').scrollLeft = 0;
+  upsell.classList.remove('is-entering');
+  void upsell.offsetWidth; // restart the animation
+  upsell.classList.add('is-entering');
+  clearTimeout(playUpsellEntrance.t);
+  playUpsellEntrance.t = setTimeout(function(){ upsell.classList.remove('is-entering'); }, 1000);
+}
+// On mobile the cart is its own screen, so the entrance plays each time it opens.
+function goToCart(){ renderCartOrder(); renderCartUpsell(); show('screen-cart'); playUpsellEntrance(); }
 function backFromCart(){ show('screen-menu'); }
 
 /* =========================================================
@@ -5578,7 +5634,9 @@ function renderCheckoutPickupOptions(){
     document.getElementById('checkout-pickup-options').innerHTML = '<div class="schedule-hint">No pickup times available right now. Please check back shortly.</div>';
     return;
   }
-  var html = '<div class="time-grid">'+quick.map(checkoutSlotTile).join('')+'</div>';
+  // "ASAP" heads the quickest windows, styled like the Later time groups (Afternoon, Evening).
+  var html = '<div class="time-period-header checkout-asap-header"><span class="time-period-label">ASAP</span></div>'+
+    '<div class="time-grid">'+quick.map(checkoutSlotTile).join('')+'</div>';
   if(later.length){
     var selLater = later.indexOf(checkoutPickupSelectedIdx)>-1;
     var lastSlot = checkoutPickupSlots[checkoutPickupSlots.length-1];
@@ -5748,6 +5806,7 @@ function goToOrderStatus(){
   document.getElementById('osx-date').textContent = (lastOrder.placedAt||new Date()).toLocaleDateString('en-US',{month:'long', day:'numeric', year:'numeric'});
   document.getElementById('ostatus-order-number').textContent = lastOrder.orderNo;
   document.getElementById('ostatus-total').textContent = '$'+lastOrder.total.toFixed(2);
+  renderDeskOrderSummary();
   show('screen-order-status');
   orderStatusTimers.forEach(clearTimeout);
   orderStatusTimers = [];
@@ -5756,6 +5815,29 @@ function goToOrderStatus(){
     setOrderStatus('ready');
     orderStatusTimers.push(setTimeout(function(){ setOrderStatus('complete'); }, 4000));
   }, 4000));
+}
+// Desktop: the order details live on the status page, in the right column.
+function renderDeskOrderSummary(){
+  var box = document.getElementById('desk-ost-summary');
+  if(!box) return;
+  document.getElementById('dos-store-name').textContent = lastOrder.pickupLocation;
+  var money = function(v){ return '$'+v.toFixed(2); };
+  var items = lastOrder.items.map(function(it){
+    return '<div class="dos-item"><div class="dos-item-row"><span>'+it.qty+' x '+it.name+'</span><span>'+money(it.price)+'</span></div>'+
+      (it.lines && it.lines.length ? '<div class="dos-item-sub">'+it.lines.join(', ')+'</div>' : '')+'</div>';
+  }).join('');
+  box.innerHTML =
+    '<div class="dos-title">Order summary</div>'+
+    '<div class="dos-meta">'+lastOrder.orderType+' · '+lastOrder.pickupTime+'</div>'+
+    '<div class="dos-meta">Order number <b>'+lastOrder.orderNo+'</b></div>'+
+    '<div class="dos-items">'+items+'</div>'+
+    '<div class="dos-totals">'+
+      '<div class="dos-row"><span>Subtotal</span><span>'+money(lastOrder.subtotal)+'</span></div>'+
+      (lastOrder.redeemed>0 ? '<div class="dos-row is-save"><span>Happy Points redeemed</span><span>−'+money(lastOrder.redeemed)+'</span></div>' : '')+
+      '<div class="dos-row"><span>Tax</span><span>'+money(lastOrder.tax)+'</span></div>'+
+      '<div class="dos-row is-total"><span>Total</span><span>'+money(lastOrder.total)+'</span></div>'+
+    '</div>'+
+    '<div class="dos-help">Need help? <span onclick="showToast(\'Support coming soon\')">Contact our support</span></div>';
 }
 function backFromOrderStatus(){ show('screen-order-success'); }
 function goToOrderDetails(){
@@ -6318,7 +6400,12 @@ function deskInit(){
   ostText.appendChild(ost.querySelector('#order-status-title')); ostText.appendChild(ost.querySelector('#order-status-sub'));
   ostHead.appendChild(ost.querySelector('#osx-art')); ostHead.appendChild(ostText);
   ostMain.appendChild(ostHead); ostMain.appendChild(ost.querySelector('.ostatus-time-card'));
-  ostGrid.appendChild(ostMain); ostGrid.appendChild(ost.querySelector('.order-status-body'));
+  // The pickup store closes the status card; the order summary fills the right column (see renderDeskOrderSummary).
+  var ostStore = mk('dos-store');
+  ostStore.innerHTML = '<img src="assets/MapPin.svg" width="20" height="20" alt=""><div><div class="dos-store-name" id="dos-store-name">Chipotle Downtown</div><div class="dos-store-sub">Pick up</div></div>';
+  ostMain.querySelector('.ostatus-time-card').appendChild(ostStore);
+  var ostSummary = mk('desk-ost-summary'); ostSummary.id = 'desk-ost-summary';
+  ostGrid.appendChild(ostMain); ostGrid.appendChild(ost.querySelector('.order-status-body')); ostGrid.appendChild(ostSummary);
   ost.appendChild(ostGrid);
   // Happy Points: tier cards, dots and buttons on the left; How to earn on the right (greeting stays on top).
   var rw = document.querySelector('#screen-rewards .rw-body'), rwGrid = mk('desk-rw'), rwMain = mk('desk-rw-main'), rwSide = mk('desk-rw-side');
@@ -6517,11 +6604,13 @@ function highlightFromUrl(){
   el.style.outlineOffset = '2px';
   el.scrollIntoView({block:'center'});
 }
+var openingRoute = false;
 function openRouteFromHash(){
   var parts = decodeURIComponent(location.hash.slice(1)).split(':');
   var route = ROUTES[parts[0]];
   if(!route) return false;
-  route(parts[1]);
+  openingRoute = true;
+  try { route(parts[1]); } finally { openingRoute = false; }
   highlightFromUrl();
   return true;
 }
